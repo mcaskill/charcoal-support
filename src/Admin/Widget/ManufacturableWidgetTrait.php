@@ -2,7 +2,7 @@
 
 namespace Charcoal\Support\Admin\Widget;
 
-use Exception;
+use RuntimeException;
 use Pimple\Container;
 use Charcoal\Factory\FactoryInterface;
 
@@ -34,13 +34,13 @@ trait ManufacturableWidgetTrait
     /**
      * Retrieve the widget factory.
      *
-     * @throws Exception If the widget factory was not previously set.
+     * @throws RuntimeException If the widget factory was not previously set.
      * @return FactoryInterface
      */
     protected function widgetFactory()
     {
         if (!isset($this->widgetFactory)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf('Widget Factory is not defined for "%s"', get_class($this))
             );
         }

@@ -2,7 +2,7 @@
 
 namespace Charcoal\Support\Model;
 
-use Exception;
+use RuntimeException;
 use Charcoal\Loader\CollectionLoader;
 
 /**
@@ -33,13 +33,13 @@ trait ManufacturableModelCollectionTrait
     /**
      * Retrieve the model collection loader.
      *
-     * @throws Exception If the collection loader was not previously set.
+     * @throws RuntimeException If the collection loader was not previously set.
      * @return CollectionLoader
      */
     public function collectionLoader()
     {
         if (!isset($this->collectionLoader)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf('Collection Loader is not defined for "%s"', get_class($this))
             );
         }
