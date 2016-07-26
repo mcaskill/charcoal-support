@@ -34,7 +34,7 @@ trait SectionAwareTrait
     /**
      * Set the class name of the section model.
      *
-     * @param  string $displayClass The class name of the section model.
+     * @param  string $className The class name of the section model.
      * @throws InvalidArgumentException If the class name is not a string.
      * @return AbstractPropertyDisplay Chainable
      */
@@ -68,7 +68,9 @@ trait SectionAwareTrait
      */
     private function createSection()
     {
-        return $this->section = $this->modelFactory()->create($this->sectionClass());
+        $this->section = $this->modelFactory()->create($this->sectionClass());
+
+        return $this->section;
     }
 
     /**

@@ -17,9 +17,9 @@ trait ParsableValueTrait
      * @param  string|AbstractProperty $separator The boundary string.
      * @return array
      */
-    public function parseAsMultiple($val, $separator = ',')
+    public function parseAsMultiple($value, $separator = ',')
     {
-        if (is_var_empty($val)) {
+        if (is_var_empty($value)) {
             return [];
         }
 
@@ -28,8 +28,8 @@ trait ParsableValueTrait
          * Manually handling the resolution to array
          * until the property itself manages this.
          */
-        if (is_string($val)) {
-            return explode(',', $val);
+        if (is_string($value)) {
+            return explode($separator, $value);
         }
 
         /**
@@ -37,36 +37,38 @@ trait ParsableValueTrait
          * means we might be dealing with an integer,
          * an empty string, or an object.
          */
-        if (!is_array($val)) {
-            return [ $val ];
+        if (!is_array($value)) {
+            return [ $value ];
         }
 
-        return $val;
+        return $value;
     }
 
     /**
      * Parse the property value as a "L10N" value type.
      *
-     * @param  mixed $val The value being localized.
+     * @deprecated In favor of {@see TranslationString::isTranslatable()}
+     * @param  mixed $value The value being localized.
      * @return TranslationString|null
      */
-    public function parseAsTranslatable($val)
+    public function parseAsTranslatable($value)
     {
-        if (is_var_empty($val)) {
+        if (!TranslationString::isTranslatable($value)) {
             return null;
         }
 
-        return new TranslationString($val);
+        return new TranslationString($value);
     }
 
     /**
      * Alias of {@see self::parseAsTranslatable()}
      *
-     * @param  mixed $val The value being localized.
+     * @deprecated In favor of {@see TranslationString::isTranslatable()}
+     * @param  mixed $value The value being localized.
      * @return TranslationString|null
      */
-    public function translatable($val)
+    public function translatable($value)
     {
-        return $this->parseAsTranslatable($val);
+        return $this->parseAsTranslatable($value);
     }
 }

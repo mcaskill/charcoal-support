@@ -38,8 +38,10 @@ class HierarchicalTableWidget extends TableWidget
      * @param  PropertyInterface $property The current property.
      * @return void
      */
-    protected function setupDisplayPropertyValue(ModelInterface $object, PropertyInterface $property)
-    {
+    protected function setupDisplayPropertyValue(
+        ModelInterface $object,
+        PropertyInterface $property
+    ) {
         parent::setupDisplayPropertyValue($object, $property);
 
         if ($this->display instanceof HierarchicalDisplay) {
