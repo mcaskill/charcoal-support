@@ -13,7 +13,7 @@ interface DependentInterface
      * Inject dependencies from a DI Container.
      *
      * @param  Container $container A dependencies container instance.
-     * @return self
+     * @return void
      */
     public function setDependencies(Container $container);
 }
