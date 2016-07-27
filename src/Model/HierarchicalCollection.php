@@ -91,6 +91,15 @@ class HierarchicalCollection implements
             }
         }
 
+        if (empty($rootObjects) && !empty($childObjects)) {
+            foreach ($childObjects as $parentId => $children) {
+                $parentObj = $children[0]->master();
+                $parentObj->auxiliary = true;
+
+                $rootObjects[] = $parentObj;
+            }
+        }
+
         $this->objects = &$rootObjects;
 
         if ($perPage < 1) {
