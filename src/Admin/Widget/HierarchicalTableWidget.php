@@ -9,9 +9,10 @@ use Charcoal\Model\ModelInterface;
 use Charcoal\Property\PropertyInterface;
 
 // From `charcoal-admin`
-use Charcoal\Admin\Widget\TableWidget;
+use Charcoal\Admin\Widget\TableWidget as CharcoalTableWidget;
 
 // From 'charcoal-support'
+use Charcoal\Support\Admin\Widget\TableWidget;
 use Charcoal\Support\Model\HierarchicalCollection;
 use Charcoal\Support\Admin\Property\Display\HierarchicalDisplay;
 
