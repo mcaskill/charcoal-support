@@ -2,6 +2,9 @@
 
 namespace Charcoal\Support\Property;
 
+use DateTime;
+use InvalidArgumentException;
+
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Translation\TranslationString;
 
@@ -39,6 +42,32 @@ trait ParsableValueTrait
          */
         if (!is_array($value)) {
             return [ $value ];
+        }
+
+        return $value;
+    }
+
+    /**
+     * Parse the property value as a "L10N" value type.
+     *
+     * @deprecated In favor of {@see TranslationString::isTranslatable()}
+     * @param  mixed $value The value being localized.
+     * @return TranslationString|null
+     */
+    public function parseAsDateTime($value)
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $value = new DateTime($value);
+        }
+
+        if (!$value instanceof DateTime) {
+            throw new InvalidArgumentException(
+                'Invalid date/time value. Must be a date/time string or an implementation of DateTime.'
+            );
         }
 
         return $value;
