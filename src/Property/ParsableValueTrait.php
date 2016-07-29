@@ -76,28 +76,15 @@ trait ParsableValueTrait
     /**
      * Parse the property value as a "L10N" value type.
      *
-     * @deprecated In favor of {@see TranslationString::isTranslatable()}
      * @param  mixed $value The value being localized.
      * @return TranslationString|null
      */
     public function parseAsTranslatable($value)
     {
-        if (!TranslationString::isTranslatable($value)) {
+        if (TranslationString::isTranslatable($value)) {
+            return new TranslationString($value);
+        } else {
             return null;
         }
-
-        return new TranslationString($value);
-    }
-
-    /**
-     * Alias of {@see self::parseAsTranslatable()}
-     *
-     * @deprecated In favor of {@see TranslationString::isTranslatable()}
-     * @param  mixed $value The value being localized.
-     * @return TranslationString|null
-     */
-    public function translatable($value)
-    {
-        return $this->parseAsTranslatable($value);
     }
 }
