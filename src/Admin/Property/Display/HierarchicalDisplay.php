@@ -15,7 +15,7 @@ class HierarchicalDisplay extends AbstractPropertyDisplay
      *
      * @var integer
      */
-    private $currentLevel = 0;
+    private $currentLevel = 1;
 
     /**
      * The indentation symbol for output.
