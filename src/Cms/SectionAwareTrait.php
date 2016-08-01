@@ -117,9 +117,10 @@ trait SectionAwareTrait
     public function templateOptions()
     {
         $section = $this->section();
+        $options = $section->templateOptions();
 
-        if ($section->templateOptions()) {
-            return json_decode($section->templateOptions());
+        if (is_string($options)) {
+            return json_decode($options);
         }
 
         return [];
