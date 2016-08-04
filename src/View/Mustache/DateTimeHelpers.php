@@ -44,7 +44,10 @@ class DateTimeHelpers extends AbstractHelpers
      */
     public function toArray()
     {
-        return array_merge($this->now(), $this->date());
+        return [
+            'now'  => $this->now(),
+            'date' => $this->date()
+        ];
     }
 
     /**
