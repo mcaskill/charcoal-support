@@ -7,17 +7,17 @@ use DateTimeZone;
 use DateTimeImmutable;
 use Pimple\Container;
 use Mustache_LambdaHelper as LambdaHelper;
-use Charcoal\View\Mustache\Helpers\AbstractHelpers;
+use Charcoal\View\Mustache\HelpersInterface;
 
 /**
  * Mustache Date/Time Helpers
  */
-class DateTimeHelpers extends AbstractHelpers
+class DateTimeHelpers implements HelpersInterface
 {
     /**
-     * A string concatenation of inline `<script>` elements.
+     * The current date/time.
      *
-     * @var string $js
+     * @var DateTimeImmutable
      */
     private static $now;
 

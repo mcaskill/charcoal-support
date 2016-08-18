@@ -6,24 +6,18 @@ use DateTime;
 use DateTimeImmutable;
 use Pimple\Container;
 use Mustache_LambdaHelper as LambdaHelper;
-use Charcoal\View\Mustache\Helpers\GenericHelpers as GenericCharcoalHelpers;
+use Charcoal\View\Mustache\HelpersInterface;
 use Charcoal\Translation\Catalog\CatalogAwareInterface;
 use Charcoal\Translation\Catalog\CatalogAwareTrait;
 
 /**
  * Enhanced Mustache helpers for rendering.
  */
-class GenericHelpers extends GenericCharcoalHelpers implements
+class GenericHelpers implements
+    HelpersInterface,
     CatalogAwareInterface
 {
     use CatalogAwareTrait;
-
-    /**
-     * A string concatenation of inline `<script>` elements.
-     *
-     * @var string $js
-     */
-    private static $now;
 
     /**
      * Inject dependencies from a DI Container.
@@ -43,12 +37,10 @@ class GenericHelpers extends GenericCharcoalHelpers implements
      */
     public function toArray()
     {
-        $helpers = parent::toArray();
-
-        $helpers['_t']        = $this->translate();
-        $helpers['preRender'] = $this->preRender();
-
-        return $helpers;
+        return [
+            '_t'        => $this->translate(),
+            'preRender' => $this->preRender()
+        ];
     }
 
     /**

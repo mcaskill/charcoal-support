@@ -3,19 +3,29 @@
 namespace Charcoal\Support\View\Mustache;
 
 use Mustache_LambdaHelper as LambdaHelper;
-use Charcoal\View\Mustache\Helpers\AbstractHelpers;
+use Charcoal\View\Mustache\HelpersInterface;
 
 /**
  * Mustache String Helpers
  */
-class StringHelpers extends AbstractHelpers
+class StringHelpers implements HelpersInterface
 {
+    /**
+     * Wrap the string helpers.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [ 'str' => $this->filters() ];
+    }
+
     /**
      * Retrieve the collection of helpers.
      *
      * @return array
      */
-    public function toArray()
+    public function filters()
     {
         return [
             /**
