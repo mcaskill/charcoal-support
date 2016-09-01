@@ -22,7 +22,11 @@ trait ParsableValueTrait
      */
     public function parseAsMultiple($value, $separator = ',')
     {
-        if (is_var_empty($value)) {
+        if (
+            !isset($var) ||
+            (is_string($var) && ! strlen(trim($var))) ||
+            (is_array($var) && ! count(array_filter($var, 'strlen')))
+        ) {
             return [];
         }
 
