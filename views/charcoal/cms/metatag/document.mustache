@@ -1,0 +1,16 @@
+{{!--
+
+    Web Metadata \ Document Information
+    ===================================
+
+--}}
+<title>{{ documentTitle }}</title>
+
+<!-- Hypertext -->
+{{# alternateTranslations }}
+<link rel="alternate" hreflang="{{ hreflang }}" href="{{ url }}" title="{{ language.name }}">
+{{/ alternateTranslations }}
+
+{{# metaDescription }}
+<meta name="description" content="{{ . }}">
+{{/ metaDescription }}

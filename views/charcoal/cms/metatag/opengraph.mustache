@@ -1,0 +1,28 @@
+{{!--
+
+    Web Metadata \ OpenGraph Data
+    =============================
+
+--}}
+{{# opengraphTypeOrFallback }}
+<meta property="og:type"        content="{{ . }}">
+{{/ opengraphTypeOrFallback }}
+{{# currentUrl }}
+<meta property="og:url"         content="{{ . }}">
+{{/ currentUrl }}
+{{# metaTitle }}
+<meta property="og:title"       content="{{ . }}">
+{{/ metaTitle }}
+{{# metaDescription }}
+<meta property="og:description" content="{{ . }}">
+{{/ metaDescription }}
+{{# opengraphImageOrFallback }}
+<meta property="og:image"       content="{{ baseUrl }}{{ . }}">
+{{/ opengraphImageOrFallback }}
+{{# siteName }}
+<meta property="og:site_name"   content="{{ . }}">
+{{/ siteName }}
+
+{{# translations }}
+<meta property="og:locale{{^ isCurrentLanguage }}:alternate{{/ isCurrentLanguage }}"{{# isCurrentLanguage }}          {{/ isCurrentLanguage }} content="{{ language.underscoreLocale }}">
+{{/ translations }}

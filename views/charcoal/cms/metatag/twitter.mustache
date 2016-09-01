@@ -1,0 +1,25 @@
+{{!--
+
+    Web Metadata \ OpenGraph Data
+    =============================
+
+--}}
+
+{{# twitterTypeOrFallback }}
+<meta property="twitter:card"        content="{{ . }}">
+{{/ twitterTypeOrFallback }}
+{{# currentUrl }}
+<meta property="twitter:url"         content="{{ . }}">
+{{/ currentUrl }}
+{{# metaTitle }}
+<meta property="twitter:title"       content="{{ . }}">
+{{/ metaTitle }}
+{{# metaDescription }}
+<meta property="twitter:description" content="{{ . }}">
+{{/ metaDescription }}
+{{# twitterImageOrFallback }}
+<meta property="twitter:image"       content="{{ baseUrl }}{{ . }}">
+{{/ twitterImageOrFallback }}
+{{# twitter.username }}
+<meta property="twitter:site"        content="{{ . }}">
+{{/ twitter.username }}
