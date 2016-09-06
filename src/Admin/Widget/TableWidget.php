@@ -8,6 +8,9 @@ use \Charcoal\Model\ModelInterface;
 // From `charcoal-property`
 use \Charcoal\Property\PropertyInterface;
 
+// From `charcoal-translation`
+use \Charcoal\Translation\TranslationString;
+
 // From `charcoal-admin`
 use Charcoal\Admin\Widget\TableWidget as CharcoalTableWidget;
 
@@ -50,8 +53,14 @@ class TableWidget extends CharcoalTableWidget
             $options = $this->viewOptions($propertyIdent);
             $classes = $this->parsePropertyCellClasses($p);
 
+            if (isset($options['label']) && TranslationString::isTranslatable($options['label'])) {
+                $label = new TranslationString($options['label']);
+            } else {
+                $label = $p->label();
+            }
+
             $column = [
-                'label' => trim($p->label())
+                'label' => trim($label)
             ];
 
             if (!isset($column['attr'])) {
