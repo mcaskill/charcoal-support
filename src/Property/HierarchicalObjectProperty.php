@@ -3,10 +3,12 @@
 namespace Charcoal\Support\Property;
 
 // From Pimple
-use \Pimple\Container;
+use Pimple\Container;
+
+// From 'charcoal-core'
+use Charcoal\Model\ModelInterface;
 
 // From 'charcoal-property'
-use Charcoal\Property\GenericProperty;
 use Charcoal\Property\ObjectProperty;
 
 // From 'charcoal-support'
@@ -51,5 +53,32 @@ class HierarchicalObjectProperty extends ObjectProperty
         }
 
         return $choices;
+    }
+
+    /**
+     * Returns a choice structure for a given ident.
+     *
+     * @param string|ModelInterface $choiceIdent The choice ident or object to format.
+     * @return mixed The matching choice.
+     */
+    public function choice($choiceIdent)
+    {
+        $obj = $this->loadObject($choiceIdent);
+
+        if ($obj === null) {
+            return null;
+        }
+
+        $choice = parent::choice($obj);
+
+        if (is_callable([ $obj, 'name' ])) {
+            $choice['title'] = $obj->name();
+        } elseif (is_callable([ $obj, 'label' ])) {
+            $choice['title'] = $obj->label();
+        } elseif (is_callable([ $obj, 'title' ])) {
+            $choice['title'] = $obj->title();
+        }
+
+        return $choice;
     }
 }
