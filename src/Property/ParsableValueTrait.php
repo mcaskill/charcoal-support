@@ -23,9 +23,9 @@ trait ParsableValueTrait
     public function parseAsMultiple($value, $separator = ',')
     {
         if (
-            !isset($var) ||
-            (is_string($var) && ! strlen(trim($var))) ||
-            (is_array($var) && ! count(array_filter($var, 'strlen')))
+            !isset($value) ||
+            (is_string($value) && ! strlen(trim($value))) ||
+            (is_array($value) && ! count(array_filter($value, 'strlen')))
         ) {
             return [];
         }
