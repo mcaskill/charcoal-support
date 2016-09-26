@@ -81,14 +81,14 @@ trait ParsableValueTrait
      * Parse the property value as a "L10N" value type.
      *
      * @param  mixed $value The value being localized.
-     * @return TranslationString|null
+     * @return TranslationString|string
      */
     public function parseAsTranslatable($value)
     {
         if (TranslationString::isTranslatable($value)) {
             return new TranslationString($value);
         } else {
-            return null;
+            return '';
         }
     }
 }
