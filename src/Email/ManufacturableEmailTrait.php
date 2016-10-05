@@ -16,7 +16,7 @@ trait ManufacturableEmailTrait
      *
      * @var FactoryInterface
      */
-    private $emailFactory;
+    protected $emailFactory;
 
     /**
      * Set an email model factory.

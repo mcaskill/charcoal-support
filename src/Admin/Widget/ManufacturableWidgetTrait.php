@@ -16,7 +16,7 @@ trait ManufacturableWidgetTrait
      *
      * @var FactoryInterface
      */
-    private $widgetFactory;
+    protected $widgetFactory;
 
     /**
      * Set an widget factory.

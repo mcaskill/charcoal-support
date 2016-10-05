@@ -15,7 +15,7 @@ trait ManufacturablePropertyTrait
      *
      * @var FactoryInterface
      */
-    private $propertyFactory;
+    protected $propertyFactory;
 
     /**
      * Set a property factory.

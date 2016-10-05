@@ -15,7 +15,7 @@ trait ManufacturablePropertyDisplayTrait
      *
      * @var FactoryInterface
      */
-    private $propertyDisplayFactory;
+    protected $propertyDisplayFactory;
 
     /**
      * Set a property display factory.

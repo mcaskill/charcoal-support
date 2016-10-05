@@ -15,7 +15,7 @@ trait ManufacturableModelTrait
      *
      * @var FactoryInterface
      */
-    private $modelFactory;
+    protected $modelFactory;
 
     /**
      * Set an object model factory.

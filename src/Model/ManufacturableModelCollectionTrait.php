@@ -15,7 +15,7 @@ trait ManufacturableModelCollectionTrait
      *
      * @var CollectionLoader
      */
-    private $collectionLoader;
+    protected $collectionLoader;
 
     /**
      * Set a model collection loader.
