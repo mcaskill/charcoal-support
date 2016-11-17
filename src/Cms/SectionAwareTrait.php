@@ -62,6 +62,18 @@ trait SectionAwareTrait
     }
 
     /**
+     * Retrieve a prototype from the section model name.
+     *
+     * @return SectionInterface
+     */
+    private function getSection()
+    {
+        $this->section = $this->modelFactory()->get($this->sectionClass());
+
+        return $this->section;
+    }
+
+    /**
      * Create a new section object from the section model name.
      *
      * @return SectionInterface
