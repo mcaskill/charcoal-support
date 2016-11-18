@@ -102,10 +102,78 @@ trait ParsableValueTrait
     }
 
     /**
+     * Pair the translatable array items.
+     *
+     * Converts this:
+     * ```
+     * {
+     *     "en": [ "Item A", "Item B", "Item C", "Item D" ],
+     *     "fr": [ "Élément A", "Élément B", "Élément C" ]
+     * }
+     * ```
+     *
+     * Into:
+     * ```
+     * [
+     *     {
+     *         "en": "Item A",
+     *         "fr": "Élément A",
+     *     },
+     *     {
+     *         "en": "Item B",
+     *         "fr": "Élément B",
+     *     },
+     *     {
+     *         "en": "Item C",
+     *         "fr": "Élément C",
+     *     },
+     *     {
+     *         "en": "Item D",
+     *         "fr": "",
+     *     }
+     * ],
+     * ```
+     *
+     * @param  mixed                    $value     The value being converted to an array.
+     * @param  string|PropertyInterface $separator The boundary string.
+     * @return array
+     */
+    public function pairTranslatableArrayItems($value, $separator = ',')
+    {
+        if ($value instanceof TranslationString) {
+            $value = $value->all();
+        }
+
+        // Parse each locale's collection into an array
+        foreach ($value as $k => $v) {
+            $value[$k] = $this->parseAsMultiple($v, $separator);
+        }
+
+        // Retrieve the highest collection count among the locales
+        $count = max(array_map('count', $value));
+
+        // Pair the items across locales
+        $result = [];
+        for ($i = 0; $i < $count; $i++) {
+            $entry = [];
+
+            foreach ($value as $lang => $arr) {
+                if (isset($arr[$i])) {
+                    $entry[$lang] = $arr[$i];
+                }
+            }
+
+            $result[] = $this->parseAsTranslatable($entry);
+        }
+
+        return $result;
+    }
+
+    /**
      * Cast the property value to a given data type.
      *
      * @param  mixed  $value    The related value.
-     * @param  string $castTo   The data type to cast the $value to.
+     * @param  mixed  $castTo   The data type to cast the $value to.
      * @param  mixed  $fallback A default value or a property identifier
      *     to retrieve a default value from the current object.
      * @return mixed|null
@@ -115,28 +183,44 @@ trait ParsableValueTrait
         $castTo,
         $fallback = null
     ) {
-        if (!is_string($castTo)) {
-            throw new InvalidArgumentException('Invalid data type.');
+        if (!is_string($castTo) && !is_array($castTo) && !($castTo instanceof PropertyInterface)) {
+            throw new InvalidArgumentException('Invalid data casting type.');
         }
 
         if ($value === null || $value === '') {
+            $value    = $fallback;
+            $property = null;
             if ($fallback instanceof PropertyInterface) {
                 $property = $fallback->ident();
             } elseif (is_string($fallback) && $this->hasProperty($fallback)) {
                 $property = $fallback;
-            } else {
-                $value = $fallback;
             }
 
-            if (isset($property)) {
+            if ($property && method_exists($this, 'defaultData')) {
                 $defaultData = $this->defaultData();
                 if (isset($defaultData[$fallback])) {
                     $value = $defaultData[$fallback];
-                } else {
-                    $value = $fallback;
                 }
+            }
+        }
+
+        if (($castTo instanceof PropertyInterface) || is_array($castTo)) {
+            if (is_object($castTo)) {
+                $l10n  = $castTo->l10n();
+                $mutli = $castTo->multiple();
+                $sep   = $castTo->multipleSeparator();
             } else {
-                $value = $fallback;
+                $l10n  = (isset($castTo['l10n']) && $castTo['l10n']);
+                $multi = (isset($castTo['multiple']) && $castTo['multiple']);
+                $sep   = ',';
+            }
+
+            if ($l10n && $multi) {
+                return $this->pairTranslatableArrayItems($value, $sep);
+            } elseif ($l10n) {
+                return $this->parseAsTranslatable($value);
+            } elseif ($multi) {
+                return $this->parseAsMultiple($value, $sep);
             }
         }
 
