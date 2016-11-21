@@ -212,7 +212,7 @@ trait ParsableValueTrait
             } else {
                 $l10n  = (isset($castTo['l10n']) && $castTo['l10n']);
                 $multi = (isset($castTo['multiple']) && $castTo['multiple']);
-                $sep   = ',';
+                $sep   = (isset($castTo['multiple_options']['separator']) ? $castTo['multiple_options']['separator'] : ',');
             }
 
             if ($l10n && $multi) {
