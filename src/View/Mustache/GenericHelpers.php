@@ -39,8 +39,19 @@ class GenericHelpers implements
     {
         return [
             '_t'        => $this->translate(),
+            'charset'   => $this->charset(),
             'preRender' => $this->preRender()
         ];
+    }
+
+    /**
+     * Retrieve the current character encoding.
+     *
+     * @return string A character encoding identifier.
+     */
+    public function charset()
+    {
+        return ini_get('default_charset');
     }
 
     /**
