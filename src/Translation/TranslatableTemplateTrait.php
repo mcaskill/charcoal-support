@@ -9,6 +9,7 @@ use Mustache_LambdaHelper as LambdaHelper;
 use Charcoal\Polyglot\MultilingualAwareTrait;
 use Charcoal\Translation\TranslationString;
 use Charcoal\Translation\Catalog\CatalogAwareTrait;
+use Charcoal\Translation\TranslatorAwareTrait;
 
 /**
  * An implementation of the `MultilingualAwareInterface`.
@@ -18,7 +19,7 @@ use Charcoal\Translation\Catalog\CatalogAwareTrait;
  * Behavioral difference:
  *
  * • Most methods access an instance of `LanguageManager` through
- *   the `\Locomotive\Support\Interfaces\TranslatorAwareInterface`.
+ *   the `\Charcoal\Translation\TranslatorAwareInterface`.
  *
  * @see \Charcoal\Translation\ConfigurableTranslationTrait For a similar delegated trait.
  */
