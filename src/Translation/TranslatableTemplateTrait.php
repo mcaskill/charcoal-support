@@ -2,7 +2,8 @@
 
 namespace Charcoal\Support\Translation;
 
-use Pimple\Container;
+use LogicException;
+
 use Mustache_LambdaHelper as LambdaHelper;
 
 // From 'charcoal-translation'
@@ -75,7 +76,12 @@ trait TranslatableTemplateTrait
      */
     public function setLanguages(array $langs = [])
     {
-        $this->translator()->setLanguages($langs);
+        throw new LogicException(
+            sprintf(
+                'Cannot add languages from translatable template [%s]',
+                get_class($this)
+            )
+        );
 
         return $this;
     }
@@ -88,7 +94,12 @@ trait TranslatableTemplateTrait
      */
     public function addLanguage($lang)
     {
-        $this->translator()->addLanguage($lang);
+        throw new LogicException(
+            sprintf(
+                'Cannot add language from translatable template [%s]',
+                get_class($this)
+            )
+        );
 
         return $this;
     }
@@ -101,7 +112,12 @@ trait TranslatableTemplateTrait
      */
     public function removeLanguage($lang)
     {
-        $this->translator()->removeLanguage($lang);
+        throw new LogicException(
+            sprintf(
+                'Cannot remove language from translatable template [%s]',
+                get_class($this)
+            )
+        );
 
         return $this;
     }
