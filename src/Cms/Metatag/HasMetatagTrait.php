@@ -14,21 +14,21 @@ trait HasMetatagTrait
      *
      * @var string|null
      */
-    public $metaTitle;
+    protected $metaTitle;
 
     /**
      * Description of the object.
      *
      * @var string|null
      */
-    public $metaDescription;
+    protected $metaDescription;
 
     /**
      * Thumbnail of the object.
      *
      * @var string|null
      */
-    public $metaImage;
+    protected $metaImage;
 
     /**
      * Retrieve the object's name or title.

@@ -4,6 +4,9 @@
     =============================
 
 --}}
+{{# socialMedia.twitter.username }}
+<meta property="twitter:site"        content="{{ . }}">
+{{/ socialMedia.twitter.username }}
 {{# twitterCardType }}
 <meta property="twitter:card"        content="{{ . }}">
 {{/ twitterCardType }}
@@ -13,12 +16,9 @@
 {{# metaTitle }}
 <meta property="twitter:title"       content="{{ . }}">
 {{/ metaTitle }}
+{{# twitterCardImage }}
+<meta property="twitter:image"       content="{{ . }}">
+{{/ twitterCardImage }}
 {{# metaDescription }}
 <meta property="twitter:description" content="{{ . }}">
 {{/ metaDescription }}
-{{# twitterCardImage }}
-<meta property="twitter:image"       content="{{ baseUrl }}{{ . }}">
-{{/ twitterCardImage }}
-{{# socialMedia.twitter.username }}
-<meta property="twitter:site"        content="{{ . }}">
-{{/ socialMedia.twitter.username }}

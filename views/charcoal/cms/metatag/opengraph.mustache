@@ -10,18 +10,19 @@
 {{# canonicalUrl }}
 <meta property="og:url"         content="{{ . }}">
 {{/ canonicalUrl }}
-{{# metaTitle }}
-<meta property="og:title"       content="{{ . }}">
-{{/ metaTitle }}
-{{# metaDescription }}
-<meta property="og:description" content="{{ . }}">
-{{/ metaDescription }}
-{{# opengraphImage }}
-<meta property="og:image"       content="{{ baseUrl }}{{ . }}">
-{{/ opengraphImage }}
 {{# siteName }}
 <meta property="og:site_name"   content="{{ . }}">
 {{/ siteName }}
+{{# metaTitle }}
+<meta property="og:title"       content="{{ . }}">
+{{/ metaTitle }}
+{{# opengraphImage }}
+<meta property="og:image"       content="{{ . }}">
+{{/ opengraphImage }}
+{{# metaDescription }}
+<meta property="og:description" content="{{ . }}">
+{{/ metaDescription }}
+
 {{# socialMedia.facebook.app_id }}
 <meta property="fb:app_id"      content="{{ . }}">
 {{/ socialMedia.facebook.app_id }}

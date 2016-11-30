@@ -16,14 +16,14 @@ trait HasOpenGraphTrait
      *
      * @var string|null
      */
-    public $opengraphType;
+    protected $opengraphType;
 
     /**
      * The path to object's thumbnail.
      *
      * @var string|null
      */
-    public $opengraphImage;
+    protected $opengraphImage;
 
     /**
      * Retrieve the object's {@link https://developers.facebook.com/docs/reference/opengraph/ OpenGraph type},

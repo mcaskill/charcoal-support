@@ -16,14 +16,14 @@ trait HasTwitterCardTrait
      *
      * @var string|null
      */
-    public $twitterCardType;
+    protected $twitterCardType;
 
     /**
      * The path to object's thumbnail.
      *
      * @var string|null
      */
-    public $twitterCardImage;
+    protected $twitterCardImage;
 
     /**
      * Retrieve the object's {@link https://dev.twitter.com/cards/types card type},

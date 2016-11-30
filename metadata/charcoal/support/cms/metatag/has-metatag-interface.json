@@ -23,6 +23,7 @@
     },
     "meta_description": {
       "type": "text",
+      "input_type": "charcoal/admin/property/input/textarea",
       "l10n": true,
       "label": "Description",
       "notes": {
@@ -43,9 +44,10 @@
         "en": "You should not use a generic image such as your website logo, author photo, or other image that spans multiple pages. The image must be less than 1MB in file size.",
         "fr": "Vous ne devriez pas utiliser une image générique tel que votre site web logo, auteur photo ou toute autre image qui couvre plusieurs pages. L'image doit être inférieure à 1 Mo en taille de fichier."
       },
+      "show_notes": "above",
       "notes": {
-        "en": "A unique image representing the content of the object.",
-        "fr": "Une image unique représentant le contenu de l'objet."
+        "en": "<p>A unique image representing the content of the object.</p><p>The minimum image size is 200×200 pixels.</p>",
+        "fr": "<p>Une image unique représentant le contenu de l'objet.</p><p>La taille d'image minimale est de 200×200 pixels.</p>"
       }
     }
   }
