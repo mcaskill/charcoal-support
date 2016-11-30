@@ -207,7 +207,7 @@ trait ParsableValueTrait
         if (($castTo instanceof PropertyInterface) || is_array($castTo)) {
             if (is_object($castTo)) {
                 $l10n  = $castTo->l10n();
-                $mutli = $castTo->multiple();
+                $multi = $castTo->multiple();
                 $sep   = $castTo->multipleSeparator();
             } else {
                 $l10n  = (isset($castTo['l10n']) && $castTo['l10n']);
