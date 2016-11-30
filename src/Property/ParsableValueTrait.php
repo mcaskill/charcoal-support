@@ -134,8 +134,8 @@ trait ParsableValueTrait
      * ],
      * ```
      *
-     * @param  mixed                    $value     The value being converted to an array.
-     * @param  string|PropertyInterface $separator The boundary string.
+     * @param  mixed $value     The value being converted to an array.
+     * @param  mixed $separator The item delimiter. This can be a string or a function.
      * @return array
      */
     public function pairTranslatableArrayItems($value, $separator = ',')
@@ -144,9 +144,13 @@ trait ParsableValueTrait
             $value = $value->all();
         }
 
-        // Parse each locale's collection into an array
-        foreach ($value as $k => $v) {
-            $value[$k] = $this->parseAsMultiple($v, $separator);
+        if ($separator instanceof \Closure) {
+            $value = $separator($value);
+        } else {
+            // Parse each locale's collection into an array
+            foreach ($value as $k => $v) {
+                $value[$k] = $this->parseAsMultiple($v, $separator);
+            }
         }
 
         // Retrieve the highest collection count among the locales
