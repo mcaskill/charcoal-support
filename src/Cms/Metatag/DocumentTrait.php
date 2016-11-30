@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Support\App\Template;
+namespace Charcoal\Support\Cms\Metatag;
 
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;

@@ -2,6 +2,8 @@
 
 namespace Charcoal\Support\Cms;
 
+use InvalidArgumentException;
+
 // From PSR-7
 use Psr\Http\Message\UriInterface;
 
@@ -37,6 +39,45 @@ trait ContextualTemplateTrait
      * @var string|null
      */
     protected $routeEndpoint;
+
+    /**
+     * The class name of the section model.
+     *
+     * A fully-qualified PHP namespace. Used for the model factory.
+     *
+     * @var string
+     */
+    protected $genericContextClass = Model::class;
+
+    /**
+     * Set the class name of the generic context model.
+     *
+     * @param  string $className The class name of the section model.
+     * @throws InvalidArgumentException If the class name is not a string.
+     * @return AbstractPropertyDisplay Chainable
+     */
+    public function setGenericContextClass($className)
+    {
+        if (!is_string($className)) {
+            throw new InvalidArgumentException(
+                'Generic context class name must be a string.'
+            );
+        }
+
+        $this->genericContextClass = $className;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the class name of the generic context model.
+     *
+     * @return string
+     */
+    public function genericContextClass()
+    {
+        return $this->genericContextClass;
+    }
 
     /**
      * Set the current renderable object relative to the context.
@@ -75,7 +116,7 @@ trait ContextualTemplateTrait
      */
     protected function createGenericContext()
     {
-        $obj = $this->modelFactory()->create(Model::class);
+        $obj = $this->modelFactory()->create($this->genericContextClass());
 
         $baseUrl = $this->baseUrl();
         if ($this->routeEndpoint) {

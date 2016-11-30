@@ -1,0 +1,52 @@
+{
+  "web": {
+    "metatag": {
+      "properties": {
+        "title": [ "meta_title", "title", "name" ],
+        "description": [ "meta_description", "description" ]
+      }
+    }
+  },
+
+  "properties": {
+    "meta_title": {
+      "type": "string",
+      "l10n": true,
+      "label": {
+        "en": "Title",
+        "fr": "Titre"
+      },
+      "notes": {
+        "en": "Name of the object",
+        "fr": "Nom de l'objet"
+      }
+    },
+    "meta_description": {
+      "type": "text",
+      "l10n": true,
+      "label": "Description",
+      "notes": {
+        "en": "Short description of object",
+        "fr": "Description sommaire de l'objet"
+      }
+    },
+    "meta_image": {
+      "type": "image",
+      "l10n": false,
+      "label": {
+        "en": "Thumbnail",
+        "fr": "Vignette"
+      },
+      "upload_path": "/uploads/metadata/images/",
+      "public_access": true,
+      "description": {
+        "en": "You should not use a generic image such as your website logo, author photo, or other image that spans multiple pages. The image must be less than 1MB in file size.",
+        "fr": "Vous ne devriez pas utiliser une image générique tel que votre site web logo, auteur photo ou toute autre image qui couvre plusieurs pages. L'image doit être inférieure à 1 Mo en taille de fichier."
+      },
+      "notes": {
+        "en": "A unique image representing the content of the object.",
+        "fr": "Une image unique représentant le contenu de l'objet."
+      }
+    }
+  }
+}

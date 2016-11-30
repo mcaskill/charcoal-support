@@ -4,13 +4,15 @@
     ===================================
 
 --}}
-<title>{{ documentTitle }}</title>
+<title>{{& documentTitle }}</title>
 
-<!-- Hypertext -->
+{{# hasAlternateTranslations }}
 {{# alternateTranslations }}
-<link rel="alternate" hreflang="{{ hreflang }}" href="{{ url }}" title="{{ language.name }}">
-{{/ alternateTranslations }}
+<link rel="alternate" hreflang="{{ hreflang }}" href="{{# withBaseUrl }}{{ url }}{{/ withBaseUrl }}" title="{{ language.name }}">
 
+{{/ alternateTranslations }}
+{{/ hasAlternateTranslations }}
 {{# metaDescription }}
 <meta name="description" content="{{ . }}">
+
 {{/ metaDescription }}

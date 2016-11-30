@@ -4,25 +4,34 @@
     =============================
 
 --}}
-{{# opengraphTypeOrFallback }}
+{{# opengraphType }}
 <meta property="og:type"        content="{{ . }}">
-{{/ opengraphTypeOrFallback }}
-{{# currentUrl }}
+{{/ opengraphType }}
+{{# canonicalUrl }}
 <meta property="og:url"         content="{{ . }}">
-{{/ currentUrl }}
+{{/ canonicalUrl }}
 {{# metaTitle }}
 <meta property="og:title"       content="{{ . }}">
 {{/ metaTitle }}
 {{# metaDescription }}
 <meta property="og:description" content="{{ . }}">
 {{/ metaDescription }}
-{{# opengraphImageOrFallback }}
+{{# opengraphImage }}
 <meta property="og:image"       content="{{ baseUrl }}{{ . }}">
-{{/ opengraphImageOrFallback }}
+{{/ opengraphImage }}
 {{# siteName }}
 <meta property="og:site_name"   content="{{ . }}">
 {{/ siteName }}
+{{# socialMedia.facebook.app_id }}
+<meta property="fb:app_id"      content="{{ . }}">
+{{/ socialMedia.facebook.app_id }}
+{{# socialMedia.facebook.admins }}
+<meta property="fb:admins"      content="{{ . }}">
+{{/ socialMedia.facebook.admins }}
 
+{{# hasTranslations }}
 {{# translations }}
 <meta property="og:locale{{^ isCurrentLanguage }}:alternate{{/ isCurrentLanguage }}"{{# isCurrentLanguage }}          {{/ isCurrentLanguage }} content="{{ language.underscoreLocale }}">
 {{/ translations }}
+
+{{/ hasTranslations }}
