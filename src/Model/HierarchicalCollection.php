@@ -3,34 +3,24 @@
 namespace Charcoal\Support\Model;
 
 use InvalidArgumentException;
-use ArrayAccess;
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
 
 // From 'charcoal-core'
-use Charcoal\Model\CollectionInterface;
-use Charcoal\Model\ModelInterface;
+use Charcoal\Model\Collection as CharcoalCollection;
+
+// From 'charcoal-base'
+use Charcoal\Object\HierarchicalInterface;
 
 /**
- * Hierarchical Model Collection
+ * A Hierarchical Model Collection
+ *
+ * Sorts and flattens a collection of hierarchically-interrelated models.
  *
  * This class is not recommended. Currently, only designed and used by
  * {@see \Charcoal\Support\Property\HierarchicalObjectProperty} and
  * {@see \Charcoal\Support\Admin\Widget\HierarchicalTableWidget}.
  */
-class HierarchicalCollection implements
-    ArrayAccess,
-    Countable,
-    IteratorAggregate
+class HierarchicalCollection extends CharcoalCollection
 {
-    /**
-     * The objects contained in the collection.
-     *
-     * @var array
-     */
-    protected $objects = [];
-
     /**
      * The current page (slice).
      *
@@ -48,16 +38,18 @@ class HierarchicalCollection implements
     /**
      * Create a new hierarchically-sorted collection.
      *
-     * @param  array|Traversable $objects The collection of objects.
-     * @param  boolean           $sort    Whether to sort the collection immediately.
+     * @param  array|Traversable|null $objs Array of objects to pre-populate this collection.
+     * @param  boolean                $sort Whether to sort the collection immediately.
      * @return void
      */
-    public function __construct($objects = [], $sort = true)
+    public function __construct($objs = [], $sort = true)
     {
-        $this->objects = $this->getArrayableItems($objects);
+        if ($objs) {
+            $this->merge($objs);
 
-        if ($sort) {
-            $this->sortTree();
+            if ($sort) {
+                $this->sortTree();
+            }
         }
     }
 
@@ -173,16 +165,19 @@ class HierarchicalCollection implements
     /**
      * Given an object, display the nested hierarchy of descendants.
      *
-     * @param  ModelInterface   $parentObj     The parent object from which to append its descendants for display.
-     * @param  ModelInterface[] $childObjects  The list of descendants by parent object ID. Passed by reference.
-     * @param  integer          $count         The current count of objects to display, for pagination.
+     * @param  HierarchicalInterface   $parentObj     The parent object from which to append its
+     *     descendants for display.
+     * @param  HierarchicalInterface[] $childObjects  The list of descendants by parent object ID.
      *     Passed by reference.
-     * @param  integer          $level         The level directly below the $parentObj.
-     * @param  ModelInterface[] $sortedObjects The list of objects to be displayed. Passed by reference.
+     * @param  integer                 $count         The current count of objects to display,
+     *     for pagination. Passed by reference.
+     * @param  integer                 $level         The level directly below the $parentObj.
+     * @param  HierarchicalInterface[] $sortedObjects The list of objects to be displayed.
+     *     Passed by reference.
      * @return void
      */
     private function sortDescendantObjects(
-        ModelInterface $parentObj,
+        HierarchicalInterface $parentObj,
         array &$childObjects,
         &$count,
         $level,
@@ -284,7 +279,7 @@ class HierarchicalCollection implements
     }
 
     /**
-     * @param integer $page The current page. Start at 0.
+     * @param  integer $page The current page. Start at 0.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
      * @return Pagination (Chainable)
      */
@@ -317,7 +312,7 @@ class HierarchicalCollection implements
     }
 
     /**
-     * @param integer $num The number of results to retrieve, per page.
+     * @param  integer $num The number of results to retrieve, per page.
      * @throws InvalidArgumentException If the parameter is not numeric or < 0.
      * @return Pagination (Chainable)
      */
@@ -351,164 +346,13 @@ class HierarchicalCollection implements
     }
 
     /**
-     * Get all of the objects in the collection.
+     * Determine if the given value is acceptable for the collection.
      *
-     * @return array
-     */
-    public function all()
-    {
-        return $this->objects;
-    }
-
-    /**
-     * Results array of objects from Collection or Arrayable.
-     *
-     * @param  mixed $objs Collections or Arrayable objects.
-     * @return array
-     */
-    protected function getArrayableItems($objs)
-    {
-        if (is_array($objs)) {
-            return $objs;
-        } elseif ($objs instanceof self) {
-            return $objs->all();
-        } elseif ($objs instanceof CollectionInterface) {
-            return $objs->objects();
-        } elseif ($objs instanceof \Arrayable) {
-            return $objs->toArray();
-        } elseif ($objs instanceof \Jsonable) {
-            return json_decode($objs->toJson(), true);
-        } elseif ($objs instanceof \JsonSerializable) {
-            return $objs->jsonSerialize();
-        }
-
-        return (array)$objs;
-    }
-
-
-    // Methods to satisfy ArrayAccess
-    // =========================================================================
-
-    /**
-     * Add or replace an object in the collection.
-     *
-     * @see    ArrayAccess::offsetSet() Satisfies interface.
-     * @param  mixed $offset Optional. The ID of the object to replace.
-     * @throws InvalidArgumentException If the value is not an instance of ModelInterface.
-     * @param  mixed $value  The object to set.
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (!$value instanceof ModelInterface) {
-            throw new InvalidArgumentException(
-                'Collection value must be a ModelInterface object.'
-            );
-        }
-
-        if ($offset === null) {
-            $this->objects[] = $value;
-        } else {
-            $found = false;
-
-            foreach ($this->objects as $i => $node) {
-                if ($offset == $node->id()) {
-                    $this->objects[$i] = $value;
-                    $found = true;
-                    break;
-                }
-            }
-
-            if (!$found) {
-                $this->offsetSet(null, $value);
-            }
-        }
-    }
-
-    /**
-     * Determine if an object exists in the collection by its ID.
-     *
-     * @see    ArrayAccess::offsetExists() Satisfies interface.
-     * @param  mixed $offset The ID of the object to look up.
+     * @param  mixed $value The value being vetted.
      * @return boolean
      */
-    public function offsetExists($offset)
+    public function isAcceptable($value)
     {
-        foreach ($this->objects as $node) {
-            if ($offset == $node->id()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Remove an object in the collection by its ID.
-     *
-     * @see    ArrayAccess::offsetUnset() Satisfies interface.
-     * @param  mixed $offset The ID of the object to unset.
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        foreach ($this->objects as $i => $node) {
-            if ($offset == $node->id()) {
-                unset($this->objects[$i]);
-                return;
-            }
-        }
-    }
-
-    /**
-     * Retrieve an object in the collection by its ID.
-     *
-     * @see    ArrayAccess::offsetGet() Satisfies interface.
-     * @param  mixed $offset The ID of the object to look up.
-     * @return ModelInterface|null
-     */
-    public function offsetGet($offset)
-    {
-        foreach ($this->objects as $node) {
-            if ($offset == $node->id()) {
-                return $node;
-            }
-        }
-
-        return null;
-    }
-
-
-    // Methods to satisfy Countable
-    // =========================================================================
-
-    /**
-     * Count the objects in the collection.
-     *
-     * @see Countable::count() Satisfies interface.
-     * @return integer The number of objects in the Collection.
-     */
-    public function count()
-    {
-        return count($this->objects);
-    }
-
-
-    // Methods to satisfy IteratorAggregate
-    // =========================================================================
-
-    /**
-     * Retrieve the collection as an iterator.
-     *
-     * @see IteratorAggregate::getIterator() Satisfies interface.
-     * @return mixed
-     */
-    public function getIterator()
-    {
-        if (empty($this->objects)) {
-            return new ArrayIterator();
-        }
-
-        return new ArrayIterator($this->objects);
+        return ($value instanceof HierarchicalInterface);
     }
 }

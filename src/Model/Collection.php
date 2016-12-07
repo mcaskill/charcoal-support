@@ -2,414 +2,252 @@
 
 namespace Charcoal\Support\Model;
 
-use LogicException;
 use InvalidArgumentException;
 
 // From 'illuminate/support'
-use Illuminate\Support\Arr;
-use Illuminate\Contracts\Queue\QueueableCollection;
-use Illuminate\Support\Collection as BaseCollection;
-
-// From 'mcaskill/charcoal-support'
-use Charcoal\Support\Model\HierarchicalCollection;
+use Illuminate\Support\Collection as LaravelCollection;
 
 // From 'charcoal-core'
-use Charcoal\Model\ModelInterface as Model;
-use Charcoal\Model\CollectionInterface as CharcoalCollection;
+use Charcoal\Model\Collection as CharcoalCollection;
+use Charcoal\Model\ModelInterface;
 
 /**
- * Object Collection
+ * A Super Model Collection
  *
- * The object collection specializes in handling instantiated models.
- * Unacceptable values (@see self::isAcceptable()) are rejected.
+ * Provides methods to manipulate the collection or retrieve specific models.
  *
- * The model collection extends the base collection with a fluent interface
- * for querying the model's source (database).
+ * Note: Some methods were adapted from
+ * {@link https://github.com/laravel/framework/blob/5.3/LICENSE.md Laravel/Framework}.
  */
-class Collection extends BaseCollection implements QueueableCollection
+class Collection extends CharcoalCollection
 {
     /**
-     * Determine if a model is acceptable.
+     * Remove and return the first object from the collection.
      *
-     * @param  mixed $value The value being evaluated..
-     * @return boolean
+     * @return object|null Returns the shifted object, or NULL if the collection is empty.
      */
-    public function isAcceptable($value)
+    public function shift()
     {
-        return $value instanceof Model;
+        return array_shift($this->objects);
     }
 
     /**
-     * Find a model in the collection by key.
+     * Remove and return the last object from the collection.
      *
-     * @param  mixed  $key
-     * @param  mixed  $default
-     * @return Model
+     * @return object|null Returns the popped object, or NULL if the collection is empty.
      */
-    public function find($key, $default = null)
+    public function pop()
     {
-        if ($this->isAcceptable($key)) {
-            $key = $key->id();
-        }
-
-        return Arr::first($this->items, function ($model) use ($key) {
-            return $model->id() == $key;
-        }, $default);
+        return array_pop($this->objects);
     }
 
     /**
-     * Add an item to the collection.
+     * Add an object onto the beginning of the collection.
      *
-     * @param  mixed  $item
-     * @return $this
+     * @param  object $obj An acceptable object.
+     * @throws InvalidArgumentException If the given value is not acceptable.
+     * @return self
      */
-    public function add($item)
+    public function prepend($obj)
     {
-        if (!$this->isAcceptable($item)) {
+        if (!$this->isAcceptable($obj)) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Must be a model, received %s',
-                    get_var_type($value)
+                    (is_object($obj) ? get_class($obj) : gettype($obj))
                 )
             );
         }
 
-        $this->items[] = $item;
+        $this->objects = ([ $obj->id() => $obj ] + $this->objects);
 
         return $this;
     }
 
     /**
-     * Set the item at a given offset.
+     * Reverse the order of objects in the collection.
      *
-     * @param  mixed  $key
-     * @param  mixed  $value
-     * @return void
+     * @return self
      */
-    public function offsetSet($key, $value)
+    public function reverse()
     {
-        if (!$this->isAcceptable($value)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Must be a model, received %s',
-                    get_var_type($value)
-                )
-            );
-        }
+        $this->objects = array_reverse($this->objects, true);
 
-        if (is_null($key)) {
-            $this->items[] = $value;
-        } else {
-            $this->items[$key] = $value;
-        }
+        return $this;
     }
 
     /**
-     * Get the array of primary keys.
+     * Extract the objects with the specified keys.
      *
-     * @return array
-     */
-    public function modelKeys()
-    {
-        return array_map(function ($model) {
-            return $model->id();
-        }, $this->items);
-    }
-
-    /**
-     * Alias of {@see self::modelKeys}.
-     *
-     * @return array
-     */
-    public function modelIds()
-    {
-        return $this->modelKeys();
-    }
-
-    /**
-     * Get a dictionary keyed by primary keys.
-     *
-     * @param  \ArrayAccess|array|null  $items
-     * @return array
-     */
-    public function getDictionary($items = null)
-    {
-        $items = is_null($items) ? $this->items : $items;
-
-        $dictionary = [];
-
-        foreach ($items as $value) {
-            $dictionary[$value->id()] = $value;
-        }
-
-        return $dictionary;
-    }
-
-
-
-    // Extends BaseCollection
-    // =================================================================================================================
-
-    /**
-     * Determine if a key exists in the collection.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function contains($key, $value = null)
-    {
-        if (func_num_args() == 2) {
-            return parent::contains($key, $value);
-        }
-
-        if ($this->useAsCallable($key)) {
-            return parent::contains($key);
-        }
-
-        $key = $this->isAcceptable($key) ? $key->id() : $key;
-
-        return parent::contains(function ($model) use ($key) {
-            return $model->id() == $key;
-        });
-    }
-
-    /**
-     * Merge the collection with the given items.
-     *
-     * @param  \ArrayAccess|array  $items
-     * @return static
-     */
-    public function merge($items)
-    {
-        $dictionary = $this->getDictionary();
-
-        foreach ($items as $item) {
-            $dictionary[$item->id()] = $item;
-        }
-
-        return new static(array_values($dictionary));
-    }
-
-    /**
-     * Run a map over each of the items.
-     *
-     * @param  callable  $callback
-     * @return \Illuminate\Support\Collection
-     */
-    public function map(callable $callback)
-    {
-        $result = parent::map($callback);
-
-        return $result->contains(function ($item) {
-            return ! $this->isAcceptable($item);
-        }) ? $result->toBase() : $result;
-    }
-
-    /**
-     * Diff the collection with the given items.
-     *
-     * @param  \ArrayAccess|array  $items
-     * @return static
-     */
-    public function diff($items)
-    {
-        $diff = new static;
-
-        $dictionary = $this->getDictionary($items);
-
-        foreach ($this->items as $item) {
-            if (! isset($dictionary[$item->id()])) {
-                $diff->add($item);
-            }
-        }
-
-        return $diff;
-    }
-
-    /**
-     * Intersect the collection with the given items.
-     *
-     * @param  \ArrayAccess|array  $items
-     * @return static
-     */
-    public function intersect($items)
-    {
-        $intersect = new static;
-
-        $dictionary = $this->getDictionary($items);
-
-        foreach ($this->items as $item) {
-            if (isset($dictionary[$item->id()])) {
-                $intersect->add($item);
-            }
-        }
-
-        return $intersect;
-    }
-
-    /**
-     * Return only unique items from the collection.
-     *
-     * @param  string|callable|null  $key
-     * @param  bool  $strict
-     * @return static|\Illuminate\Support\Collection
-     */
-    public function unique($key = null, $strict = false)
-    {
-        if (! is_null($key)) {
-            return parent::unique($key, $strict);
-        }
-
-        return new static(array_values($this->getDictionary()));
-    }
-
-    /**
-     * Returns only the models from the collection with the specified keys.
-     *
-     * @param  mixed  $keys
+     * @param  mixed $keys One or more object primary keys.
      * @return static
      */
     public function only($keys)
     {
-        $dictionary = Arr::only($this->getDictionary(), $keys);
+        if ($keys === null) {
+            return new static($this->objects);
+        }
 
-        return new static(array_values($dictionary));
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        return new static(array_intersect_key($this->objects, array_flip($keys)));
     }
 
     /**
-     * Returns all models in the collection except the models with specified keys.
+     * Extract a slice of the collection.
      *
-     * @param  mixed  $keys
+     * @param  integer $offset See {@see array_slice()} for a description of $offset.
+     * @param  integer $length See {@see array_slice()} for a description of $length.
      * @return static
      */
-    public function except($keys)
+    public function slice($offset, $length = null)
     {
-        $dictionary = Arr::except($this->getDictionary(), $keys);
-
-        return new static(array_values($dictionary));
+        return new static(array_slice($this->objects, $offset, $length, true));
     }
 
     /**
-     * Parse the given items into an array.
+     * Extract a portion of the first or last objects from the collection.
      *
-     * @param  mixed  $items The variable being parsed.
-     * @return array
+     * @param  integer $limit The number of objects to extract.
+     * @return static
      */
-    protected function getArrayableItems($items)
+    public function take($limit)
     {
-        if ($items instanceof HierarchicalCollection) {
-            return $items->all();
-        } elseif ($items instanceof CharcoalCollection) {
-            return $items->objects();
+        if ($limit < 0) {
+            return $this->slice($limit, abs($limit));
         }
 
-        return parent::getArrayableItems($items);
-    }
-
-
-
-    // Intercepted to always return base collections
-    // =================================================================================================================
-
-    /**
-     * Get an array with the values of a given key.
-     *
-     * @param  string  $value
-     * @param  string|null  $key
-     * @return \Illuminate\Support\Collection
-     */
-    public function pluck($value, $key = null)
-    {
-        return $this->toBase()->pluck($value, $key);
+        return $this->slice(0, $limit);
     }
 
     /**
-     * Get the keys of the collection items.
+     * "Paginate" the collection by slicing it into a smaller collection.
      *
-     * @return \Illuminate\Support\Collection
+     * @param  integer $page    The page offset.
+     * @param  integer $perPage The number of objects per page.
+     * @return static
      */
-    public function keys()
+    public function forPage($page, $perPage)
     {
-        return $this->toBase()->keys();
+        return $this->slice((($page - 1) * $perPage), $perPage);
     }
 
     /**
-     * Zip the collection together with one or more arrays.
+     * Sort the collection by the given callback or object property.
      *
-     * @param  mixed ...$items
-     * @return \Illuminate\Support\Collection
-     */
-    public function zip($items)
-    {
-        return call_user_func_array([$this->toBase(), 'zip'], func_get_args());
-    }
-
-    /**
-     * Collapse the collection of items into a single array.
+     * If a {@see \Closure} is passed, it accepts two parameters.
+     * The collection's object first, and its primary key second.
      *
-     * @return \Illuminate\Support\Collection
-     */
-    public function collapse()
-    {
-        return $this->toBase()->collapse();
-    }
-
-    /**
-     * Get a flattened array of the items in the collection.
+     * ```
+     * mixed callback ( ModelInterface $obj, integer|string $key )
+     * ```
      *
-     * @param  int  $depth
-     * @return \Illuminate\Support\Collection
+     * @param  callable|string $sortBy     Sort by a property or a callback.
+     * @param  integer         $options    See {@see sort()} for a description of $sort_flags.
+     * @param  boolean         $descending If TRUE, the collection is sorted in reverse order.
+     * @throws InvalidArgumentException If the comparator is not a string or callback.
+     * @return self
      */
-    public function flatten($depth = INF)
+    public function sortBy($sortBy, $options = SORT_REGULAR, $descending = false)
     {
-        return $this->toBase()->flatten($depth);
-    }
+        $results = [];
 
-    /**
-     * Flip the items in the collection.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function flip()
-    {
-        return $this->toBase()->flip();
-    }
-
-
-
-    // Satisfies QueueableCollection
-    // =================================================================================================================
-
-    /**
-     * Get the type of the entities being queued.
-     *
-     * @return string|null
-     */
-    public function getQueueableClass()
-    {
-        if ($this->count() === 0) {
-            return;
+        if (is_string($sortBy)) {
+            $callback = function ($obj) use ($sortBy) {
+                return $obj[$sortBy];
+            };
+        } elseif (is_callable($sortBy)) {
+            $callback = $sortBy;
+        } else {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'The comparator must be a property key or a function, received %s',
+                    (is_object($sortBy) ? get_class($sortBy) : gettype($sortBy))
+                )
+            );
         }
 
-        $class = get_class($this->first());
+        // First we will loop through the items and get the comparator from a callback
+        // function which we were given. Then, we will sort the returned values and
+        // and grab the corresponding values for the sorted keys from this array.
+        foreach ($this->objects as $key => $obj) {
+            $results[$key] = $callback($obj, $key);
+        }
 
-        $this->each(function ($model) use ($class) {
-            if (get_class($model) !== $class) {
-                throw new LogicException('Queueing collections with multiple model types is not supported.');
-            }
-        });
+        if ($descending) {
+            arsort($results, $options);
+        } else {
+            asort($results, $options);
+        }
 
-        return $class;
+        // Once we have sorted all of the keys in the array, we will loop through them
+        // and grab the corresponding model so we can set the underlying items list
+        // to the sorted version. Then we'll just return the collection instance.
+        foreach (array_keys($results) as $key) {
+            $results[$key] = $this->objects[$key];
+        }
+
+        $this->objects = $results;
+
+        return $this;
     }
 
     /**
-     * Get the identifiers for all of the entities.
+     * Sort the collection in descending order using the given callback or object property.
      *
+     * @param  callable|string $sortBy  Sort by a property or a callback.
+     * @param  integer         $options See {@see sort()} for a description of $sort_flags.
+     * @return self
+     */
+    public function sortByDesc($sortBy, $options = SORT_REGULAR)
+    {
+        return $this->sortBy($sortBy, $options, true);
+    }
+
+    /**
+     * Retrieve one or more random objects from the collection.
+     *
+     * @param  integer $amount Specifies how many objects should be picked.
+     * @throws InvalidArgumentException If the requested amount exceeds the available objects in the collection.
+     * @return static
+     */
+    public function random($amount = 1)
+    {
+        $count = $this->count();
+        if ($amount > $count) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'You requested %d objects, but there are only %d objects in the collection',
+                    $amount,
+                    $count
+                )
+            );
+        }
+
+        $keys = array_rand($this->objects, $amount);
+
+        if ($amount === 1) {
+            return $this->objects[$keys];
+        }
+
+        return new static(array_intersect_key($this->objects, array_flip($keys)));
+    }
+
+    /**
+     * Parse the given value into an array.
+     *
+     * @link http://php.net/types.array#language.types.array.casting
+     *     If an object is converted to an array, the result is an array whose
+     *     elements are the object's properties.
+     * @param  mixed $value The value being converted.
      * @return array
      */
-    public function getQueueableIds()
+    protected function asArray($value)
     {
-        return $this->modelKeys();
+        if ($value instanceof LaravelCollection) {
+            return $value->all();
+        }
+
+        return parent::asArray($value);
     }
 }
