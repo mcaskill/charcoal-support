@@ -124,8 +124,8 @@ trait ContextualTemplateTrait
             foreach ($endpoint->all() as $lang => $trans) {
                 $uri = $baseUrl->withPath($trans);
 
-                if ($this->setRouteGroup) {
-                    $uri = $uri->withBasePath($this->setRouteGroup->fallback($lang));
+                if ($this->routeGroup) {
+                    $uri = $uri->withBasePath($this->routeGroup->fallback($lang));
                 }
 
                 $basePath = $uri->getBasePath();
@@ -170,13 +170,13 @@ trait ContextualTemplateTrait
     public function setRouteGroup($path)
     {
         if (TranslationString::isTranslatable($path)) {
-            $this->setRouteGroup = new TranslationString($path);
+            $this->routeGroup = new TranslationString($path);
 
-            foreach ($this->setRouteGroup->all() as $lang => $path) {
-                $this->setRouteGroup[$lang] = trim($path, '/');
+            foreach ($this->routeGroup->all() as $lang => $path) {
+                $this->routeGroup[$lang] = trim($path, '/');
             }
         } else {
-            $this->setRouteGroup = null;
+            $this->routeGroup = null;
         }
 
         return $this;
