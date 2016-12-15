@@ -1,0 +1,46 @@
+{
+    "properties": {
+        "locked": {
+            "type": "boolean",
+            "label": {
+                "fr": "Verrouillé",
+                "en": "Locked"
+            },
+            "description": {
+                "en": "A <em>locked</em> object cannot be deleted.",
+                "fr": "Un objet <em>verrouillé</em> ne peut pas être supprimé."
+            }
+        },
+        "opengraph_image": {
+            "placeholder": "{{ obj.meta_image }}"
+        },
+        "twitter_card_image": {
+            "placeholder": "{{ obj.meta_image }}"
+        }
+    },
+
+    "admin": {
+        "form_groups": {
+            "web-metadata": {
+                "title": {
+                    "en": "Metadata",
+                    "fr": "Méta-données"
+                },
+                "properties": [
+                    "meta_title",
+                    "meta_description",
+                    "meta_image",
+                    "opengraph_image",
+                    "twitter_card_image"
+                ],
+                "layout": {
+                    "structure": [
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1 ] },
+                        { "columns": [ 1, 1, 1 ] }
+                    ]
+                }
+            }
+        }
+    }
+}
