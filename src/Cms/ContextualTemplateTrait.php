@@ -41,6 +41,13 @@ trait ContextualTemplateTrait
     protected $routeEndpoint;
 
     /**
+     * Track the state of context creation.
+     *
+     * @var boolean
+     */
+    protected $isCreatingContext = false;
+
+    /**
      * The class name of the section model.
      *
      * A fully-qualified PHP namespace. Used for the model factory.
@@ -112,10 +119,16 @@ trait ContextualTemplateTrait
     /**
      * Create a generic object relative to the context.
      *
-     * @return ModelInterface
+     * @return ModelInterface|null
      */
     protected function createGenericContext()
     {
+        if ($this->isCreatingContext) {
+            return null;
+        }
+
+        $this->isCreatingContext = true;
+
         $obj = $this->modelFactory()->create($this->genericContextClass());
 
         $baseUrl = $this->baseUrl();
@@ -140,6 +153,8 @@ trait ContextualTemplateTrait
 
         $obj['url']   = $endpoint;
         $obj['title'] = $this->title();
+
+        $this->isCreatingContext = false;
 
         return $obj;
     }
