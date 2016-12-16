@@ -83,4 +83,25 @@ trait SluggableTrait
 
         return $newSlug;
     }
+
+    /**
+     * Ignore ObjectRoute Generation.
+     *
+     * @param  mixed $slug Slug by langs.
+     * @return void
+     */
+    protected function generateObjectRoute($slug = null)
+    {
+    }
+
+    /**
+     * Ignore the latest object route.
+     *
+     * @param  string|null $lang If object is multilingual, return the object route for the specified locale.
+     * @return null
+     */
+    protected function getLatestObjectRoute($lang = null)
+    {
+        return null;
+    }
 }

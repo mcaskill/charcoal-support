@@ -41,7 +41,7 @@ trait ManufacturablePropertyInputTrait
     {
         if (!isset($this->propertyInputFactory)) {
             throw new RuntimeException(
-                sprintf('Property Display Factory is not defined for "%s"', get_class($this))
+                sprintf('Property Control Factory is not defined for "%s"', get_class($this))
             );
         }
 

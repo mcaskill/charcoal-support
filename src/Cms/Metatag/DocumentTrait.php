@@ -52,6 +52,10 @@ trait DocumentTrait
     {
         $parts = array_merge([ 'title' => '', 'site' => '' ], $this->documentTitleParts());
         $parts = array_filter($parts, function ($segment, $key) use ($parts) {
+            if (empty($segment)) {
+                return false;
+            }
+
             if ($key !== 'site') {
                 return (false === strpos($segment, $parts['site']));
             }

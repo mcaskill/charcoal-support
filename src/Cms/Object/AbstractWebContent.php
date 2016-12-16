@@ -76,9 +76,27 @@ abstract class AbstractWebContent extends Content implements
      */
     public function preSave()
     {
-        $this->setSlug($this->generateSlug());
+        if (!$this->locked()) {
+            $this->setSlug($this->generateSlug());
+        }
 
         return parent::preSave();
+    }
+
+    /**
+     * Event called after _creating_ the object.
+     *
+     * @see    \Charcoal\Source\StorableTrait::postSave() For the "create" Event.
+     * @see    \Charcoal\Object\RoutableTrait::generateObjectRoute()
+     * @return boolean
+     */
+    public function postSave()
+    {
+        if (!$this->locked()) {
+            $this->generateObjectRoute($this->slug());
+        }
+
+        return parent::postSave();
     }
 
     /**
@@ -91,9 +109,28 @@ abstract class AbstractWebContent extends Content implements
      */
     public function preUpdate(array $properties = null)
     {
-        $this->setSlug($this->generateSlug());
+        if (!$this->locked()) {
+            $this->setSlug($this->generateSlug());
+        }
 
         return parent::preUpdate($properties);
+    }
+
+    /**
+     * Event called after _updating_ the object.
+     *
+     * @see    \Charcoal\Source\StorableTrait::postUpdate() For the "update" Event.
+     * @see    \Charcoal\Object\RoutableTrait::generateObjectRoute()
+     * @param  array $properties Optional. The list of properties to update.
+     * @return boolean
+     */
+    public function postUpdate(array $properties = null)
+    {
+        if (!$this->locked()) {
+            $this->generateObjectRoute($this->slug());
+        }
+
+        return parent::postUpdate($properties);
     }
 
     /**
