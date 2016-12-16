@@ -77,6 +77,86 @@ class Collection extends CharcoalCollection
     }
 
     /**
+     * Filter the collection of objects using the given callback.
+     *
+     * Iterates over each object in the collection passing them to the $callback function.
+     * If the $callback function returns TRUE, the current object is returned into the
+     * result collection.
+     *
+     * @param  callable $callback The callback routine to use.
+     * @return static
+     */
+    public function filter(callable $callback)
+    {
+        return new static(array_filter($this->objects, $callback, ARRAY_FILTER_USE_BOTH));
+    }
+
+    /**
+     * Filter the collection of objects by the given key/value pair.
+     *
+     * @param  string $key      The property to filter by.
+     * @param  mixed  $operator The comparison operator.
+     * @param  mixed  $value    The value to filter by.
+     * @return static
+     */
+    public function where($key, $operator, $value = null)
+    {
+        if (func_num_args() === 2) {
+            $value    = $operator;
+            $operator = '=';
+        }
+
+        return $this->filter($this->operatorForWhere($key, $operator, $value));
+    }
+
+    /**
+     * Get an operator checker callback.
+     *
+     * @param  string $key      The property to filter by.
+     * @param  mixed  $operator The comparison operator.
+     * @param  mixed  $value    The value to filter by.
+     * @return \Closure
+     */
+    protected function operatorForWhere($key, $operator, $value)
+    {
+        return function ($obj) use ($key, $operator, $value) {
+            $retrieved = $obj[$key];
+
+            switch ($operator) {
+                default:
+                case '=':
+                case '==':  return $retrieved == $value;
+                case '!=':
+                case '<>':  return $retrieved != $value;
+                case '<':   return $retrieved < $value;
+                case '>':   return $retrieved > $value;
+                case '<=':  return $retrieved <= $value;
+                case '>=':  return $retrieved >= $value;
+                case '===': return $retrieved === $value;
+                case '!==': return $retrieved !== $value;
+            }
+        };
+    }
+
+    /**
+     * Filter the collection of objects by the given key/value pair.
+     *
+     * @param  string  $key      The property to filter by.
+     * @param  mixed   $values   The values to filter by.
+     * @param  boolean $strict   Whether to use strict comparisons (TRUE)
+     *     or "loose" comparisons (FALSE).
+     * @return static
+     */
+    public function whereIn($key, $values, $strict = false)
+    {
+        $values = $this->asArray($values);
+
+        return $this->filter(function ($obj) use ($key, $values, $strict) {
+            return in_array($obj[$key], $values, $strict);
+        });
+    }
+
+    /**
      * Extract the objects with the specified keys.
      *
      * @param  mixed $keys One or more object primary keys.
