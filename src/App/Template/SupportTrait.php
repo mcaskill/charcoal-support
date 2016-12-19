@@ -157,6 +157,7 @@ trait SupportTrait
         if ($config instanceof EntityInterface) {
             $delegate = $this->dynamicConfig();
             if ($delegate instanceof EntityInterface) {
+                $config['dynamic'] = $delegate;
                 $config->prependDelegate($delegate);
             }
         }
