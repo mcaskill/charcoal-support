@@ -115,6 +115,8 @@ class TableWidget extends CharcoalTableWidget
         $options = $this->viewOptions($ident);
         $classes = $this->parsePropertyCellClasses($property, $object);
 
+        $cell['truncate'] = (isset($options['truncate']) ? boolval($options['truncate']) : false);
+
         if (!isset($cell['attr'])) {
             $cell['attr'] = [];
         }
