@@ -13,16 +13,12 @@ use Charcoal\Translation\TranslationString;
 
 /**
  * Provides utilities for parsing property values.
+ *
+ * Optional Dependency:
+ * - 'model/factory'
  */
 trait ParsableValueTrait
 {
-    /**
-     * Retrieve the object model factory.
-     *
-     * @return \Charcoal\Factory\FactoryInterface
-     */
-    abstract public function modelFactory();
-
     /**
      * Parse the property value as a "multiple" value type.
      *
@@ -32,11 +28,28 @@ trait ParsableValueTrait
      */
     public function parseAsMultiple($value, $separator = ',')
     {
-        if (
-            !isset($value) ||
-            (is_string($value) && ! strlen(trim($value))) ||
-            (is_array($value) && ! count(array_filter($value, 'strlen')))
-        ) {
+        if (is_array($value) || ($value instanceof Traversable)) {
+            $parsed = [];
+            foreach ($value as $val) {
+                if ($val === null || $val === '') {
+                    continue;
+                }
+
+                $parsed[] = $val;
+            }
+
+            return $parsed;
+        }
+
+        if ($separator instanceof PropertyInterface) {
+            $separator = $separator->multipleSeparator();
+        }
+
+        if (is_object($value) && method_exists($value, '__toString')) {
+            $value = strval($value);
+        }
+
+        if ($value === null || $value === '') {
             return [];
         }
 
@@ -55,7 +68,7 @@ trait ParsableValueTrait
          * an empty string, or an object.
          */
         if (!is_array($value)) {
-            return [ $value ];
+            return (array)$value;
         }
 
         return $value;
@@ -245,21 +258,19 @@ trait ParsableValueTrait
                 return floatval($value);
 
             case 'object':
-                return (object) $value;
+                return (object)$value;
 
             case 'array':
-                return (array) $value;
+                return (array)$value;
 
             default:
-                # if (class_exists($castTo)) {
+                if (method_exists($this, 'modelFactory')) {
                     if (is_string($value) || is_numeric($value)) {
                         $objId = $value;
                         $value = $this->modelFactory()->create($castTo);
                         $value->load($objId);
-                    }/* else {
-                        $value = new $castTo($value);
-                    }*/
-                # }
+                    }
+                }
                 break;
         }
 
