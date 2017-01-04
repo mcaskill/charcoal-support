@@ -37,7 +37,7 @@ class TableWidget extends CharcoalTableWidget
     /**
      * Properties to display in collection template, and their order, as set in object metadata
      *
-     * @return  FormPropertyWidget         Generator function
+     * @return array|Generator
      */
     public function collectionProperties()
     {
