@@ -1,6 +1,6 @@
 <?php
 
-namespace Charcoal\Support\Admin\Widget;
+namespace Charcoal\Support\Widget;
 
 use RuntimeException;
 use Pimple\Container;
