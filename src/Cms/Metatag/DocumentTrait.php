@@ -46,11 +46,11 @@ trait DocumentTrait
     /**
      * Retrieve the document title.
      *
+     * @param  array $parts The document title parts.
      * @return string
      */
-    final public function documentTitle()
+    protected function parseDocumentTitle($parts)
     {
-        $parts = array_merge([ 'title' => '', 'site' => '' ], $this->documentTitleParts());
         $parts = array_filter($parts, function ($segment, $key) use ($parts) {
             if (empty($segment)) {
                 return false;
@@ -66,6 +66,18 @@ trait DocumentTrait
         $title = implode($delim, $parts);
 
         return $title;
+    }
+
+    /**
+     * Retrieve the document title.
+     *
+     * @return string
+     */
+    final public function documentTitle()
+    {
+        $parts = array_merge([ 'title' => '', 'site' => '' ], $this->documentTitleParts());
+
+        return $this->parseDocumentTitle($parts);
     }
 
     /**
