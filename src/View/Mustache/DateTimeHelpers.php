@@ -158,50 +158,104 @@ class DateTimeHelpers implements
         };
 
         return [
-            'year' => function ($time, LambdaHelper $helper) {
-                $time = $this->parseDateTime($helper->render($time));
+            'year' => function ($time, LambdaHelper $helper = null) {
+                if ($time === null) {
+                    return;
+                }
+
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
 
                 return $time->format('Y');
             },
-            'atom' => function ($time, LambdaHelper $helper) {
-                $time = $this->parseDateTime($helper->render($time));
+            'atom' => function ($time, LambdaHelper $helper = null) {
+                if ($time === null) {
+                    return;
+                }
+
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
 
                 return $time->format(DateTime::ATOM);
             },
-            'sqlFull' => function ($time, LambdaHelper $helper) {
-                $time = $this->parseDateTime($helper->render($time));
+            'sqlFull' => function ($time, LambdaHelper $helper = null) {
+                if ($time === null) {
+                    return;
+                }
+
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
 
                 return $time->format('Y-m-d H:i:s');
             },
-            'sqlDate' => function ($time, LambdaHelper $helper) {
-                $time = $this->parseDateTime($helper->render($time));
+            'sqlDate' => function ($time, LambdaHelper $helper = null) {
+                if ($time === null) {
+                    return;
+                }
+
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
 
                 return $time->format('Y-m-d');
             },
-            'sqlTime' => function ($time, LambdaHelper $helper) {
-                $time = $this->parseDateTime($helper->render($time));
+            'sqlTime' => function ($time, LambdaHelper $helper = null) {
+                if ($time === null) {
+                    return;
+                }
+
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
 
                 return $time->format('H:i:s');
             },
-            'timestamp' => function ($time, LambdaHelper $helper) {
-                $time = $this->parseDateTime($helper->render($time));
+            'timestamp' => function ($time, LambdaHelper $helper = null) {
+                if ($time === null) {
+                    return;
+                }
+
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
 
                 return $time->getTimestamp();
             },
-            'seconds' => function ($time, LambdaHelper $helper) {
-                $time = $this->parseDateTime($helper->render($time));
+            'seconds' => function ($time, LambdaHelper $helper = null) {
+                if ($time === null) {
+                    return;
+                }
 
-                return ( $time->getTimestamp() - time() );
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
+
+                return ($time->getTimestamp() - time());
             },
             'format' => function ($text, LambdaHelper $helper) {
+                if ($text === null) {
+                    return;
+                }
+
                 $parts = preg_split('#(?<!\\\\)\|#', $text);
                 list($time, $format) = array_pad($parts, 2, null);
 
                 $time = $this->parseDateTime($helper->render($time));
+
                 return $time->format($helper->render($format));
             },
-            'relative' => function ($time, LambdaHelper $helper) use ($plural) {
-                $time = $this->parseDateTime($helper->render($time));
+            'relative' => function ($time, LambdaHelper $helper = null) use ($plural) {
+                if ($time === null) {
+                    return;
+                }
+
+                if ($helper && is_string($time)) {
+                    $time = $this->parseDateTime($helper->render($time));
+                }
+
                 $diff = time_diff($from);
 
                 if ($diff < static::MINUTE_IN_SECONDS) {
