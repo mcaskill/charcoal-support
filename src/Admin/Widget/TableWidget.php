@@ -35,6 +35,27 @@ class TableWidget extends CharcoalTableWidget
     }
 
     /**
+     * Create a collection loader.
+     *
+     * @return CollectionLoader
+     */
+    protected function createCollectionLoader()
+    {
+        $loader = parent::createCollectionLoader();
+
+        $mainMenu = filter_input(INPUT_GET, 'main_menu', FILTER_SANITIZE_STRING);
+        if ($mainMenu) {
+            $loader->setCallback(function (&$obj) use ($mainMenu) {
+                if (!$obj['main_menu']) {
+                    $obj['main_menu'] = $mainMenu;
+                }
+            });
+        }
+
+        return $loader;
+    }
+
+    /**
      * Properties to display in collection template, and their order, as set in object metadata
      *
      * @return array|Generator
