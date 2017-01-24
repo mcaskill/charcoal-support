@@ -159,7 +159,7 @@ class DateTimeHelpers implements
 
         return [
             'year' => function ($time, LambdaHelper $helper = null) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
@@ -170,7 +170,7 @@ class DateTimeHelpers implements
                 return $time->format('Y');
             },
             'atom' => function ($time, LambdaHelper $helper = null) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
@@ -181,7 +181,7 @@ class DateTimeHelpers implements
                 return $time->format(DateTime::ATOM);
             },
             'sqlFull' => function ($time, LambdaHelper $helper = null) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
@@ -189,10 +189,12 @@ class DateTimeHelpers implements
                     $time = $this->parseDateTime($helper->render($time));
                 }
 
+                error_log(var_export($time, true));
+
                 return $time->format('Y-m-d H:i:s');
             },
             'sqlDate' => function ($time, LambdaHelper $helper = null) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
@@ -203,7 +205,7 @@ class DateTimeHelpers implements
                 return $time->format('Y-m-d');
             },
             'sqlTime' => function ($time, LambdaHelper $helper = null) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
@@ -214,7 +216,7 @@ class DateTimeHelpers implements
                 return $time->format('H:i:s');
             },
             'timestamp' => function ($time, LambdaHelper $helper = null) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
@@ -225,7 +227,7 @@ class DateTimeHelpers implements
                 return $time->getTimestamp();
             },
             'seconds' => function ($time, LambdaHelper $helper = null) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
@@ -236,7 +238,7 @@ class DateTimeHelpers implements
                 return ($time->getTimestamp() - time());
             },
             'format' => function ($text, LambdaHelper $helper) {
-                if ($text === null) {
+                if ($text === null || $text === '') {
                     return;
                 }
 
@@ -248,7 +250,7 @@ class DateTimeHelpers implements
                 return $time->format($helper->render($format));
             },
             'relative' => function ($time, LambdaHelper $helper = null) use ($plural) {
-                if ($time === null) {
+                if ($time === null || $time === '') {
                     return;
                 }
 
