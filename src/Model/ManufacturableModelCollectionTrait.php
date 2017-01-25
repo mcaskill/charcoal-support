@@ -7,7 +7,7 @@ use Charcoal\Loader\CollectionLoader;
 use Charcoal\Factory\FactoryInterface;
 
 /**
- * Provides object model factory features.
+ * Provides object collection features.
  */
 trait ManufacturableModelCollectionTrait
 {
