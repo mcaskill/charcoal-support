@@ -59,7 +59,8 @@ class Collection extends CharcoalCollection
             );
         }
 
-        $this->objects = ([ $obj->id() => $obj ] + $this->objects);
+        $key = $this->modelKey($obj);
+        $this->objects = ([ $key => $obj ] + $this->objects);
 
         return $this;
     }
