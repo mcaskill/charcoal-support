@@ -189,8 +189,6 @@ class DateTimeHelpers implements
                     $time = $this->parseDateTime($helper->render($time));
                 }
 
-                error_log(var_export($time, true));
-
                 return $time->format('Y-m-d H:i:s');
             },
             'sqlDate' => function ($time, LambdaHelper $helper = null) {
