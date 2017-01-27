@@ -52,12 +52,14 @@ trait DocumentTrait
     protected function parseDocumentTitle($parts)
     {
         $parts = array_filter($parts, function ($segment, $key) use ($parts) {
-            if (empty($segment)) {
+            if (empty($segment) && !is_numeric($segment)) {
                 return false;
             }
 
             if ($key !== 'site') {
-                return (false === strpos($segment, $parts['site']));
+                if (!empty($parts['site']) || is_numeric($parts['site'])) {
+                    return (false === strpos($segment, $parts['site']));
+                }
             }
 
             return $segment;
