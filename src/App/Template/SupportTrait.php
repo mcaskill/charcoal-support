@@ -31,7 +31,7 @@ trait SupportTrait
      * {@see \Charcoal\App\StaticConfig `$container['config']`}) or a
      * {@see SupportTrait::dynamicConfig() dynamic configset} from the database.
      *
-     * @var array|ArrayAccess;
+     * @var array|ArrayAccess
      */
     protected $appConfig = [];
 
@@ -131,7 +131,7 @@ trait SupportTrait
      * Prepend the base URI to the given path.
      *
      * @param  string $path A URI path to wrap.
-     * @return callable
+     * @return UriInterface
      */
     public function withBaseUrl($path)
     {

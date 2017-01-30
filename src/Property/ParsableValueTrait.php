@@ -78,6 +78,7 @@ trait ParsableValueTrait
      * Parse the property value as a date/time object.
      *
      * @param  mixed $value The date/time value.
+     * @throws InvalidArgumentException If the date/time value is invalid.
      * @return DateTimeInterface|null
      */
     public function parseAsDateTime($value)
