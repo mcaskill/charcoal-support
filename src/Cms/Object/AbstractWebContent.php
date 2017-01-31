@@ -54,13 +54,23 @@ abstract class AbstractWebContent extends Content implements
     }
 
     /**
+     * Determine if the object can be viewed (on the front-end).
+     *
+     * @return boolean
+     */
+    public function isViewable()
+    {
+        return $this->id() && $this->active();
+    }
+
+    /**
      * Determine if the object can be deleted.
      *
      * @return boolean
      */
     public function isDeletable()
     {
-        return !!$this->id() && !$this->locked();
+        return $this->id() && !$this->locked();
     }
 
 
