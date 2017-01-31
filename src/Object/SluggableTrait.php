@@ -39,6 +39,10 @@ trait SluggableTrait
     public function url($lang = null)
     {
         if ($this->url === null) {
+            if (!$this->id()) {
+                return null;
+            }
+
             $this->url = $this->generateUri();
         }
 
