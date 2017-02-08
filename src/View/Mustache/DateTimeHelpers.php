@@ -39,7 +39,7 @@ class DateTimeHelpers implements
     private static $now;
 
     /**
-     * Store the given macro or format.
+     * Store the given macro (Mustache tag node) or format.
      *
      * @var string
      */
@@ -61,7 +61,7 @@ class DateTimeHelpers implements
      *     {@link http://php.net/manual/en/timezones.php timezone names} or a DateTimeZone object.
      *     If $timezone is omitted, the current time zone will be used.
      */
-    public function __construct( array $macros = null, $timezone = null)
+    public function __construct(array $macros = null, $timezone = null)
     {
         if (is_string($timezone)) {
             $timezone = new DateTimeZone($timezone);
