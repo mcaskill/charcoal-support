@@ -3,7 +3,8 @@
 namespace Charcoal\Support\Widget;
 
 use RuntimeException;
-use Pimple\Container;
+
+// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
 /**
@@ -12,7 +13,7 @@ use Charcoal\Factory\FactoryInterface;
 trait ManufacturableWidgetTrait
 {
     /**
-     * Store the factory instance for the current class.
+     * Store the factory instance.
      *
      * @var FactoryInterface
      */
@@ -21,7 +22,7 @@ trait ManufacturableWidgetTrait
     /**
      * Set an widget factory.
      *
-     * @param FactoryInterface $factory The factory to create widgets.
+     * @param  FactoryInterface $factory The factory to create widgets.
      * @return self
      */
     protected function setWidgetFactory(FactoryInterface $factory)
@@ -34,15 +35,16 @@ trait ManufacturableWidgetTrait
     /**
      * Retrieve the widget factory.
      *
-     * @throws RuntimeException If the widget factory was not previously set.
+     * @throws RuntimeException If the widget factory is missing.
      * @return FactoryInterface
      */
     protected function widgetFactory()
     {
         if (!isset($this->widgetFactory)) {
-            throw new RuntimeException(
-                sprintf('Widget Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Widget Factory is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->widgetFactory;

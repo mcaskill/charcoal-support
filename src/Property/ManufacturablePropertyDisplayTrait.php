@@ -3,6 +3,8 @@
 namespace Charcoal\Support\Property;
 
 use RuntimeException;
+
+// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
 /**
@@ -11,7 +13,7 @@ use Charcoal\Factory\FactoryInterface;
 trait ManufacturablePropertyDisplayTrait
 {
     /**
-     * Store the factory instance for the current class.
+     * Store the factory instance.
      *
      * @var FactoryInterface
      */
@@ -20,8 +22,7 @@ trait ManufacturablePropertyDisplayTrait
     /**
      * Set a property display factory.
      *
-     * @param FactoryInterface $factory The property display factory,
-     *     to create displayable property values.
+     * @param  FactoryInterface $factory The factory to create displayable property values.
      * @return self
      */
     protected function setPropertyDisplayFactory(FactoryInterface $factory)
@@ -34,15 +35,16 @@ trait ManufacturablePropertyDisplayTrait
     /**
      * Retrieve the property display factory.
      *
-     * @throws RuntimeException If the property display factory was not previously set.
+     * @throws RuntimeException If the property display factory is missing.
      * @return FactoryInterface
      */
     public function propertyDisplayFactory()
     {
         if (!isset($this->propertyDisplayFactory)) {
-            throw new RuntimeException(
-                sprintf('Property Display Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Property Display Factory is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->propertyDisplayFactory;

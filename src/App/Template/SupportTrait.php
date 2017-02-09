@@ -75,7 +75,7 @@ trait SupportTrait
      */
     public function templateName()
     {
-        $key = substr(strrchr('\\'.get_class($this), '\\'), 1);
+        $key = substr(strrchr('\\' . get_class($this), '\\'), 1);
 
         if (!isset(static::$templateNameCache[$key])) {
             $value = $key;
@@ -114,14 +114,16 @@ trait SupportTrait
     /**
      * Retrieve the base URI of the project.
      *
+     * @throws RuntimeException If the base URI is missing.
      * @return UriInterface|null
      */
     public function baseUrl()
     {
         if (!isset($this->baseUrl)) {
-            throw new RuntimeException(
-                sprintf('The base URI is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'The base URI is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->baseUrl;
@@ -146,6 +148,7 @@ trait SupportTrait
      * Set the application's configset.
      *
      * @param  array|ArrayAccess $config A configset.
+     * @throws InvalidArgumentException If the configset is invalid.
      * @return self
      */
     public function setAppConfig($config)

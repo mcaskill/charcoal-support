@@ -3,6 +3,7 @@
 namespace Charcoal\Support\View\Mustache;
 
 use ArrayAccess;
+use Exception;
 use InvalidArgumentException;
 
 use Closure;
@@ -25,11 +26,11 @@ class DateTimeHelpers implements
     HelpersInterface
 {
     const MINUTE_IN_SECONDS =  60;
-    const HOUR_IN_SECONDS   =  60 * self::MINUTE_IN_SECONDS;
-    const DAY_IN_SECONDS    =  24 * self::HOUR_IN_SECONDS;
-    const WEEK_IN_SECONDS   =   7 * self::DAY_IN_SECONDS;
-    const MONTH_IN_SECONDS  =  30 * self::DAY_IN_SECONDS;
-    const YEAR_IN_SECONDS   = 365 * self::DAY_IN_SECONDS;
+    const HOUR_IN_SECONDS   =  (60 * self::MINUTE_IN_SECONDS);
+    const DAY_IN_SECONDS    =  (24 * self::HOUR_IN_SECONDS);
+    const WEEK_IN_SECONDS   =   (7 * self::DAY_IN_SECONDS);
+    const MONTH_IN_SECONDS  =  (30 * self::DAY_IN_SECONDS);
+    const YEAR_IN_SECONDS   = (365 * self::DAY_IN_SECONDS);
 
     /**
      * Store the current date/time.
@@ -55,16 +56,24 @@ class DateTimeHelpers implements
     /**
      * Returns a new DateTimeHelpers object.
      *
-     * @param  array|null                $macros    Macros to add to the presenter.
+     * @param  array|null               $macros   Macros to add to the presenter.
      *     Valid formats are explained in {@link http://php.net/manual/en/datetime.formats.php Date and Time Formats}.
-     * @param  DateTimeZone|string|null  $timezone  One of the supported
+     * @param  DateTimeZone|string|null $timezone One of the supported
      *     {@link http://php.net/manual/en/timezones.php timezone names} or a DateTimeZone object.
      *     If $timezone is omitted, the current time zone will be used.
+     * @throws InvalidArgumentException If the timezone value is invalid.
      */
     public function __construct(array $macros = null, $timezone = null)
     {
         if (is_string($timezone)) {
-            $timezone = new DateTimeZone($timezone);
+            try {
+                $timezone = new DateTimeZone($timezone);
+            } catch (Exception $e) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid timezone value: %s',
+                    $e->getMessage()
+                ), $e->getCode(), $e);
+            }
         }
 
         if (!static::$now) {
@@ -96,16 +105,31 @@ class DateTimeHelpers implements
      * Parse the given date and time into a DateTime object.
      *
      * @param  DateTimeInterface|string $time A date/time string or a DateTime object.
+     * @throws InvalidArgumentException If the date/time value is invalid.
      * @return DateTimeImmutable
      */
     private function parseDateTime($time)
     {
         if (is_string($time)) {
-            $time = new DateTimeImmutable($time);
+            try {
+                $time = new DateTimeImmutable($time);
+            } catch (Exception $e) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid date/time value: %s',
+                    $e->getMessage()
+                ), $e->getCode(), $e);
+            }
         }
 
         if ($time instanceof DateTime) {
-            $time = DateTimeImmutable::createFromMutable($time);
+            try {
+                $time = DateTimeImmutable::createFromMutable($time);
+            } catch (Exception $e) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid date/time value: %s',
+                    $e->getMessage()
+                ), $e->getCode(), $e);
+            }
         }
 
         if ($time instanceof DateTimeImmutable) {
@@ -317,7 +341,7 @@ class DateTimeHelpers implements
      *
      * Required by Mustache.
      *
-     * @param  string  $macro A macro.
+     * @param  string $macro A macro.
      * @return boolean
      */
     public function __isset($macro)
@@ -370,7 +394,8 @@ class DateTimeHelpers implements
      * Determine if an macro exists at an offset.
      *
      * @param  mixed $key The name of the macro to lookup.
-     * @return bool
+     * @throws InvalidArgumentException If the $key is invalid.
+     * @return boolean
      */
     public function offsetExists($key)
     {
@@ -385,6 +410,7 @@ class DateTimeHelpers implements
      * Get an macro at a given offset.
      *
      * @param  mixed $key The name of the macro to retrieve.
+     * @throws InvalidArgumentException If the $key is invalid.
      * @return mixed
      */
     public function offsetGet($key)
@@ -401,6 +427,7 @@ class DateTimeHelpers implements
      *
      * @param  mixed $key   The name of the macro.
      * @param  mixed $value The macro's effect.
+     * @throws InvalidArgumentException If the $key or $value are invalid.
      * @return void
      */
     public function offsetSet($key, $value)

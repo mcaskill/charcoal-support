@@ -66,7 +66,7 @@ class StringHelpers implements HelpersInterface
             'ucfirst' => function ($text, LambdaHelper $helper) {
                 $text = $helper->render($text);
 
-                return mb_strtoupper(mb_substr($text, 0, 1)).mb_substr($text, 1, null, 'UTF-8');
+                return mb_strtoupper(mb_substr($text, 0, 1)) . mb_substr($text, 1, null, 'UTF-8');
             },
             /**
              * URL-encodes a string.

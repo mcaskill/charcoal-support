@@ -2,6 +2,9 @@
 
 namespace Charcoal\Support\Cms\Metatag;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 /**
  * Basic implementation of {@see HasMetatagInterface}
  *
@@ -12,21 +15,21 @@ trait HasMetatagTrait
     /**
      * Name of the object.
      *
-     * @var string|null
+     * @var Translation|string|null
      */
     protected $metaTitle;
 
     /**
      * Description of the object.
      *
-     * @var string|null
+     * @var Translation|string|null
      */
     protected $metaDescription;
 
     /**
      * Thumbnail of the object.
      *
-     * @var string|null
+     * @var Translation|string|null
      */
     protected $metaImage;
 
@@ -39,7 +42,7 @@ trait HasMetatagTrait
      * With the OpenGraph Metadata—as it should appear
      * in the graph—for the "og:title" meta-property.
      *
-     * @return string|null
+     * @return Translation|string|null
      */
     public function metaTitle()
     {
@@ -49,12 +52,12 @@ trait HasMetatagTrait
     /**
      * Set the object's name or title.
      *
-     * @param  string|string[] $name The name for the object.
+     * @param  string $name The name for the object.
      * @return self
      */
     public function setMetaTitle($name)
     {
-        $this->metaTitle = $this->parseAsTranslatable($name);
+        $this->metaTitle = $this->translator()->translation($name);
 
         return $this;
     }
@@ -62,7 +65,7 @@ trait HasMetatagTrait
     /**
      * Retrieve the object's description.
      *
-     * @return string|null
+     * @return Translation|string|null
      */
     public function metaDescription()
     {
@@ -72,12 +75,12 @@ trait HasMetatagTrait
     /**
      * Set the object's description.
      *
-     * @param  string|string[] $description A short description for the object.
+     * @param  string $description A short description for the object.
      * @return self
      */
     public function setMetaDescription($description)
     {
-        $this->metaDescription = $this->parseAsTranslatable($description);
+        $this->metaDescription = $this->translator()->translation($description);
 
         return $this;
     }
@@ -85,7 +88,7 @@ trait HasMetatagTrait
     /**
      * Retrieve the object's thumbnail or preview image.
      *
-     * @return string|null
+     * @return Translation|string|null
      */
     public function metaImage()
     {
@@ -95,13 +98,21 @@ trait HasMetatagTrait
     /**
      * Set the object's thumbnail or preview image.
      *
-     * @param  string|string[] $path A path to an image.
+     * @param  string $path A path to an image.
      * @return self
      */
     public function setMetaImage($path)
     {
-        $this->metaImage = $this->parseAsTranslatable($path);
+        $this->metaImage = $this->translator()->translation($path);
 
         return $this;
     }
+
+    /**
+     * Retrieve the translator service.
+     *
+     * @see    \Charcoal\Translator\TranslatorAwareTrait
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 }

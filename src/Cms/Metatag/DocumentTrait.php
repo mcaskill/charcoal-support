@@ -5,21 +5,14 @@ namespace Charcoal\Support\Cms\Metatag;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 /**
  * Additional utilities for the HTML document.
  */
 trait DocumentTrait
 {
-    /**
-     * Retrieve the site name.
-     *
-     * @return string|null
-     */
-    public function siteName()
-    {
-        return 'Charcoal Project';
-    }
-
     /**
      * Parse the document title parts.
      *
@@ -49,8 +42,9 @@ trait DocumentTrait
      * @param  array $parts The document title parts.
      * @return string
      */
-    protected function parseDocumentTitle($parts)
+    protected function parseDocumentTitle(array $parts)
     {
+        $parts = array_map('strval', $parts);
         $parts = array_filter($parts, function ($segment, $key) use ($parts) {
             if (empty($segment) && !is_numeric($segment)) {
                 return false;
@@ -83,16 +77,23 @@ trait DocumentTrait
     }
 
     /**
+     * Retrieve the site name.
+     *
+     * @return Translation|string|null
+     */
+    abstract public function siteName();
+
+    /**
      * Retrieve the title of the page (from the context).
      *
-     * @return string
+     * @return Translation|string|null
      */
     abstract public function title();
 
     /**
      * Retrieve the current object relative to the context.
      *
-     * @return \Charcoal\Model\ModelInterface
+     * @return ModelInterface
      */
     abstract public function contextObject();
 }

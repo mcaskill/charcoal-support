@@ -3,7 +3,8 @@
 namespace Charcoal\Support\Email;
 
 use RuntimeException;
-use Pimple\Container;
+
+// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
 /**
@@ -12,7 +13,7 @@ use Charcoal\Factory\FactoryInterface;
 trait ManufacturableEmailTrait
 {
     /**
-     * Store the factory instance for the current class.
+     * Store the factory instance.
      *
      * @var FactoryInterface
      */
@@ -21,7 +22,7 @@ trait ManufacturableEmailTrait
     /**
      * Set an email model factory.
      *
-     * @param FactoryInterface $factory The email factory, to create emails.
+     * @param  FactoryInterface $factory The factory to create emails.
      * @return self
      */
     protected function setEmailFactory(FactoryInterface $factory)
@@ -34,15 +35,16 @@ trait ManufacturableEmailTrait
     /**
      * Retrieve the email model factory.
      *
-     * @throws RuntimeException If the model factory was not previously set.
+     * @throws RuntimeException If the model factory is missing.
      * @return FactoryInterface
      */
     protected function emailFactory()
     {
         if (!isset($this->emailFactory)) {
-            throw new RuntimeException(
-                sprintf('Email Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Email Factory is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->emailFactory;

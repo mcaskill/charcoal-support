@@ -3,24 +3,26 @@
 namespace Charcoal\Support\Model;
 
 use RuntimeException;
+
+// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
 
 /**
- * Provides object model factory features.
+ * Provides model factory features.
  */
 trait ManufacturableModelTrait
 {
     /**
-     * Store the factory instance for the current class.
+     * Store the factory instance.
      *
      * @var FactoryInterface
      */
     protected $modelFactory;
 
     /**
-     * Set an object model factory.
+     * Set an model factory.
      *
-     * @param FactoryInterface $factory The model factory, to create objects.
+     * @param  FactoryInterface $factory The factory to create models.
      * @return self
      */
     protected function setModelFactory(FactoryInterface $factory)
@@ -31,17 +33,18 @@ trait ManufacturableModelTrait
     }
 
     /**
-     * Retrieve the object model factory.
+     * Retrieve the model factory.
      *
-     * @throws RuntimeException If the model factory was not previously set.
+     * @throws RuntimeException If the model factory is missing.
      * @return FactoryInterface
      */
     public function modelFactory()
     {
         if (!isset($this->modelFactory)) {
-            throw new RuntimeException(
-                sprintf('Model Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Model Factory is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->modelFactory;

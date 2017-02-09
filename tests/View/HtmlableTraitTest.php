@@ -1,11 +1,17 @@
 <?php
 
-namespace Charcoal\Tests\View;
+namespace Charcoal\Tests\Support\View;
 
-use \Charcoal\Support\View\HtmlableTrait;
+// From 'charcoal-view'
 use \Charcoal\View\AbstractView;
 use \Charcoal\View\GenericView;
 
+// From 'charcoal-support'
+use \Charcoal\Support\View\HtmlableTrait;
+
+/**
+ * Test the HTML-renderable trait.
+ */
 class HtmlableTraitTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -44,9 +50,9 @@ class HtmlableTraitTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actual   = $obj->htmlAttributes($attr, null, false);
-        $expected = 'href="https://github.com/locomotivemtl/charcoal-view" '.
-                    'hreflang="en" '.
-                    'title="&quot;Charcoal Views&quot; on GitHub" '.
+        $expected = 'href="https://github.com/locomotivemtl/charcoal-view" ' .
+                    'hreflang="en" ' .
+                    'title="&quot;Charcoal Views&quot; on GitHub" ' .
                     'data-foo="qux"';
 
         $this->assertEquals($expected, $actual);

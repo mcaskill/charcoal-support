@@ -51,12 +51,10 @@ class Collection extends CharcoalCollection
     public function prepend($obj)
     {
         if (!$this->isAcceptable($obj)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Must be a model, received %s',
-                    (is_object($obj) ? get_class($obj) : gettype($obj))
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Must be a model, received %s',
+                (is_object($obj) ? get_class($obj) : gettype($obj))
+            ));
         }
 
         $key = $this->modelKey($obj);
@@ -126,15 +124,23 @@ class Collection extends CharcoalCollection
             switch ($operator) {
                 default:
                 case '=':
-                case '==':  return $retrieved == $value;
+                case '==':
+                    return $retrieved == $value;
                 case '!=':
-                case '<>':  return $retrieved != $value;
-                case '<':   return $retrieved < $value;
-                case '>':   return $retrieved > $value;
-                case '<=':  return $retrieved <= $value;
-                case '>=':  return $retrieved >= $value;
-                case '===': return $retrieved === $value;
-                case '!==': return $retrieved !== $value;
+                case '<>':
+                    return $retrieved != $value;
+                case '<':
+                    return $retrieved < $value;
+                case '>':
+                    return $retrieved > $value;
+                case '<=':
+                    return $retrieved <= $value;
+                case '>=':
+                    return $retrieved >= $value;
+                case '===':
+                    return $retrieved === $value;
+                case '!==':
+                    return $retrieved !== $value;
             }
         };
     }
@@ -142,10 +148,10 @@ class Collection extends CharcoalCollection
     /**
      * Filter the collection of objects by the given key/value pair.
      *
-     * @param  string  $key      The property to filter by.
-     * @param  mixed   $values   The values to filter by.
-     * @param  boolean $strict   Whether to use strict comparisons (TRUE)
-     *     or "loose" comparisons (FALSE).
+     * @param  string  $key    The property to filter by.
+     * @param  mixed   $values The values to filter by.
+     * @param  boolean $strict Whether to use strict comparisons (TRUE)
+     *   or "loose" comparisons (FALSE).
      * @return static
      */
     public function whereIn($key, $values, $strict = false)
@@ -240,12 +246,10 @@ class Collection extends CharcoalCollection
         } elseif (is_callable($sortBy)) {
             $callback = $sortBy;
         } else {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'The comparator must be a property key or a function, received %s',
-                    (is_object($sortBy) ? get_class($sortBy) : gettype($sortBy))
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'The comparator must be a property key or a function, received %s',
+                (is_object($sortBy) ? get_class($sortBy) : gettype($sortBy))
+            ));
         }
 
         // First we will loop through the items and get the comparator from a callback
@@ -296,13 +300,11 @@ class Collection extends CharcoalCollection
     {
         $count = $this->count();
         if ($amount > $count) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'You requested %d objects, but there are only %d objects in the collection',
-                    $amount,
-                    $count
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'You requested %d objects, but there are only %d objects in the collection',
+                $amount,
+                $count
+            ));
         }
 
         $keys = array_rand($this->objects, $amount);
@@ -325,7 +327,7 @@ class Collection extends CharcoalCollection
      */
     protected function asArray($value)
     {
-        if ($value instanceof LaravelCollection) {
+        if (class_exists('\Illuminate\Support\Collection') && $value instanceof LaravelCollection) {
             return $value->all();
         }
 

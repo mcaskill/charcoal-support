@@ -7,19 +7,19 @@ use Charcoal\Loader\CollectionLoader;
 use Charcoal\Factory\FactoryInterface;
 
 /**
- * Provides object collection features.
+ * Provides model collection features.
  */
 trait ManufacturableModelCollectionTrait
 {
     /**
-     * Store the collection loader for the current class.
+     * Store the collection loader.
      *
      * @var CollectionLoader
      */
     protected $collectionLoader;
 
     /**
-     * Store the factory instance for the current class.
+     * Store the factory instance.
      *
      * @var FactoryInterface
      */
@@ -28,7 +28,7 @@ trait ManufacturableModelCollectionTrait
     /**
      * Set a model collection loader.
      *
-     * @param CollectionLoader $loader The collection loader.
+     * @param  CollectionLoader $loader The model collection loader.
      * @return self
      */
     protected function setCollectionLoader(CollectionLoader $loader)
@@ -41,24 +41,25 @@ trait ManufacturableModelCollectionTrait
     /**
      * Retrieve the model collection loader.
      *
-     * @throws RuntimeException If the collection loader was not previously set.
+     * @throws RuntimeException If the collection loader is missing.
      * @return CollectionLoader
      */
     public function collectionLoader()
     {
         if (!isset($this->collectionLoader)) {
-            throw new RuntimeException(
-                sprintf('Collection Loader is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Collection Loader is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->collectionLoader;
     }
 
     /**
-     * Set a collection loader factory.
+     * Set a model collection loader factory.
      *
-     * @param FactoryInterface $factory The collection loader factory, to create objects.
+     * @param  FactoryInterface $factory The factory to create model collection loaders.
      * @return self
      */
     protected function setCollectionLoaderFactory(FactoryInterface $factory)
@@ -71,22 +72,23 @@ trait ManufacturableModelCollectionTrait
     /**
      * Retrieve the collection loader factory.
      *
-     * @throws RuntimeException If the collection loader factory was not previously set.
+     * @throws RuntimeException If the collection loader factory is missing.
      * @return FactoryInterface
      */
     public function collectionLoaderFactory()
     {
         if (!isset($this->collectionLoaderFactory)) {
-            throw new RuntimeException(
-                sprintf('Collection Loader Factory is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Collection Loader Factory is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->collectionLoaderFactory;
     }
 
     /**
-     * Create a collection loader with optional constructor arguments and a post-creation callback.
+     * Create a model collection loader with optional constructor arguments and a post-creation callback.
      *
      * @param  array|null    $args     Optional. Constructor arguments.
      * @param  callable|null $callback Optional. Called at creation.
@@ -100,7 +102,7 @@ trait ManufacturableModelCollectionTrait
     }
 
     /**
-     * Create a collection loader.
+     * Create a model collection loader.
      *
      * @return CollectionLoader
      */

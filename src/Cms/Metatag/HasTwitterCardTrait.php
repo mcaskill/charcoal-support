@@ -2,10 +2,11 @@
 
 namespace Charcoal\Support\Cms\Metatag;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 /**
  * Basic implementation of {@see HasTwitterCardInterface}
- *
- * @uses \Charcoal\Support\Property\ParsableValueTrait
  */
 trait HasTwitterCardTrait
 {
@@ -21,7 +22,7 @@ trait HasTwitterCardTrait
     /**
      * The path to object's thumbnail.
      *
-     * @var string|null
+     * @var Translation|string|null
      */
     protected $twitterCardImage;
 
@@ -40,7 +41,7 @@ trait HasTwitterCardTrait
      * Set object's Twitter card type or a fallback.
      *
      * @see    HasTwitterCardInterface::DEFAULT_TWITTER_CARD_TYPE The default card type.
-     * @param  string|string[] $type The Twitter card type.
+     * @param  string $type The Twitter card type.
      * @return self
      */
     public function setTwitterCardType($type)
@@ -53,7 +54,7 @@ trait HasTwitterCardTrait
     /**
      * Retrieve the URL to the object's social image for the "twitter:image" meta-property.
      *
-     * @return string|null
+     * @return Translation|string|null
      */
     public function twitterCardImage()
     {
@@ -63,13 +64,21 @@ trait HasTwitterCardTrait
     /**
      * Set the object's Twitter Card thumbnail image path.
      *
-     * @param  string|string[] $path A path to an image.
+     * @param  string $path A path to an image.
      * @return self
      */
     public function setTwitterCardImage($path)
     {
-        $this->twitterCardImage = $this->parseAsTranslatable($path);
+        $this->twitterCardImage = $this->translator()->translation($path);
 
         return $this;
     }
+
+    /**
+     * Retrieve the translator service.
+     *
+     * @see    \Charcoal\Translator\TranslatorAwareTrait
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 }

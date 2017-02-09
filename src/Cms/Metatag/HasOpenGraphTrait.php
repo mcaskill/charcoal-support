@@ -2,6 +2,9 @@
 
 namespace Charcoal\Support\Cms\Metatag;
 
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
+
 /**
  * Basic implementation of {@see HasOpenGraphInterface}
  *
@@ -21,7 +24,7 @@ trait HasOpenGraphTrait
     /**
      * The path to object's thumbnail.
      *
-     * @var string|null
+     * @var Translation|string|null
      */
     protected $opengraphImage;
 
@@ -40,7 +43,7 @@ trait HasOpenGraphTrait
      * Set object's OpenGraph content type.
      *
      * @see    HasOpenGraphInterface::DEFAULT_OPENGRAPH_TYPE The default content type.
-     * @param  string|string[] $type The OpenGraph content type.
+     * @param  string $type The OpenGraph content type.
      * @return self
      */
     public function setOpengraphType($type)
@@ -53,7 +56,7 @@ trait HasOpenGraphTrait
     /**
      * Retrieve the URL to the object's social image for the "og:image" meta-property.
      *
-     * @return string
+     * @return Translation|string|null
      */
     public function opengraphImage()
     {
@@ -63,13 +66,21 @@ trait HasOpenGraphTrait
     /**
      * Set the object's OpenGraph thumbnail image path.
      *
-     * @param  string|string[] $path A path to an image.
+     * @param  string $path A path to an image.
      * @return self
      */
     public function setOpengraphImage($path)
     {
-        $this->opengraphImage = $this->parseAsTranslatable($path);
+        $this->opengraphImage = $this->translator()->translation($path);
 
         return $this;
     }
+
+    /**
+     * Retrieve the translator service.
+     *
+     * @see    \Charcoal\Translator\TranslatorAwareTrait
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 }

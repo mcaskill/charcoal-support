@@ -1,15 +1,14 @@
 <?php
 
-namespace Charcoal\Support\Object;
+namespace Charcoal\Support\App\Routing;
 
 use UnexpectedValueException;
 
-// From 'charcoal-translation'
-use Charcoal\Translation\TranslationConfig;
-use Charcoal\Translation\TranslationString;
-
 // From 'charcoal-base'
 use Charcoal\Object\RoutableTrait;
+
+// From 'charcoal-translator'
+use Charcoal\Translator\Translation;
 
 /**
  * Full implementation, as Trait, of the {@see \Charcoal\Object\RoutableInterface}.
@@ -26,7 +25,7 @@ trait SluggableTrait
     /**
      * The object's URI path.
      *
-     * @var string|null
+     * @var Translation|string|null
      */
     protected $url;
 
@@ -34,7 +33,7 @@ trait SluggableTrait
      * Retrieve the object's URI.
      *
      * @param  string|null $lang If object is multilingual, return the object route for the specified locale.
-     * @return TranslationString|string
+     * @return Translation|string|null
      */
     public function url($lang = null)
     {
@@ -46,8 +45,8 @@ trait SluggableTrait
             $this->url = $this->generateUri();
         }
 
-        if ($this->url instanceof TranslationString && $lang) {
-            return $this->url->val($lang);
+        if ($lang && $this->url instanceof Translation) {
+            return $this->url[$lang];
         }
 
         return strval($this->url);
@@ -57,35 +56,36 @@ trait SluggableTrait
      * Generate a URL slug from the object's URL slug pattern.
      *
      * @throws UnexpectedValueException If the slug is empty.
-     * @return TranslationString
+     * @return Translation|string|null
      */
     public function generateSlug()
     {
-        $translator = TranslationConfig::instance();
-        $languages  = $translator->availableLanguages();
+        $translator = $this->translator();
+        $languages  = $translator->availableLocales();
         $patterns   = $this->slugPattern();
         $curSlug    = $this->slug();
-        $newSlug    = new TranslationString();
+        $newSlug    = [];
 
-        $origLang = $translator->currentLanguage();
+        $origLang = $translator->getLocale();
         foreach ($languages as $lang) {
             $pattern = $patterns[$lang];
 
-            $translator->setCurrentLanguage($lang);
+            $this->translator()->setLocale($lang);
             if ($this->isSlugEditable() && isset($curSlug[$lang]) && strlen($curSlug[$lang])) {
                 $newSlug[$lang] = $curSlug[$lang];
             } else {
                 $newSlug[$lang] = $this->generateRoutePattern($pattern);
                 if (!strlen($newSlug[$lang])) {
-                    throw new UnexpectedValueException(
-                        sprintf('The slug is empty. The pattern is "%s"', $pattern)
-                    );
+                    throw new UnexpectedValueException(sprintf(
+                        'The slug is empty; the pattern is "%s"',
+                        $pattern
+                    ));
                 }
             }
         }
-        $translator->setCurrentLanguage($origLang);
+        $this->translator()->setLocale($origLang);
 
-        return $newSlug;
+        return $this->translator()->translation($newSlug);
     }
 
     /**
@@ -96,6 +96,7 @@ trait SluggableTrait
      */
     protected function generateObjectRoute($slug = null)
     {
+        // Do Nothing
     }
 
     /**

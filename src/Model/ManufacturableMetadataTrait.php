@@ -23,7 +23,7 @@ trait ManufacturableMetadataTrait
     /**
      * Set a metadata loader.
      *
-     * @param MetadataLoader $loader The metadata loader.
+     * @param  MetadataLoader $loader The metadata loader.
      * @return self
      */
     protected function setMetadataLoader(MetadataLoader $loader)
@@ -36,15 +36,16 @@ trait ManufacturableMetadataTrait
     /**
      * Retrieve the metadata loader.
      *
-     * @throws RuntimeException If the metadata loader was not previously set.
+     * @throws RuntimeException If the metadata loader is missing.
      * @return MetadataLoader
      */
     public function metadataLoader()
     {
         if (!isset($this->metadataLoader)) {
-            throw new RuntimeException(
-                sprintf('Metadata Loader is not defined for "%s"', get_class($this))
-            );
+            throw new RuntimeException(sprintf(
+                'Metadata Loader is not defined for [%s]',
+                get_class($this)
+            ));
         }
 
         return $this->metadataLoader;
@@ -65,6 +66,8 @@ trait ManufacturableMetadataTrait
     }
 
     /**
+     * Retrieve a new metadata object.
+     *
      * @return MetadataInterface
      */
     abstract protected function createMetadata();

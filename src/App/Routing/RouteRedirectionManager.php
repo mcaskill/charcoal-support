@@ -10,8 +10,8 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// From 'charcoal-translation'
-use Charcoal\Translation\TranslationString;
+// From 'charcoal-translator'
+use Charcoal\Translator\TranslatorAwareTrait;
 
 // From 'charcoal-app'
 use Charcoal\App\AppAwareInterface;
@@ -26,6 +26,7 @@ class RouteRedirectionManager implements
     AppAwareInterface
 {
     use AppAwareTrait;
+    use TranslatorAwareTrait;
 
     /**
      * @var array Redirected paths.
@@ -64,6 +65,13 @@ class RouteRedirectionManager implements
     {
         $this->setApp($data['app']);
         $this->setPaths($data['routes']);
+
+        if (isset($data['translator'])) {
+            $this->setTranslator($data['translator']);
+        } else {
+            $container = $this->app()->getContainer();
+            $this->setTranslator($container['translator']);
+        }
     }
 
     /**
@@ -142,6 +150,7 @@ class RouteRedirectionManager implements
      * @todo   Add support for explicit {@see \Slim\Route}.
      * @param  string $oldPath The path to watch for and redirect to $newPath.
      * @param  mixed  $newPath The destination for $oldPath.
+     * @throws InvalidArgumentException If the path is not a string.
      * @return void
      */
     public function addRedirection($oldPath, $newPath)
@@ -159,7 +168,7 @@ class RouteRedirectionManager implements
         $this->app()->map(
             $newPath['methods'],
             $oldPath,
-            function (
+            function(
                 RequestInterface $request,
                 ResponseInterface $response,
                 array $args = []
@@ -170,11 +179,13 @@ class RouteRedirectionManager implements
                     return $response->withStatus(404);
                 }
 
+                $locale = isset($args['lang']) ? $args['lang'] : null;
+
                 if ($newPath['data_key'] === null) {
                     if (is_array($newPath['route'])) {
-                        if (TranslationString::isTranslatable($newPath['route'])) {
-                            $newPath['route'] = new TranslationString($newPath['route']);
-                            $newPath['route'] = $newPath['route']->fallback(isset($args['lang']) ? $args['lang'] : null);
+                        $route = $this->translator()->translate($newPath['route'], [], null, $locale);
+                        if ($route !== null) {
+                            $newPath['route'] = $route;
                         } else {
                             $newPath['route'] = reset($newPath['route']);
                         }
@@ -193,8 +204,12 @@ class RouteRedirectionManager implements
 
                 $router = $this->get('router');
                 if (isset($newPath[$newPath['data_key']]['route_endpoint'])) {
-                    $endpoint = new TranslationString($newPath[$newPath['data_key']]['route_endpoint']);
-                    $endpoint = $endpoint->fallback(isset($args['lang']) ? $args['lang'] : null);
+                    $endpoint = $this->translator()->translate(
+                        $newPath[$newPath['data_key']]['route_endpoint'],
+                        [],
+                        null,
+                        $locale
+                    );
 
                     $args['route_endpoint'] = $endpoint;
                 }
@@ -210,8 +225,9 @@ class RouteRedirectionManager implements
      * Parse the destination route.
      *
      * @todo   Add support for explicit {@see \Slim\Route}.
-     * @param  mixed  $route The destination to prepare.
-     * @return void
+     * @param  mixed $route The destination to prepare.
+     * @throws InvalidArgumentException If the route is invalid.
+     * @return array The parsed route structure.
      */
     private function parseRoute($route)
     {

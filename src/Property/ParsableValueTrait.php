@@ -4,12 +4,18 @@ namespace Charcoal\Support\Property;
 
 use DateTime;
 use DateTimeInterface;
+use Exception;
 use InvalidArgumentException;
 
+// From 'cahrcoal-core'
 use Charcoal\Model\ModelInterface;
+
+// From 'cahrcoal-property'
 use Charcoal\Property\AbstractProperty;
 use Charcoal\Property\PropertyInterface;
-use Charcoal\Translation\TranslationString;
+
+// From 'cahrcoal-translator'
+use Charcoal\Translator\Translation;
 
 /**
  * Provides utilities for parsing property values.
@@ -28,10 +34,10 @@ trait ParsableValueTrait
      */
     public function parseAsMultiple($value, $separator = ',')
     {
-        if (is_array($value) || ($value instanceof Traversable)) {
+        if (is_array($value) || $value instanceof Traversable) {
             $parsed = [];
             foreach ($value as $val) {
-                if ($val === null || $val === '') {
+                if (empty($val) && !is_numeric($val)) {
                     continue;
                 }
 
@@ -49,7 +55,7 @@ trait ParsableValueTrait
             $value = strval($value);
         }
 
-        if ($value === null || $value === '') {
+        if (empty($value) && !is_numeric($value)) {
             return [];
         }
 
@@ -83,17 +89,24 @@ trait ParsableValueTrait
      */
     public function parseAsDateTime($value)
     {
-        if ($value === null || $value === '') {
+        if (empty($value) && !is_numeric($value)) {
             return null;
         }
 
         if (is_string($value)) {
-            $value = new DateTime($value);
+            try {
+                $value = new DateTime($value);
+            } catch (Exception $e) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid date/time value: %s',
+                    $e->getMessage()
+                ), $e->getCode(), $e);
+            }
         }
 
         if (!$value instanceof DateTimeInterface) {
             throw new InvalidArgumentException(
-                'Invalid date/time value. Must be a date/time string or an implementation of DateTime.'
+                'Invalid date/time value. Must be a date/time string or an implementation of DateTimeInterface.'
             );
         }
 
@@ -103,16 +116,17 @@ trait ParsableValueTrait
     /**
      * Parse the property value as a "L10N" value type.
      *
+     * @deprecated In favor of 'locomotivemtl/charcoal-translator'
      * @param  mixed $value The value being localized.
-     * @return TranslationString|string
+     * @return Translation|string|null
      */
     public function parseAsTranslatable($value)
     {
-        if (TranslationString::isTranslatable($value)) {
-            return new TranslationString($value);
-        } else {
-            return '';
-        }
+        trigger_error('parseAsTranslatable() is deprecated. Use Translator::translation() instead.', E_USER_DEPRECATED);
+
+        $value = $this->translator()->translation($value);
+
+        return $value === null ? '' : $value;
     }
 
     /**
@@ -154,8 +168,8 @@ trait ParsableValueTrait
      */
     public function pairTranslatableArrayItems($value, $separator = ',')
     {
-        if ($value instanceof TranslationString) {
-            $value = $value->all();
+        if ($value instanceof Translation) {
+            $value = $value->data();
         }
 
         if ($separator instanceof \Closure) {
@@ -181,7 +195,7 @@ trait ParsableValueTrait
                 }
             }
 
-            $result[] = $this->parseAsTranslatable($entry);
+            $result[] = $this->translator()->translation($entry);
         }
 
         return $result;
@@ -190,10 +204,11 @@ trait ParsableValueTrait
     /**
      * Cast the property value to a given data type.
      *
-     * @param  mixed  $value    The related value.
-     * @param  mixed  $castTo   The data type to cast the $value to.
-     * @param  mixed  $fallback A default value or a property identifier
+     * @param mixed $value    The related value.
+     * @param mixed $castTo   The data type to cast the $value to.
+     * @param mixed $fallback A default value or a property identifier
      *     to retrieve a default value from the current object.
+     * @throws InvalidArgumentException If the $castTo parameter is invalid.
      * @return mixed|null
      */
     public function castTo(
@@ -205,7 +220,7 @@ trait ParsableValueTrait
             throw new InvalidArgumentException('Invalid data casting type.');
         }
 
-        if ($value === null || $value === '') {
+        if (empty($value) && !is_numeric($value)) {
             $value    = $fallback;
             $property = null;
             if ($fallback instanceof PropertyInterface) {
@@ -230,13 +245,15 @@ trait ParsableValueTrait
             } else {
                 $l10n  = (isset($castTo['l10n']) && $castTo['l10n']);
                 $multi = (isset($castTo['multiple']) && $castTo['multiple']);
-                $sep   = (isset($castTo['multiple_options']['separator']) ? $castTo['multiple_options']['separator'] : ',');
+                $sep   = (isset($castTo['multiple_options']['separator'])
+                         ? $castTo['multiple_options']['separator']
+                         : ',');
             }
 
             if ($l10n && $multi) {
                 return $this->pairTranslatableArrayItems($value, $sep);
             } elseif ($l10n) {
-                return $this->parseAsTranslatable($value);
+                return $this->translator()->translation($value);
             } elseif ($multi) {
                 return $this->parseAsMultiple($value, $sep);
             }

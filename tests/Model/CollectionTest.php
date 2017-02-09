@@ -1,25 +1,29 @@
 <?php
 
-namespace Charcoal\Support\Tests\Model;
+namespace Charcoal\Tests\Support\Model;
 
-use \ArrayIterator;
-use \ArrayObject;
-use \CachingIterator;
-use \ReflectionClass;
+use ArrayIterator;
+use ArrayObject;
+use CachingIterator;
+use ReflectionClass;
 
 // From 'mockery/mockery'
-use \Mockery as m;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 // From 'charcoal-core'
-use \Charcoal\Model\Model;
-use \Charcoal\Model\ModelInterface;
+use Charcoal\Model\Model;
+use Charcoal\Model\ModelInterface;
 
 // From 'charcoal-support'
-use \Charcoal\Support\Model\Collection;
+use Charcoal\Support\Model\Collection;
 
+/**
+ * Test the enhanced model collection class.
+ */
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
     const OBJ_1 = '40ea';
     const OBJ_2 = '69c6';

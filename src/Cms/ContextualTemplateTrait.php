@@ -11,9 +11,6 @@ use Psr\Http\Message\UriInterface;
 use Charcoal\Model\Model;
 use Charcoal\Model\ModelInterface;
 
-// From 'charcoal-translation'
-use Charcoal\Translation\TranslationString;
-
 /**
  * Additional utilities for the routing.
  */
@@ -133,17 +130,17 @@ trait ContextualTemplateTrait
 
         $baseUrl = $this->baseUrl();
         if ($this->routeEndpoint) {
-            $endpoint = new TranslationString($this->routeEndpoint);
-            foreach ($endpoint->all() as $lang => $trans) {
-                $uri = $baseUrl->withPath($trans);
+            $endpoint = $this->translator()->translation($this->routeEndpoint);
+            foreach ($this->translator()->availableLocales() as $lang) {
+                $uri = $baseUrl->withPath($endpoint[$lang]);
 
                 if ($this->routeGroup) {
-                    $uri = $uri->withBasePath($this->routeGroup->fallback($lang));
+                    $uri = $uri->withBasePath($this->routeGroup[$lang]);
                 }
 
-                $basePath = $uri->getBasePath();
+                $base = $uri->getBasePath();
                 $path = $uri->getPath();
-                $path = $basePath . '/' . ltrim($path, '/');
+                $path = $base . '/' . ltrim($path, '/');
 
                 $endpoint[$lang] = $path;
             }
@@ -184,15 +181,13 @@ trait ContextualTemplateTrait
      */
     public function setRouteGroup($path)
     {
-        if (TranslationString::isTranslatable($path)) {
-            $this->routeGroup = new TranslationString($path);
+        $group = $this->translator()->translation($path);
 
-            foreach ($this->routeGroup->all() as $lang => $path) {
-                $this->routeGroup[$lang] = trim($path, '/');
-            }
-        } else {
-            $this->routeGroup = null;
+        foreach ($this->translator()->availableLocales() as $lang) {
+            $group[$lang] = trim($group[$lang], '/');
         }
+
+        $this->routeGroup = $group;
 
         return $this;
     }
@@ -205,15 +200,13 @@ trait ContextualTemplateTrait
      */
     public function setRouteEndpoint($path)
     {
-        if (TranslationString::isTranslatable($path)) {
-            $this->routeEndpoint = new TranslationString($path);
+        $endpoint = $this->translator()->translation($path);
 
-            foreach ($this->routeEndpoint->all() as $lang => $path) {
-                $this->routeEndpoint[$lang] = trim($path, '/');
-            }
-        } else {
-            $this->routeEndpoint = null;
+        foreach ($this->translator()->availableLocales() as $lang) {
+            $endpoint[$lang] = trim($endpoint[$lang], '/');
         }
+
+        $this->routeEndpoint = $endpoint;
 
         return $this;
     }
@@ -231,6 +224,14 @@ trait ContextualTemplateTrait
      * @return string
      */
     abstract public function title();
+
+    /**
+     * Retrieve the translator service.
+     *
+     * @see    \Charcoal\Translator\TranslatorAwareTrait
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 
     /**
      * Retrieve the object model factory.

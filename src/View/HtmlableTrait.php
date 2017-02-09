@@ -29,11 +29,11 @@ trait HtmlableTrait
         $html = array_map(
             function ($val, $key) use ($callback) {
                 if (is_bool($val)) {
-                    return ($val) ? $key : '';
+                    return ($val ? $key : '');
                 } elseif (isset($val)) {
-                    if ($val instanceof \Closure) {
+                    if ($val instanceof Closure) {
                         $val = $val();
-                    } elseif ($val instanceof \JsonSerializable) {
+                    } elseif ($val instanceof JsonSerializable) {
                         $val = json_encode(
                             $val->jsonSerialize(),
                             (JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
@@ -45,11 +45,22 @@ trait HtmlableTrait
                     }
 
                     if (is_array($val)) {
-                        $val = implode(' ', $val);
+                        if (function_exists('is_blank')) {
+                            $filter = function ($var) {
+                                return !is_blank($var);
+                            };
+                        } else {
+                            $filter = function ($var) {
+                                return !empty($var) || is_numeric($var);
+                            };
+                        }
+                        $val = implode(' ', array_filter($val, $filter));
                     }
 
                     if (is_callable($callback)) {
                         $val = call_user_func($callback, $val);
+                    } elseif (function_exists('esc_attr')) {
+                        $val = esc_attr($val);
                     } else {
                         $val = htmlspecialchars($val, ENT_QUOTES);
                     }
@@ -71,6 +82,6 @@ trait HtmlableTrait
             $prefix = '';
         }
 
-        return $prefix.$html;
+        return $prefix . $html;
     }
 }
