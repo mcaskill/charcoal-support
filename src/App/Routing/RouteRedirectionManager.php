@@ -249,6 +249,14 @@ class RouteRedirectionManager implements
                 $route['status'] = $this->defaultRedirect['status'];
             }
 
+            if (!isset($route['route_type'])) {
+                $route['route_type'] = null;
+            }
+
+            if (!isset($route['data_key'])) {
+                $route['data_key'] = null;
+            }
+
             if (isset($route['template_route'])) {
                 $route['route']         = $route['template_route'];
                 $route['methods']       = [ 'GET' ];
