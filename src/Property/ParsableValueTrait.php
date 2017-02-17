@@ -168,6 +168,10 @@ trait ParsableValueTrait
      */
     public function pairTranslatableArrayItems($value, $separator = ',')
     {
+        if (empty($value) && !is_numeric($value)) {
+            return null;
+        }
+
         if ($value instanceof Translation) {
             $value = $value->data();
         }
@@ -239,7 +243,7 @@ trait ParsableValueTrait
 
         if (($castTo instanceof PropertyInterface) || is_array($castTo)) {
             if (is_object($castTo)) {
-                $l10n  = $castTo->l10n();
+                $l10n   = $castTo->l10n();
                 $multi = $castTo->multiple();
                 $sep   = $castTo->multipleSeparator();
             } else {
