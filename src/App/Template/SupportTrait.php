@@ -52,21 +52,11 @@ trait SupportTrait
     protected static $templateNameCache = [];
 
     /**
-     * Application Debug Mode.
+     * Whether the debug mode is enabled.
      *
-     * @return boolean
+     * @var boolean
      */
-    public function debug()
-    {
-        if (!$this->appConfig) {
-            return false;
-        }
-
-        $debug   = isset($this->appConfig['debug'])    ? $this->appConfig['debug']    : false;
-        $devMode = isset($this->appConfig['dev_mode']) ? $this->appConfig['dev_mode'] : false;
-
-        return $debug || $devMode;
-    }
+    private $debug = false;
 
     /**
      * Retrieve the template's identifier.
@@ -98,13 +88,34 @@ trait SupportTrait
     }
 
     /**
+     * Set application debug mode.
+     *
+     * @param  boolean $debug The debug flag.
+     * @return void
+     */
+    protected function setDebug($debug)
+    {
+        $this->debug = !!$debug;
+    }
+
+    /**
+     * Retrieve the application debug mode.
+     *
+     * @return boolean
+     */
+    public function debug()
+    {
+        return $this->debug;
+    }
+
+    /**
      * Set the base URI of the project.
      *
      * @see    \Charcoal\App\ServiceProvider\AppServiceProvider `$container['base-url']`
      * @param  UriInterface $uri The base URI.
      * @return self
      */
-    public function setBaseUrl(UriInterface $uri)
+    protected function setBaseUrl(UriInterface $uri)
     {
         $this->baseUrl = $uri;
 
@@ -154,7 +165,7 @@ trait SupportTrait
      * @throws InvalidArgumentException If the configset is invalid.
      * @return self
      */
-    public function setAppConfig($config)
+    protected function setAppConfig($config)
     {
         if (!is_array($config) && !($config instanceof ArrayAccess)) {
             throw new InvalidArgumentException('The configset must be array-accessible.');
@@ -204,7 +215,7 @@ trait SupportTrait
      * @throws InvalidArgumentException If the class name is not a string.
      * @return AbstractPropertyDisplay Chainable
      */
-    public function setDynamicConfigClass($className)
+    protected function setDynamicConfigClass($className)
     {
         if (!is_string($className)) {
             throw new InvalidArgumentException(
@@ -232,7 +243,7 @@ trait SupportTrait
      *
      * @return EntityInterface|null
      */
-    private function dynamicConfig()
+    protected function dynamicConfig()
     {
         $className = $this->dynamicConfigClass();
         if ($className) {

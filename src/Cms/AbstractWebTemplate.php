@@ -57,6 +57,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     {
         parent::setDependencies($container);
 
+        $this->setDebug($container['debug']);
         $this->setTranslator($container['translator']);
         $this->setAppConfig($container['config']);
         $this->setBaseUrl($container['base-url']);
