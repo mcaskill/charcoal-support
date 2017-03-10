@@ -146,7 +146,7 @@ trait SupportTrait
      * @param  string $uri A URI path to wrap.
      * @return UriInterface
      */
-    public function withBaseUrl($uri)
+    public function createAbsoluteUrl($uri)
     {
         $uri = strval($uri);
         if ($uri && !parse_url($uri, PHP_URL_SCHEME)) {
