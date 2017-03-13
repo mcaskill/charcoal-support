@@ -167,7 +167,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      * @param  string|null $img A path to an image.
      * @return string|null
      */
-    public function resolveMetaImage($img = null)
+    protected function resolveMetaImage($img = null)
     {
         if (!$img) {
             $img = static::DEFAULT_SOCIAL_MEDIA_IMAGE;
