@@ -164,10 +164,13 @@ trait ContextualTemplateTrait
     public function currentUrl()
     {
         $context = $this->contextObject();
-        $uri     = $this->baseUrl();
 
         if ($context) {
-            return $uri->withPath(strval($context['url']));
+            $uri = $context['url'];
+
+            if ($uri && !parse_url($uri, PHP_URL_SCHEME)) {
+                $uri = $this->baseUrl()->withPath($uri);
+            }
         }
 
         return $uri;
