@@ -149,9 +149,20 @@ trait SupportTrait
     public function createAbsoluteUrl($uri)
     {
         $uri = strval($uri);
-        if ($uri && !parse_url($uri, PHP_URL_SCHEME)) {
-            if (!in_array($uri[0], [ '/', '#', '?' ])) {
-                return $this->baseUrl()->withPath($uri);
+        if ($uri === '') {
+            $uri = $baseUrl->withPath('');
+        } else {
+            $parts = parse_url($uri);
+            if (!isset($parts['scheme'])) {
+                if (!in_array($uri[0], [ '/', '#', '?' ])) {
+                    $path  = isset($parts['path']) ? $parts['path'] : '';
+                    $query = isset($parts['query']) ? $parts['query'] : '';
+                    $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
+
+                    $uri = $baseUrl->withPath($path)
+                                   ->withQuery($query)
+                                   ->withFragment($hash);
+                }
             }
         }
 
