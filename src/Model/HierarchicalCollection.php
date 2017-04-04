@@ -7,7 +7,7 @@ use InvalidArgumentException;
 // From 'charcoal-core'
 use Charcoal\Model\Collection as CharcoalCollection;
 
-// From 'charcoal-base'
+// From 'charcoal-object'
 use Charcoal\Object\HierarchicalInterface;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Charcoal\Support\Cms\Object;
 
-// From 'charcoal-base'
+// From 'charcoal-object'
 use Charcoal\Object\RoutableInterface;
 
 // From 'mcaskill/charcoal-support'

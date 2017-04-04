@@ -101,7 +101,6 @@ Defines a web page.
 [charcoal-app]: https://github.com/locomotivemtl/charcoal-app
 [charcoal-cms]: https://github.com/locomotivemtl/charcoal-cms
 [charcoal-core]: https://github.com/locomotivemtl/charcoal-core
-[charcoal-base]: https://github.com/locomotivemtl/charcoal-base
 [charcoal-project]: https://github.com/locomotivemtl/charcoal-project-boilerplate
 [charcoal-property]: https://github.com/locomotivemtl/charcoal-property
 [charcoal-view]: https://github.com/locomotivemtl/charcoal-view

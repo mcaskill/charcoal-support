@@ -4,7 +4,7 @@ namespace Charcoal\Support\App\Routing;
 
 use UnexpectedValueException;
 
-// From 'charcoal-base'
+// From 'charcoal-object'
 use Charcoal\Object\RoutableTrait;
 
 // From 'charcoal-translator'
