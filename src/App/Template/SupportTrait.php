@@ -150,7 +150,7 @@ trait SupportTrait
     {
         $uri = strval($uri);
         if ($uri === '') {
-            $uri = $baseUrl->withPath('');
+            $uri = $this->baseUrl()->withPath('');
         } else {
             $parts = parse_url($uri);
             if (!isset($parts['scheme'])) {
@@ -158,10 +158,7 @@ trait SupportTrait
                     $path  = isset($parts['path']) ? $parts['path'] : '';
                     $query = isset($parts['query']) ? $parts['query'] : '';
                     $hash  = isset($parts['fragment']) ? $parts['fragment'] : '';
-
-                    $uri = $baseUrl->withPath($path)
-                                   ->withQuery($query)
-                                   ->withFragment($hash);
+                    $uri   = $this->baseUrl()->withPath($path)->withQuery($query)->withFragment($hash);
                 }
             }
         }
