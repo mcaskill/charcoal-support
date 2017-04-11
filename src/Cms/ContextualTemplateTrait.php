@@ -159,21 +159,17 @@ trait ContextualTemplateTrait
     /**
      * Retrieve the current URI of the context.
      *
-     * @return string|UriInterface
+     * @return UriInterface|string|null
      */
     public function currentUrl()
     {
         $context = $this->contextObject();
 
-        if ($context) {
-            $uri = $context['url'];
-
-            if ($uri && !parse_url($uri, PHP_URL_SCHEME)) {
-                $uri = $this->baseUrl()->withPath($uri);
-            }
+        if ($context && isset($context['url'])) {
+            return $context['url'];
         }
 
-        return $uri;
+        return null;
     }
 
     /**

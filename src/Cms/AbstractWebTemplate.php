@@ -79,6 +79,22 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         return '';
     }
 
+    /**
+     * Retrieve the current URI of the context.
+     *
+     * @return UriInterface|string|null
+     */
+    public function currentUrl()
+    {
+        $context = $this->contextObject();
+
+        if ($context && isset($context['url'])) {
+            return $this->createAbsoluteUrl($context['url']);
+        }
+
+        return null;
+    }
+
 
 
     // Metadata
