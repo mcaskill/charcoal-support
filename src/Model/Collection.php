@@ -66,13 +66,11 @@ class Collection extends CharcoalCollection
     /**
      * Reverse the order of objects in the collection.
      *
-     * @return self
+     * @return static
      */
     public function reverse()
     {
-        $this->objects = array_reverse($this->objects, true);
-
-        return $this;
+        return new static(array_reverse($this->objects, true));
     }
 
     /**
