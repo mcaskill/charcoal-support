@@ -71,6 +71,12 @@ class HierarchicalObjectProperty extends ObjectProperty
 
         $choice = parent::choice($obj);
 
+        if (property_exists($obj, 'auxiliary') && $obj->auxiliary) {
+            $choice['parent'] = true;
+        } else {
+            $choice['group'] = ($obj->hasMaster() ? $obj->master()->id() : null);
+        }
+
         if (is_callable([ $obj, 'name' ])) {
             $choice['title'] = $obj->name();
         } elseif (is_callable([ $obj, 'label' ])) {
