@@ -407,7 +407,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
                 $data = [
                     'id'    => ($isModel) ? $context['id'] : $this->templateName(),
                     'title' => ($isModel) ? (string)$context['title'] : $this->pageTitle(),
-                    'url'   => ($isRoutable) ? $context->url($lang) : $this->currentUrl(),
+                    'url'   => ($isRoutable) ? $context->url($lang) : ($this->currentUrl()) ? : $lang,
                     'hreflang' => $lang
                 ];
 
