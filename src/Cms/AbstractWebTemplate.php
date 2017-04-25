@@ -8,6 +8,9 @@ use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
+// From 'charcoal-object'
+use Charcoal\Object\RoutableInterface;
+
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
@@ -390,6 +393,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         if ($this->alternateTranslations === null) {
             $context = $this->contextObject();
             $isModel = ($context instanceof ModelInterface);
+            $isRoutable = ($context instanceof RoutableInterface);
 
             $origLang   = $this->currentLanguage();
 
@@ -402,13 +406,9 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
                 $data = [
                     'id'    => ($isModel) ? $context['id'] : $this->templateName(),
-                    'title' => ($isModel) ? (string)$context->title() : $this->pageTitle(),
-                    'url'   => ($isModel) ? $context->url($lang) : $this->currentUrl(),
-                    'hreflang' => $lang,
-                    // 'hreflang' => $language->code(),
-                    'language' => $lang,
-                    // 'language' => $this->languagePresenter->transform($language),
-                    'isCurrentLanguage' => $lang === $origLang
+                    'title' => ($isModel) ? (string)$context['title'] : $this->pageTitle(),
+                    'url'   => ($isRoutable) ? $context->url($lang) : $this->currentUrl(),
+                    'hreflang' => $lang
                 ];
 
                 $this->alternateTranslations[$lang] = $data;
