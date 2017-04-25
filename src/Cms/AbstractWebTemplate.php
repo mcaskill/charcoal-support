@@ -196,10 +196,27 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     {
         $context = $this->contextObject();
 
+        $desc = null;
         if ($context instanceof HasMetatagInterface) {
-            return $context['meta_description'];
+            $desc = $context['meta_description'];
         }
 
+        if (!$desc) {
+            $desc = $this->metaDescriptionFromConfig();
+        }
+
+        return null;
+    }
+
+    /**
+     * Hook called as a fallback if no meta description is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return null
+     */
+    protected function metaDescriptionFromConfig()
+    {
         return null;
     }
 
@@ -217,7 +234,23 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
             $img = $context['meta_image'];
         }
 
+        if (!$img) {
+            $img = $this->metaImageFromConfig();
+        }
+
         return $this->resolveMetaImage($img);
+    }
+
+    /**
+     * Hook called as a fallback if no meta image is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return null
+     */
+    protected function metaImageFromConfig()
+    {
+        return null;
     }
 
     /**
@@ -280,12 +313,28 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
             $img = $context['opengraph_image'];
         }
 
+        if (!$img) {
+            $img = $this->opengraphImageFromConfig();
+        }
+
         if ($img) {
             $uri = $this->baseUrl();
             return $uri->withPath(strval($img));
         }
 
         return $this->metaImage();
+    }
+
+    /**
+     * Hook called as a fallback if no social image is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return null
+     */
+    protected function opengraphImageFromConfig()
+    {
+        return null;
     }
 
     /**
