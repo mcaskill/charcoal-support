@@ -95,6 +95,27 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         return null;
     }
 
+    /**
+     * Retrieve the canonical URI of the object.
+     *
+     * @return string|null
+     */
+    public function currentLocale()
+    {
+        $langCode = $this->translator()->getLocale();
+        $locales  = $this->translator()->locales();
+        if (isset($locales[$langCode])) {
+            $locale = $locales[$langCode];
+            if (isset($locale['locale'])) {
+                return $locale['locale'];
+            } else {
+                return $langCode;
+            }
+        }
+
+        return null;
+    }
+
 
 
     // Metadata
