@@ -87,6 +87,17 @@ class StringHelpers implements HelpersInterface
                 $text = $helper->render($text);
 
                 return rawurlencode($text);
+            },
+            /**
+             * Transform URL patterns into links.
+             *
+             * @see https://davidwalsh.name/linkify-twitter-feed
+             * @return string
+             */
+            'linkify' => function ($text, LambdaHelper $helper) {
+                $text = $helper->render($text);
+
+                return preg_replace('/(https?:\/\/\S+)/', '<a href="\1">\1</a>', $text);
             }
         ];
     }
