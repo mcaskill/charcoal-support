@@ -22,6 +22,7 @@ use Charcoal\App\Template\AbstractTemplate as CharcoalTemplate;
 use Charcoal\Support\App\Template\SupportTrait as TemplateSupportTrait;
 use Charcoal\Support\Cms\ContextualTemplateInterface;
 use Charcoal\Support\Cms\ContextualTemplateTrait;
+use Charcoal\Support\Cms\LocaleAwareTrait;
 use Charcoal\Support\Cms\Metatag\DocumentTrait;
 use Charcoal\Support\Cms\Metatag\HasMetatagInterface;
 use Charcoal\Support\Cms\Metatag\HasOpenGraphInterface;
@@ -40,6 +41,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 {
     use ContextualTemplateTrait;
     use DocumentTrait;
+    use LocaleAwareTrait;
     use TemplateSupportTrait;
     use TranslatorAwareTrait;
 
@@ -49,23 +51,6 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      * @var string
      */
     const DEFAULT_SOCIAL_MEDIA_IMAGE = '';
-
-    /**
-     * Available languages as defined by the config.
-     *
-     * @var array
-     */
-    protected $availableLanguages;
-
-    /**
-     * @var array
-     */
-    private $alternateTranslations;
-
-    /**
-     * @var array
-     */
-    private $localesManager;
 
     /**
      * Inject dependencies from a DI Container.
@@ -80,7 +65,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         $this->setDebug($container['debug']);
         $this->setTranslator($container['translator']);
         $this->setAvailableLanguages($container['locales/available-languages']);
-        $this->localesManager = $container['locales/manager'];
+        $this->setLocalesManager($container['locales/manager']);
         $this->setAppConfig($container['config']);
         $this->setBaseUrl($container['base-url']);
     }
@@ -388,29 +373,6 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     // =================================================================================================================
 
     /**
-     * Set the available languages.
-     *
-     * @param  array $languages The list of languages.
-     * @return self
-     */
-    protected function setAvailableLanguages(array $languages)
-    {
-        $this->availableLanguages = $languages;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the translator service.
-     *
-     * @return array
-     */
-    protected function availableLanguages()
-    {
-        return $this->availableLanguages;
-    }
-
-    /**
      * Retrieve the locale shortcode
      *
      * @return string
@@ -418,56 +380,5 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     public function currentLanguage()
     {
         return $this->translator()->getLocale();
-    }
-
-    /**
-     * Determine if there exists alternate translations associated with the current route.
-     *
-     * @return boolean
-     */
-    public function hasAlternateTranslations()
-    {
-        return count(iterator_to_array($this->alternateTranslations())) > 0;
-    }
-
-    /**
-     * Render the alternate translations associated with the current route.
-     *
-     * This method _excludes_ the current route's canonical URI.
-     *
-     * @return Generator|null
-     */
-    public function alternateTranslations()
-    {
-        if ($this->alternateTranslations === null) {
-            $context = $this->contextObject();
-            $isModel = ($context instanceof ModelInterface);
-            $isRoutable = ($context instanceof RoutableInterface);
-
-            $origLang   = $this->currentLanguage();
-
-            foreach ($this->availableLanguages() as $lang) {
-                if ($lang === $origLang) {
-                    continue;
-                }
-
-                $this->localesManager->setCurrentLocale($lang);
-
-                $data = [
-                    'id'    => ($isModel) ? $context['id'] : $this->templateName(),
-                    'title' => ($isModel) ? (string)$context['title'] : $this->pageTitle(),
-                    'url'   => ($isRoutable) ? $context->url($lang) : ($this->currentUrl()) ? : $lang,
-                    'hreflang' => $lang
-                ];
-
-                $this->alternateTranslations[$lang] = $data;
-            }
-
-            $this->localesManager->setCurrentLocale($origLang);
-        }
-
-        foreach ($this->alternateTranslations as $lang => $trans) {
-            yield $lang => $trans;
-        }
     }
 }
