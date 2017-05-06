@@ -202,10 +202,10 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         if (!$desc) {
-            $desc = $this->metaDescriptionFromConfig();
+            $desc = $this->fallbackMetaDescription();
         }
 
-        return null;
+        return $desc;
     }
 
     /**
@@ -215,7 +215,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * @return null
      */
-    protected function metaDescriptionFromConfig()
+    protected function fallbackMetaDescription()
     {
         return null;
     }
@@ -235,7 +235,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         if (!$img) {
-            $img = $this->metaImageFromConfig();
+            $img = $this->fallbackMetaImage();
         }
 
         return $this->resolveMetaImage($img);
@@ -248,7 +248,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * @return null
      */
-    protected function metaImageFromConfig()
+    protected function fallbackMetaImage()
     {
         return null;
     }
@@ -314,7 +314,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         if (!$img) {
-            $img = $this->opengraphImageFromConfig();
+            $img = $this->fallbackOpengraphImage();
         }
 
         if ($img) {
@@ -332,7 +332,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * @return null
      */
-    protected function opengraphImageFromConfig()
+    protected function fallbackOpengraphImage()
     {
         return null;
     }
