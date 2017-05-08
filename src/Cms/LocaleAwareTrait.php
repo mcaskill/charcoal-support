@@ -94,6 +94,8 @@ trait LocaleAwareTrait
     public function alternateTranslations()
     {
         if ($this->alternateTranslations === null) {
+            $this->alternateTranslations = [];
+
             $context  = $this->contextObject();
             $origLang = $this->currentLanguage();
 
@@ -148,7 +150,11 @@ trait LocaleAwareTrait
      */
     public function hasAlternateTranslations()
     {
-        return count(iterator_to_array($this->alternateTranslations())) > 0;
+        if ($this->alternateTranslations === null) {
+            $this->alternateTranslations();
+        }
+
+        return (count($this->alternateTranslations) > 0);
     }
 
     /**
