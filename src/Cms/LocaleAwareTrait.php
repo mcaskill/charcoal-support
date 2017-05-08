@@ -17,18 +17,23 @@ use Charcoal\Translator\LocalesManager;
 trait LocaleAwareTrait
 {
     /**
-     * Available languages as defined by the config.
+     * Available languages as defined by the application configset.
      *
      * @var array
      */
     protected $availableLanguages;
 
     /**
+     * Store the processed link structures to translations
+     * for the current route, if any.
+     *
      * @var array
      */
     private $alternateTranslations;
 
     /**
+     * Store the application's locales manager.
+     *
      * @var LocalesManager
      */
     private $localesManager;
@@ -36,20 +41,11 @@ trait LocaleAwareTrait
     /**
      * Set the class name of the section model.
      *
-     * @param  string $className The class name of the section model.
-     * @throws InvalidArgumentException If the given object is invalid.
+     * @param  LocalesManager $manager The locales manager.
      * @return self
      */
-    public function setLocalesManager($manager)
+    protected function setLocalesManager(LocalesManager $manager)
     {
-        if (!$manager instanceof LocalesManager) {
-            throw new InvalidArgumentException(sprintf(
-                'Locales Manager must be an instance of %s; received %s',
-                LocalesManager::class,
-                (is_object($manager) ? get_class($manager) : gettype($manager))
-            ));
-        }
-
         $this->localesManager = $manager;
 
         return $this;
@@ -58,9 +54,9 @@ trait LocaleAwareTrait
     /**
      * Retrieve the locales manager.
      *
-     * @return
+     * @return LocalesManager
      */
-    public function localesManager()
+    protected function localesManager()
     {
         return $this->localesManager;
     }
@@ -98,10 +94,7 @@ trait LocaleAwareTrait
     public function alternateTranslations()
     {
         if ($this->alternateTranslations === null) {
-            $context = $this->contextObject();
-            $isModel = ($context instanceof ModelInterface);
-            $isRoutable = ($context instanceof RoutableInterface);
-
+            $context  = $this->contextObject();
             $origLang = $this->currentLanguage();
 
             foreach ($this->availableLanguages() as $lang) {
@@ -111,14 +104,7 @@ trait LocaleAwareTrait
 
                 $this->localesManager()->setCurrentLocale($lang);
 
-                $data = [
-                    'id'    => ($isModel) ? $context['id'] : $this->templateName(),
-                    'title' => ($isModel) ? (string)$context['title'] : $this->title(),
-                    'url'   => ($isRoutable) ? $context->url($lang) : ($this->currentUrl()) ? : $lang,
-                    'hreflang' => $lang
-                ];
-
-                $this->alternateTranslations[$lang] = $data;
+                $this->alternateTranslations[$lang] = $this->formatAlternateTranslation($context, $lang);
             }
 
             $this->localesManager()->setCurrentLocale($origLang);
@@ -127,6 +113,32 @@ trait LocaleAwareTrait
         foreach ($this->alternateTranslations as $lang => $trans) {
             yield $lang => $trans;
         }
+    }
+
+    /**
+     * Format an alternate translation for the given translatable model.
+     *
+     * Note: The application's locale is already modified and will be reset
+     * after processing all available languages.
+     *
+     * @param  mixed  $context The translated {@see \Charcoal\Model\ModelInterface model}
+     *     or array-accessible structure.
+     * @param  string $lang    The currently iterated language.
+     * @return array Returns a link structure.
+     */
+    protected function formatAlternateTranslation($context, $lang)
+    {
+        $isModel    = ($context instanceof ModelInterface);
+        $isRoutable = ($context instanceof RoutableInterface);
+
+        $link = [
+            'id'       => ($isModel ? $obj['id'] : $this->templateName()),
+            'title'    => ($isModel ? (string)$obj['title'] : $this->title()),
+            'url'      => ($isRoutable ? $obj->url($lang) : ($this->currentUrl() ? : $lang)),
+            'hreflang' => $lang
+        ];
+
+        return $link;
     }
 
     /**
@@ -146,4 +158,32 @@ trait LocaleAwareTrait
      * @return \Charcoal\Translator\Translator
      */
     abstract protected function translator();
+
+    /**
+     * Retrieve the template's identifier.
+     *
+     * @return string
+     */
+    abstract public function templateName();
+
+    /**
+     * Retrieve the title of the page (from the context).
+     *
+     * @return string
+     */
+    abstract public function title();
+
+    /**
+     * Retrieve the current URI of the context.
+     *
+     * @return \Psr\Http\Message\UriInterface|string
+     */
+    abstract public function currentUrl();
+
+    /**
+     * Retrieve the current object relative to the context.
+     *
+     * @return \Charcoal\Model\ModelInterface|null
+     */
+    abstract public function contextObject();
 }
