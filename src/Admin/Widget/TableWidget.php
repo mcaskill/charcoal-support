@@ -22,11 +22,11 @@ class TableWidget extends CharcoalTableWidget
     use HtmlableTrait;
 
     /**
-     * Retrieve the widget type.
+     * Retrieve the widget's template.
      *
      * @return string
      */
-    public function type()
+    public function template()
     {
         return 'charcoal/admin/widget/table';
     }
