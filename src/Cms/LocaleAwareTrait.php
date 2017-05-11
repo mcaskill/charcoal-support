@@ -85,13 +85,13 @@ trait LocaleAwareTrait
     }
 
     /**
-     * Render the alternate translations associated with the current route.
+     * Build the alternate translations associated with the current route.
      *
      * This method _excludes_ the current route's canonical URI.
      *
-     * @return Generator|null
+     * @return array
      */
-    public function alternateTranslations()
+    protected function buildAlternateTranslations()
     {
         if ($this->alternateTranslations === null) {
             $this->alternateTranslations = [];
@@ -112,9 +112,7 @@ trait LocaleAwareTrait
             $this->localesManager()->setCurrentLocale($origLang);
         }
 
-        foreach ($this->alternateTranslations as $lang => $trans) {
-            yield $lang => $trans;
-        }
+        return $this->alternateTranslations;
     }
 
     /**
@@ -130,17 +128,28 @@ trait LocaleAwareTrait
      */
     protected function formatAlternateTranslation($context, $lang)
     {
-        $isModel    = ($context instanceof ModelInterface);
         $isRoutable = ($context instanceof RoutableInterface);
 
         $link = [
-            'id'       => ($isModel ? $obj['id'] : $this->templateName()),
-            'title'    => ($isModel ? (string)$obj['title'] : $this->title()),
+            'id'       => ($context['id']) ? : $this->templateName(),
+            'title'    => ((string)$context['title']) ? : $this->title(),
             'url'      => ($isRoutable ? $obj->url($lang) : ($this->currentUrl() ? : $lang)),
             'hreflang' => $lang
         ];
 
         return $link;
+    }
+
+    /**
+     * Render the alternate translations associated with the current route.
+     *
+     * @return Generator|null
+     */
+    public function alternateTranslations()
+    {
+        foreach ($this->buildAlternateTranslations() as $lang => $trans) {
+            yield $lang => $trans;
+        }
     }
 
     /**
@@ -150,11 +159,7 @@ trait LocaleAwareTrait
      */
     public function hasAlternateTranslations()
     {
-        if ($this->alternateTranslations === null) {
-            $this->alternateTranslations();
-        }
-
-        return (count($this->alternateTranslations) > 0);
+        return (count($this->buildAlternateTranslations()) > 0);
     }
 
     /**
