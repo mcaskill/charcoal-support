@@ -12,6 +12,7 @@
         "meta_title": {
             "type": "string",
             "l10n": true,
+            "l10n_mode": "loop_inputs",
             "label": {
                 "en": "Title",
                 "fr": "Titre"
@@ -25,6 +26,7 @@
             "type": "text",
             "input_type": "charcoal/admin/property/input/textarea",
             "l10n": true,
+            "l10n_mode": "loop_inputs",
             "label": "Description",
             "notes": {
                 "en": "Short description of object",

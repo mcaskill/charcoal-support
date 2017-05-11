@@ -8,6 +8,9 @@ use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
+// From 'charcoal-object'
+use Charcoal\Object\RoutableInterface;
+
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
@@ -19,6 +22,7 @@ use Charcoal\App\Template\AbstractTemplate as CharcoalTemplate;
 use Charcoal\Support\App\Template\SupportTrait as TemplateSupportTrait;
 use Charcoal\Support\Cms\ContextualTemplateInterface;
 use Charcoal\Support\Cms\ContextualTemplateTrait;
+use Charcoal\Support\Cms\LocaleAwareTrait;
 use Charcoal\Support\Cms\Metatag\DocumentTrait;
 use Charcoal\Support\Cms\Metatag\HasMetatagInterface;
 use Charcoal\Support\Cms\Metatag\HasOpenGraphInterface;
@@ -37,6 +41,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 {
     use ContextualTemplateTrait;
     use DocumentTrait;
+    use LocaleAwareTrait;
     use TemplateSupportTrait;
     use TranslatorAwareTrait;
 
@@ -59,6 +64,8 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $this->setDebug($container['debug']);
         $this->setTranslator($container['translator']);
+        $this->setAvailableLanguages($container['locales/available-languages']);
+        $this->setLocalesManager($container['locales/manager']);
         $this->setAppConfig($container['config']);
         $this->setBaseUrl($container['base-url']);
     }
@@ -174,10 +181,27 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     {
         $context = $this->contextObject();
 
+        $desc = null;
         if ($context instanceof HasMetatagInterface) {
-            return $context['meta_description'];
+            $desc = $context['meta_description'];
         }
 
+        if (!$desc) {
+            $desc = $this->fallbackMetaDescription();
+        }
+
+        return $desc;
+    }
+
+    /**
+     * Hook called as a fallback if no meta description is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return null
+     */
+    protected function fallbackMetaDescription()
+    {
         return null;
     }
 
@@ -195,7 +219,23 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
             $img = $context['meta_image'];
         }
 
+        if (!$img) {
+            $img = $this->fallbackMetaImage();
+        }
+
         return $this->resolveMetaImage($img);
+    }
+
+    /**
+     * Hook called as a fallback if no meta image is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return null
+     */
+    protected function fallbackMetaImage()
+    {
+        return null;
     }
 
     /**
@@ -258,12 +298,28 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
             $img = $context['opengraph_image'];
         }
 
+        if (!$img) {
+            $img = $this->fallbackOpengraphImage();
+        }
+
         if ($img) {
             $uri = $this->baseUrl();
             return $uri->withPath(strval($img));
         }
 
         return $this->metaImage();
+    }
+
+    /**
+     * Hook called as a fallback if no social image is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return null
+     */
+    protected function fallbackOpengraphImage()
+    {
+        return null;
     }
 
     /**
@@ -309,5 +365,20 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         return $this->metaImage();
+    }
+
+
+
+    // Polylingual
+    // =================================================================================================================
+
+    /**
+     * Retrieve the locale shortcode
+     *
+     * @return string
+     */
+    public function currentLanguage()
+    {
+        return $this->translator()->getLocale();
     }
 }
