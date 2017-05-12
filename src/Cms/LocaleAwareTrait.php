@@ -4,6 +4,9 @@ namespace Charcoal\Support\Cms;
 
 use InvalidArgumentException;
 
+// From 'charcoal-object'
+use Charcoal\Object\RoutableInterface;
+
 // From 'charcoal-translator'
 use Charcoal\Translator\LocalesManager;
 
@@ -133,7 +136,7 @@ trait LocaleAwareTrait
         $link = [
             'id'       => ($context['id']) ? : $this->templateName(),
             'title'    => ((string)$context['title']) ? : $this->title(),
-            'url'      => ($isRoutable ? $obj->url($lang) : ($this->currentUrl() ? : $lang)),
+            'url'      => ($isRoutable ? $context->url($lang) : ($this->currentUrl() ? : $lang)),
             'hreflang' => $lang
         ];
 
