@@ -10,7 +10,6 @@ use Charcoal\Support\Cms\Metatag\HasMetatagTrait;
 use Charcoal\Support\Cms\Metatag\HasOpenGraphTrait;
 use Charcoal\Support\Cms\Metatag\HasTwitterCardTrait;
 use Charcoal\Support\Cms\Object\WebContentInterface;
-use Charcoal\Support\Property\ParsableValueTrait;
 
 /**
  * Hypertext Content Model
@@ -21,7 +20,6 @@ abstract class AbstractWebContent extends Content implements
     use HasMetatagTrait;
     use HasOpenGraphTrait;
     use HasTwitterCardTrait;
-    use ParsableValueTrait;
 
     /**
      * Objects are not locked by default.
