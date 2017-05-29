@@ -32,7 +32,7 @@ trait ParsableValueTrait
      * @param  string|PropertyInterface $separator The boundary string.
      * @return array
      */
-    public function parseAsMultiple($value, $separator = ',')
+    protected function parseAsMultiple($value, $separator = ',')
     {
         if (is_array($value) || $value instanceof Traversable) {
             $parsed = [];
@@ -87,7 +87,7 @@ trait ParsableValueTrait
      * @throws InvalidArgumentException If the date/time value is invalid.
      * @return DateTimeInterface|null
      */
-    public function parseAsDateTime($value)
+    protected function parseAsDateTime($value)
     {
         if (empty($value) && !is_numeric($value)) {
             return null;
@@ -120,7 +120,7 @@ trait ParsableValueTrait
      * @param  mixed $value The value being localized.
      * @return Translation|string|null
      */
-    public function parseAsTranslatable($value)
+    protected function parseAsTranslatable($value)
     {
         trigger_error('parseAsTranslatable() is deprecated. Use Translator::translation() instead.', E_USER_DEPRECATED);
 
@@ -166,7 +166,7 @@ trait ParsableValueTrait
      * @param  mixed $separator The item delimiter. This can be a string or a function.
      * @return array
      */
-    public function pairTranslatableArrayItems($value, $separator = ',')
+    protected function pairTranslatableArrayItems($value, $separator = ',')
     {
         if (empty($value) && !is_numeric($value)) {
             return null;
@@ -215,7 +215,7 @@ trait ParsableValueTrait
      * @throws InvalidArgumentException If the $castTo parameter is invalid.
      * @return mixed|null
      */
-    public function castTo(
+    protected function castTo(
         $value,
         $castTo,
         $fallback = null
