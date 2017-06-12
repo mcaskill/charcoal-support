@@ -130,6 +130,29 @@ trait ParsableValueTrait
     }
 
     /**
+     * Retrieve a fallback value from a translatable value.
+     *
+     * Note: Fallbacks are determined in your application settings, "locales.fallback_languages".
+     *
+     * @param  mixed $value A translatable value.
+     * @return string|null
+     */
+    protected function parseAsTranslatableFallback($value)
+    {
+        $fallback = $this->translator()->translate($value);
+        if (empty($fallback) && is_array($value)) {
+            foreach ($this->translator()->getFallbackLocales() as $lang) {
+                if (!empty($value[$lang])) {
+                    $fallback = $value[$lang];
+                    break;
+                }
+            }
+        }
+
+        return $fallback;
+    }
+
+    /**
      * Pair the translatable array items.
      *
      * Converts this:
