@@ -2,6 +2,9 @@
 
 namespace Charcoal\Support\Cms;
 
+use ArrayIterator;
+use Traversable;
+
 // From Pimple
 use Pimple\Container;
 
@@ -53,6 +56,13 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     const DEFAULT_SOCIAL_MEDIA_IMAGE = '';
 
     /**
+     * Additional SEO metadata.
+     *
+     * @var array
+     */
+    private $seoMetadata = [];
+
+    /**
      * Inject dependencies from a DI Container.
      *
      * @param  Container $container A dependencies container instance.
@@ -68,6 +78,11 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         $this->setLocalesManager($container['locales/manager']);
         $this->setAppConfig($container['config']);
         $this->setBaseUrl($container['base-url']);
+
+        $metatags = $this->appConfig('cms.metatags');
+        if (is_array($metatags)) {
+            $this->setSeoMetadata($this->appConfig('cms.metatags'));
+        }
     }
 
     /**
@@ -365,6 +380,56 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         return $this->metaImage();
+    }
+
+    /**
+     * Set additional SEO metadata.
+     *
+     * @return array|Traversable
+     */
+    public function seoMetadata()
+    {
+        return $this->seoMetadata;
+    }
+
+    /**
+     * Determine if we have additional SEO metadata.
+     *
+     * @return boolean
+     */
+    public function hasSeoMetadata()
+    {
+        if ($this->seoMetadata instanceof ArrayIterator) {
+            return (count($this->seoMetadata) > 0);
+        }
+
+        return !empty($this->seoMetadata);
+    }
+
+    /**
+     * Set additional SEO metadata.
+     *
+     * @param  array $metadata Map of metadata keys and values.
+     * @return self
+     */
+    protected function setSeoMetadata(array $metadata)
+    {
+        if (is_array($this->seoMetadata)) {
+            $this->seoMetadata = new ArrayIterator($this->seoMetadata);
+        }
+
+        foreach ($metadata as $key => $value) {
+            if (is_array($value)) {
+                $value = implode(',', $value);
+            }
+
+            $this->seoMetadata[] = [
+                'name'    => $key,
+                'content' => (string)$value
+            ];
+        }
+
+        return $this;
     }
 
 

@@ -12,6 +12,12 @@
 
 {{/ alternateTranslations }}
 {{/ hasAlternateTranslations }}
+{{# hasSeoMetadata }}
+{{# seoMetadata }}
+<meta name="{{ name }}" content="{{ content }}">
+{{/ seoMetadata }}
+
+{{/ hasSeoMetadata }}
 {{# metaDescription }}
 <meta name="description" content="{{ . }}">
 
