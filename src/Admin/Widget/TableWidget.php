@@ -22,16 +22,6 @@ class TableWidget extends CharcoalTableWidget
     use HtmlableTrait;
 
     /**
-     * Retrieve the widget's template.
-     *
-     * @return string
-     */
-    public function template()
-    {
-        return 'charcoal/admin/widget/table';
-    }
-
-    /**
      * Create a collection loader.
      *
      * @return CollectionLoader
