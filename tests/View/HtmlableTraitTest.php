@@ -3,11 +3,11 @@
 namespace Charcoal\Tests\Support\View;
 
 // From 'charcoal-view'
-use \Charcoal\View\AbstractView;
-use \Charcoal\View\GenericView;
+use Charcoal\View\AbstractView;
+use Charcoal\View\GenericView;
 
 // From 'charcoal-support'
-use \Charcoal\Support\View\HtmlableTrait;
+use Charcoal\Support\View\HtmlableTrait;
 
 /**
  * Test the HTML-renderable trait.

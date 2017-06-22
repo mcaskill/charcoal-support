@@ -3,16 +3,16 @@
 namespace Charcoal\Support\Admin\Widget;
 
 // From `charcoal-core`
-use \Charcoal\Model\ModelInterface;
+use Charcoal\Model\ModelInterface;
 
 // From `charcoal-property`
-use \Charcoal\Property\PropertyInterface;
+use Charcoal\Property\PropertyInterface;
 
 // From `charcoal-admin`
 use Charcoal\Admin\Widget\TableWidget as CharcoalTableWidget;
 
 // From 'charcoal-support'
-use \Charcoal\Support\View\HtmlableTrait;
+use Charcoal\Support\View\HtmlableTrait;
 
 /**
  *
