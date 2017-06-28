@@ -75,7 +75,6 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         $this->setDebug($container['debug']);
         $this->setTranslator($container['translator']);
         $this->setAvailableLanguages(array_keys($container['locales/manager']->locales()));
-        $this->setLocalesManager($container['locales/manager']);
         $this->setAppConfig($container['config']);
         $this->setBaseUrl($container['base-url']);
 

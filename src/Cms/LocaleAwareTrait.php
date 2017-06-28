@@ -7,9 +7,6 @@ use InvalidArgumentException;
 // From 'charcoal-object'
 use Charcoal\Object\RoutableInterface;
 
-// From 'charcoal-translator'
-use Charcoal\Translator\LocalesManager;
-
 /**
  * Provides awareness of locales.
  *
@@ -33,36 +30,6 @@ trait LocaleAwareTrait
      * @var array
      */
     private $alternateTranslations;
-
-    /**
-     * Store the application's locales manager.
-     *
-     * @var LocalesManager
-     */
-    private $localesManager;
-
-    /**
-     * Set the class name of the section model.
-     *
-     * @param  LocalesManager $manager The locales manager.
-     * @return self
-     */
-    protected function setLocalesManager(LocalesManager $manager)
-    {
-        $this->localesManager = $manager;
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the locales manager.
-     *
-     * @return LocalesManager
-     */
-    protected function localesManager()
-    {
-        return $this->localesManager;
-    }
 
     /**
      * Set the available languages.
@@ -107,12 +74,12 @@ trait LocaleAwareTrait
                     continue;
                 }
 
-                $this->localesManager()->setCurrentLocale($lang);
+                $this->translator()->setLocale($lang);
 
                 $this->alternateTranslations[$lang] = $this->formatAlternateTranslation($context, $lang);
             }
 
-            $this->localesManager()->setCurrentLocale($origLang);
+            $this->translator()->setLocale($origLang);
         }
 
         return $this->alternateTranslations;
@@ -131,7 +98,7 @@ trait LocaleAwareTrait
      */
     protected function formatAlternateTranslation($context, $lang)
     {
-        $isRoutable = ($context instanceof RoutableInterface);
+        $isRoutable = ($context instanceof RoutableInterface && $context->isActiveRoute());
 
         $link = [
             'id'       => ($context['id']) ? : $this->templateName(),
