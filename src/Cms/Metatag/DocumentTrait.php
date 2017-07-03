@@ -2,6 +2,8 @@
 
 namespace Charcoal\Support\Cms\Metatag;
 
+use InvalidArgumentException;
+
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
@@ -67,11 +69,17 @@ trait DocumentTrait
     /**
      * Retrieve the document title.
      *
+     * @throws InvalidArgumentException If the document title structure is invalid.
      * @return string
      */
     final public function documentTitle()
     {
-        $parts = array_merge([ 'title' => '', 'site' => '' ], $this->documentTitleParts());
+        $parts = $this->documentTitleParts();
+        if (array_diff_key([ 'title' => true, 'site' => true ], $parts)) {
+            throw new InvalidArgumentException(
+                'The document title parts requires at least a "title" and a "site"'
+            );
+        }
 
         return $this->parseDocumentTitle($parts);
     }
