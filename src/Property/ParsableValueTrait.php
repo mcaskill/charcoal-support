@@ -2,6 +2,7 @@
 
 namespace Charcoal\Support\Property;
 
+use ArrayAccess;
 use DateTime;
 use DateTimeInterface;
 use Exception;
