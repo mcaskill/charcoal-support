@@ -140,7 +140,7 @@ trait ParsableValueTrait
     protected function parseAsTranslatableFallback($value)
     {
         $fallback = $this->translator()->translate($value);
-        if (empty($fallback) && !is_numeric($fallback) && is_array($value)) {
+        if (empty($fallback) && !is_numeric($fallback) && (is_array($value) || ($value instanceof ArrayAccess))) {
             foreach ($this->translator()->getFallbackLocales() as $lang) {
                 $trans = $value[$lang];
                 if (!empty($trans) || is_numeric($trans)) {
