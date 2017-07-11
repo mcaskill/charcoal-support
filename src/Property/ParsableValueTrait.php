@@ -135,17 +135,18 @@ trait ParsableValueTrait
      *
      * Note: Fallbacks are determined in your application settings, "locales.fallback_languages".
      *
-     * @param  mixed $value A translatable value.
+     * @param  mixed $value      A translatable value.
+     * @param  array $parameters An array of parameters for the message.
      * @return string|null
      */
-    protected function parseAsTranslatableFallback($value)
+    protected function parseAsTranslatableFallback($value, array $parameters = [])
     {
-        $fallback = $this->translator()->translate($value);
+        $fallback = $this->translator()->translate($value, $parameters);
         if (empty($fallback) && !is_numeric($fallback) && (is_array($value) || ($value instanceof ArrayAccess))) {
             foreach ($this->translator()->getFallbackLocales() as $lang) {
                 $trans = $value[$lang];
                 if (!empty($trans) || is_numeric($trans)) {
-                    $fallback = $trans;
+                    $fallback = strtr($trans, $parameters);
                     break;
                 }
             }
