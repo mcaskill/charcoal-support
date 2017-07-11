@@ -137,10 +137,10 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     public function testReverse()
     {
         $arr = $this->arr;
-        $map = array_reverse($this->map);
+        $map = array_reverse($this->map, true);
 
         $c = new Collection($arr);
-        $c->reverse();
+        $c = $c->reverse();
 
         $this->assertSame($map, $c->all());
     }
