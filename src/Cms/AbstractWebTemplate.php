@@ -176,11 +176,11 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         $title   = null;
 
         if ($context instanceof HasMetatagInterface) {
-            $title = $context['meta_title'];
+            $title = (string)$context['meta_title'];
         }
 
         if (!$title) {
-            $title = $this->title();
+            $title = (string)$this->title();
         }
 
         return $title;
@@ -197,11 +197,11 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $desc = null;
         if ($context instanceof HasMetatagInterface) {
-            $desc = $context['meta_description'];
+            $desc = (string)$context['meta_description'];
         }
 
         if (!$desc) {
-            $desc = $this->fallbackMetaDescription();
+            $desc = (string)$this->fallbackMetaDescription();
         }
 
         return $desc;
@@ -230,11 +230,11 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $img = null;
         if ($context instanceof HasMetatagInterface) {
-            $img = $context['meta_image'];
+            $img = (string)$context['meta_image'];
         }
 
         if (!$img) {
-            $img = $this->fallbackMetaImage();
+            $img = (string)$this->fallbackMetaImage();
         }
 
         return $this->resolveMetaImage($img);
@@ -309,11 +309,11 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $img = null;
         if ($context instanceof HasOpenGraphInterface) {
-            $img = $context['opengraph_image'];
+            $img = (string)$context['opengraph_image'];
         }
 
         if (!$img) {
-            $img = $this->fallbackOpengraphImage();
+            $img = (string)$this->fallbackOpengraphImage();
         }
 
         if ($img) {
@@ -370,7 +370,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $img = null;
         if ($context instanceof HasTwitterCardInterface) {
-            $img = $context['twitter_card_image'];
+            $img = (string)$context['twitter_card_image'];
         }
 
         if ($img) {
