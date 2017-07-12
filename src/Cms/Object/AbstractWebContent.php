@@ -145,7 +145,7 @@ abstract class AbstractWebContent extends Content implements
      * Event called before _deleting_ the object.
      *
      * @see    \Charcoal\Model\AbstractModel::preDelete() For the "delete" Event.
-     * @see    \Charcoal\Attachment\Traits\AttachmentAwareTrait::removeJoins
+     * @see    \Charcoal\Object\RoutableTrait::deleteObjectRoutes()
      * @return boolean
      */
     public function preDelete()
@@ -153,6 +153,8 @@ abstract class AbstractWebContent extends Content implements
         if ($this->locked()) {
             return false;
         }
+
+        $this->deleteObjectRoutes();
 
         return parent::preDelete();
     }
