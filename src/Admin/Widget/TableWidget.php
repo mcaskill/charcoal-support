@@ -155,4 +155,34 @@ class TableWidget extends CharcoalTableWidget
 
         return $cell;
     }
+
+    /**
+     * Filter the object before its assigned to the row.
+     *
+     * This method is useful for classes using this trait.
+     *
+     * @param  ModelInterface $object           The current row's object.
+     * @param  array          $objectProperties The $object's display properties.
+     * @return array
+     */
+    protected function parseObjectRow(ModelInterface $object, array $objectProperties)
+    {
+        $row = parent::parseObjectRow($object, $objectProperties);
+        $row['attr'] = [
+            'class' => []
+        ];
+
+        $method = [ $object, 'isActiveTableRow' ];
+        if (is_callable($method)) {
+            if (call_user_func($method)) {
+                $row['attr']['class'][] = 'active';
+            }
+        }
+
+        $row['attr']['class'][] = 'js-table-row';
+
+        $row['attr'] = $this->htmlAttributes($row['attr']);
+
+        return $row;
+    }
 }
