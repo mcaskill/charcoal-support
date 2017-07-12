@@ -21,7 +21,7 @@ trait LocaleAwareTrait
      *
      * @var array
      */
-    protected $availableLanguages;
+    protected $locales = [];
 
     /**
      * Store the processed link structures to translations
@@ -29,19 +29,77 @@ trait LocaleAwareTrait
      *
      * @var array
      */
-    private $alternateTranslations;
+    protected $alternateTranslations;
 
     /**
-     * Set the available languages.
+     * Retrieve the available locales.
      *
-     * @param  array $languages The list of languages.
+     * @return array
+     */
+    protected function locales()
+    {
+        return $this->locales;
+    }
+
+    /**
+     * Set the available locales.
+     *
+     * @param  array $locales The list of language structures.
      * @return self
      */
-    protected function setAvailableLanguages(array $languages)
+    protected function setLocales(array $locales)
     {
-        $this->availableLanguages = $languages;
+        $this->locales = [];
+        foreach ($locales as $langCode => $localeStruct) {
+            $this->locales[$langCode] = $this->parseLocale($localeStruct, $langCode);
+        }
 
         return $this;
+    }
+
+    /**
+     * Parse the given locale.
+     *
+     * @see    \Charcoal\Admin\Widget\FormSidebarWidget::languages()
+     * @see    \Charcoal\Admin\Widget\FormGroupWidget::languages()
+     * @param  array  $localeStruct The language structure.
+     * @param  string $langCode     The language code.
+     * @throws InvalidArgumentException If the locale does not have a language code.
+     * @return array
+     */
+    private function parseLocale(array $localeStruct, $langCode)
+    {
+        $trans = 'locale.' . $langCode;
+
+        /** Setup the name of the language in the current locale */
+        if (isset($localeStruct['name'])) {
+            $name = $this->translator()->translate($localeStruct['name']);
+        } else {
+            $name = $this->translator()->translate($trans);
+            if ($trans === $name) {
+                $name = strtoupper($langCode);
+            }
+        }
+
+        /** Setup the native name of the language */
+        if (isset($localeStruct['native'])) {
+            $native = $this->translator()->translate($localeStruct['native'], [], null, $langCode);
+        } else {
+            $native = $this->translator()->translate($trans, [], null, $langCode);
+            if ($trans === $native) {
+                $native = strtoupper($langCode);
+            }
+        }
+
+        if (!isset($localeStruct['locale'])) {
+            $localeStruct['locale'] = $langCode;
+        }
+
+        $localeStruct['name']   = $name;
+        $localeStruct['native'] = $native;
+        $localeStruct['code']   = $langCode;
+
+        return $localeStruct;
     }
 
     /**
@@ -51,7 +109,7 @@ trait LocaleAwareTrait
      */
     protected function availableLanguages()
     {
-        return $this->availableLanguages;
+        return array_keys($this->availableLocales);
     }
 
     /**
@@ -63,23 +121,37 @@ trait LocaleAwareTrait
      */
     protected function buildAlternateTranslations()
     {
-        if ($this->alternateTranslations === null) {
-            $this->alternateTranslations = [];
+        $translations = [];
 
-            $context  = $this->contextObject();
-            $origLang = $this->currentLanguage();
+        $context  = $this->contextObject();
+        $origLang = $this->currentLanguage();
 
-            foreach ($this->availableLanguages() as $lang) {
-                if ($lang === $origLang) {
-                    continue;
-                }
-
-                $this->translator()->setLocale($lang);
-
-                $this->alternateTranslations[$lang] = $this->formatAlternateTranslation($context, $lang);
+        foreach ($this->locales() as $langCode => $localeStruct) {
+            if ($langCode === $origLang) {
+                continue;
             }
 
-            $this->translator()->setLocale($origLang);
+            $this->translator()->setLocale($langCode);
+
+            $translations[$langCode] = $this->formatAlternateTranslation($context, $localeStruct);
+        }
+
+        $this->translator()->setLocale($origLang);
+
+        return $translations;
+    }
+
+    /**
+     * Retrieve the alternate translations associated with the current route.
+     *
+     * This method _excludes_ the current route's canonical URI.
+     *
+     * @return array
+     */
+    protected function getAlternateTranslations()
+    {
+        if ($this->alternateTranslations === null) {
+            $this->alternateTranslations = $this->buildAlternateTranslations();
         }
 
         return $this->alternateTranslations;
@@ -91,34 +163,39 @@ trait LocaleAwareTrait
      * Note: The application's locale is already modified and will be reset
      * after processing all available languages.
      *
-     * @param  mixed  $context The translated {@see \Charcoal\Model\ModelInterface model}
+     * @param  mixed $context      The translated {@see \Charcoal\Model\ModelInterface model}
      *     or array-accessible structure.
-     * @param  string $lang    The currently iterated language.
+     * @param  array $localeStruct The currently iterated language.
      * @return array Returns a link structure.
      */
-    protected function formatAlternateTranslation($context, $lang)
+    protected function formatAlternateTranslation($context, array $localeStruct)
     {
         $isRoutable = ($context instanceof RoutableInterface && $context->isActiveRoute());
+
+        $langCode = $localeStruct['code'];
 
         $link = [
             'id'       => ($context['id']) ? : $this->templateName(),
             'title'    => ((string)$context['title']) ? : $this->title(),
-            'url'      => ($isRoutable ? $context->url($lang) : ($this->currentUrl() ? : $lang)),
-            'hreflang' => $lang
+            'url'      => ($isRoutable ? $context->url($langCode) : ($this->currentUrl() ? : $langCode)),
+            'hreflang' => $langCode,
+            'locale'   => $localeStruct['locale'],
+            'name'     => $localeStruct['name'],
+            'native'   => $localeStruct['native'],
         ];
 
         return $link;
     }
 
     /**
-     * Render the alternate translations associated with the current route.
+     * Yield the alternate translations associated with the current route.
      *
      * @return Generator|null
      */
     public function alternateTranslations()
     {
-        foreach ($this->buildAlternateTranslations() as $lang => $trans) {
-            yield $lang => $trans;
+        foreach ($this->getAlternateTranslations() as $langCode => $transStruct) {
+            yield $langCode => $transStruct;
         }
     }
 
@@ -129,7 +206,7 @@ trait LocaleAwareTrait
      */
     public function hasAlternateTranslations()
     {
-        return (count($this->buildAlternateTranslations()) > 0);
+        return !empty($this->getAlternateTranslations());
     }
 
     /**

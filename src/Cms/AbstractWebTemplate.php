@@ -74,7 +74,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $this->setDebug($container['debug']);
         $this->setTranslator($container['translator']);
-        $this->setAvailableLanguages(array_keys($container['locales/manager']->locales()));
+        $this->setLocales($container['locales/manager']->locales());
         $this->setAppConfig($container['config']);
         $this->setBaseUrl($container['base-url']);
 
@@ -434,7 +434,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
 
     // Polylingual
-    // =================================================================================================================
+    // =============================================================================================
 
     /**
      * Retrieve the locale shortcode
