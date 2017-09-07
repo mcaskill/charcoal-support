@@ -130,6 +130,7 @@ class TableWidget extends CharcoalTableWidget
         }
 
         if (isset($options['attr'])) {
+            unset($options['attr']['width']);
             $cell['attr'] = array_merge($cell['attr'], $options['attr']);
         }
 
