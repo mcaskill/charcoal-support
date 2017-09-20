@@ -180,10 +180,22 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         if (!$title) {
-            $title = (string)$this->title();
+            $title = (string)$this->fallbackMetaTitle();
         }
 
         return $title;
+    }
+
+    /**
+     * Hook called as a fallback if no meta title is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return null
+     */
+    protected function fallbackMetaTitle()
+    {
+        return (string)$this->title();
     }
 
     /**
