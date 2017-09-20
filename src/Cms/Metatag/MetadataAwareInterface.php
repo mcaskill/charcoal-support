@@ -18,6 +18,13 @@ interface MetadataAwareInterface
     public function canonicalUrl();
 
     /**
+     * Retrieve the current URI of the object.
+     *
+     * @return string|null
+     */
+    public function currentUrl();
+
+    /**
      * Retrieve the name or title of the object.
      *
      * @return string|null
