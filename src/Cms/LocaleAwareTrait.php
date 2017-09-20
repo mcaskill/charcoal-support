@@ -126,6 +126,7 @@ trait LocaleAwareTrait
         $context  = $this->contextObject();
         $origLang = $this->currentLanguage();
 
+        $this->translator()->isIteratingLocales = true;
         foreach ($this->locales() as $langCode => $localeStruct) {
             if ($langCode === $origLang) {
                 continue;
@@ -137,6 +138,7 @@ trait LocaleAwareTrait
         }
 
         $this->translator()->setLocale($origLang);
+        unset($this->translator()->isIteratingLocales);
 
         return $translations;
     }
