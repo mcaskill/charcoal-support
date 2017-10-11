@@ -172,21 +172,35 @@ trait LocaleAwareTrait
      */
     protected function formatAlternateTranslation($context, array $localeStruct)
     {
-        $isRoutable = ($context instanceof RoutableInterface && $context->isActiveRoute());
-
-        $langCode = $localeStruct['code'];
-
-        $link = [
+        return [
             'id'       => ($context['id']) ? : $this->templateName(),
             'title'    => ((string)$context['title']) ? : $this->title(),
-            'url'      => ($isRoutable ? $context->url($langCode) : ($this->currentUrl() ? : $langCode)),
-            'hreflang' => $langCode,
+            'url'      => $this->formatAlternateTranslationUrl($context, $localeStruct),
+            'hreflang' => $localeStruct['code'],
             'locale'   => $localeStruct['locale'],
             'name'     => $localeStruct['name'],
             'native'   => $localeStruct['native'],
         ];
+    }
 
-        return $link;
+    /**
+     * Format an alternate translation URL for the given translatable model.
+     *
+     * Note: The application's locale is already modified and will be reset
+     * after processing all available languages.
+     *
+     * @param  mixed  $context      The translated {@see \Charcoal\Model\ModelInterface model}
+     *     or array-accessible structure.
+     * @param  array  $localeStruct The currently iterated language.
+     * @return string Returns a link.
+     */
+    protected function formatAlternateTranslationUrl($context, array $localeStruct)
+    {
+        $isRoutable = ($context instanceof RoutableInterface && $context->isActiveRoute());
+        $langCode   = $localeStruct['code'];
+        $path       = ($isRoutable ? $context->url($langCode) : ($this->currentUrl() ? : $langCode));
+
+        return $this->baseUrl()->withPath($path);
     }
 
     /**
@@ -246,4 +260,12 @@ trait LocaleAwareTrait
      * @return \Charcoal\Model\ModelInterface|null
      */
     abstract public function contextObject();
+
+    /**
+     * Retrieve the base URI of the project.
+     *
+     * @throws RuntimeException If the base URI is missing.
+     * @return UriInterface|null
+     */
+    abstract public function baseUrl();
 }
