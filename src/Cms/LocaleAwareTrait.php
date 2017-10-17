@@ -4,6 +4,9 @@ namespace Charcoal\Support\Cms;
 
 use InvalidArgumentException;
 
+// From PSR-7
+use Psr\Http\Message\UriInterface;
+
 // From 'charcoal-object'
 use Charcoal\Object\RoutableInterface;
 
@@ -199,6 +202,10 @@ trait LocaleAwareTrait
         $isRoutable = ($context instanceof RoutableInterface && $context->isActiveRoute());
         $langCode   = $localeStruct['code'];
         $path       = ($isRoutable ? $context->url($langCode) : ($this->currentUrl() ? : $langCode));
+
+        if ($path instanceof UriInterface) {
+            $path = $path->getPath();
+        }
 
         return $this->baseUrl()->withPath($path);
     }
