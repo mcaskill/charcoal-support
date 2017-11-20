@@ -82,7 +82,7 @@ abstract class AbstractWebContent extends Content implements
      * @see    \Charcoal\Source\StorableTrait::preSave() For the "create" Event.
      * @return boolean
      */
-    public function preSave()
+    protected function preSave()
     {
         if (!$this->locked()) {
             $this->setSlug($this->generateSlug());
@@ -98,7 +98,7 @@ abstract class AbstractWebContent extends Content implements
      * @see    \Charcoal\Object\RoutableTrait::generateObjectRoute()
      * @return boolean
      */
-    public function postSave()
+    protected function postSave()
     {
         if (!$this->locked()) {
             $this->generateObjectRoute($this->slug());
@@ -115,7 +115,7 @@ abstract class AbstractWebContent extends Content implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    public function preUpdate(array $properties = null)
+    protected function preUpdate(array $properties = null)
     {
         if (!$this->locked()) {
             $this->setSlug($this->generateSlug());
@@ -132,7 +132,7 @@ abstract class AbstractWebContent extends Content implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    public function postUpdate(array $properties = null)
+    protected function postUpdate(array $properties = null)
     {
         if (!$this->locked()) {
             $this->generateObjectRoute($this->slug());
@@ -148,7 +148,7 @@ abstract class AbstractWebContent extends Content implements
      * @see    \Charcoal\Object\RoutableTrait::deleteObjectRoutes()
      * @return boolean
      */
-    public function preDelete()
+    protected function preDelete()
     {
         if ($this->locked()) {
             return false;
