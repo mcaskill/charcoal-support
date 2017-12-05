@@ -21,7 +21,6 @@ use Charcoal\Support\App\Template\DynamicAppConfigTrait;
 use Charcoal\Support\App\Template\SupportTrait as TemplateSupportTrait;
 use Charcoal\Support\Cms\ContextualTemplateInterface;
 use Charcoal\Support\Cms\ContextualTemplateTrait;
-use Charcoal\Support\Cms\LocaleAwareTrait;
 use Charcoal\Support\Cms\Metatag\DocumentTrait;
 use Charcoal\Support\Cms\Metatag\HasMetatagInterface;
 use Charcoal\Support\Cms\Metatag\HasOpenGraphInterface;
@@ -40,7 +39,6 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 {
     use ContextualTemplateTrait;
     use DocumentTrait;
-    use LocaleAwareTrait;
     use DynamicAppConfigTrait;
     use TemplateSupportTrait;
     use TranslatorAwareTrait;
@@ -71,7 +69,6 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $this->setDebug($container['debug']);
         $this->setTranslator($container['translator']);
-        $this->setLocales($container['locales/manager']->locales());
         $this->setAppConfig($container['config']);
         $this->setBaseUrl($container['base-url']);
 
@@ -100,7 +97,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     /**
      * Retrieve the current URI of the context.
      *
-     * @return UriInterface|string|null
+     * @return \Psr\Http\Message\UriInterface|null
      */
     public function currentUrl()
     {
@@ -114,7 +111,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     }
 
     /**
-     * Retrieve the canonical URI of the object.
+     * Retrieve the current locale.
      *
      * @return string|null
      */
@@ -132,6 +129,16 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         return null;
+    }
+
+    /**
+     * Retrieve the current locale's language code.
+     *
+     * @return string
+     */
+    public function currentLanguage()
+    {
+        return $this->translator()->getLocale();
     }
 
 
@@ -438,20 +445,5 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
         }
 
         return $this;
-    }
-
-
-
-    // Polylingual
-    // =============================================================================================
-
-    /**
-     * Retrieve the locale shortcode
-     *
-     * @return string
-     */
-    public function currentLanguage()
-    {
-        return $this->translator()->getLocale();
     }
 }
