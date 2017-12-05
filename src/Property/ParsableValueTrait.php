@@ -82,6 +82,51 @@ trait ParsableValueTrait
     }
 
     /**
+     * Parse the property value as a JSON object.
+     *
+     * @param  mixed $value The JSONable value.
+     * @throws InvalidArgumentException If the value is invalid.
+     * @return array
+     */
+    protected function parseAsJson($value)
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+            $error = json_last_error();
+            if ($error !== JSON_ERROR_NONE) {
+                switch ($error) {
+                    case JSON_ERROR_DEPTH:
+                        $message = 'Maximum stack depth exceeded';
+                        break;
+                    case JSON_ERROR_STATE_MISMATCH:
+                        $message = 'Underflow or the modes mismatch';
+                        break;
+                    case JSON_ERROR_CTRL_CHAR:
+                        $message = 'Unexpected control character found';
+                        break;
+                    case JSON_ERROR_SYNTAX:
+                        $message = 'Syntax error, malformed JSON';
+                        break;
+                    case JSON_ERROR_UTF8:
+                        $message = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                        break;
+                    default:
+                        $message = 'Unknown error';
+                        break;
+                }
+
+                throw new InvalidArgumentException(sprintf(
+                    'Value "%s" could not be parsed as JSON: "%s"',
+                    is_object($value) ? get_class($value) : gettype($value),
+                    $message
+                ));
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Parse the property value as a date/time object.
      *
      * @param  mixed $value The date/time value.
