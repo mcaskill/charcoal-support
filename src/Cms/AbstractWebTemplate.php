@@ -3,7 +3,6 @@
 namespace Charcoal\Support\Cms;
 
 use ArrayIterator;
-use Traversable;
 
 // From Pimple
 use Pimple\Container;
@@ -11,17 +10,14 @@ use Pimple\Container;
 // From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
-// From 'charcoal-object'
-use Charcoal\Object\RoutableInterface;
-
 // From 'charcoal-translator'
-use Charcoal\Translator\Translation;
 use Charcoal\Translator\TranslatorAwareTrait;
 
 // From 'charcoal-app'
 use Charcoal\App\Template\AbstractTemplate as CharcoalTemplate;
 
 // From 'mcaskill/charcoal-support'
+use Charcoal\Support\App\Template\DynamicAppConfigTrait;
 use Charcoal\Support\App\Template\SupportTrait as TemplateSupportTrait;
 use Charcoal\Support\Cms\ContextualTemplateInterface;
 use Charcoal\Support\Cms\ContextualTemplateTrait;
@@ -45,6 +41,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     use ContextualTemplateTrait;
     use DocumentTrait;
     use LocaleAwareTrait;
+    use DynamicAppConfigTrait;
     use TemplateSupportTrait;
     use TranslatorAwareTrait;
 
