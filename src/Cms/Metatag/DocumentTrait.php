@@ -4,12 +4,6 @@ namespace Charcoal\Support\Cms\Metatag;
 
 use InvalidArgumentException;
 
-// From 'charcoal-core'
-use Charcoal\Model\ModelInterface;
-
-// From 'charcoal-translator'
-use Charcoal\Translator\Translation;
-
 /**
  * Additional utilities for the HTML document.
  */
@@ -87,21 +81,21 @@ trait DocumentTrait
     /**
      * Retrieve the site name.
      *
-     * @return Translation|string|null
+     * @return string|null
      */
     abstract public function siteName();
 
     /**
      * Retrieve the title of the page (from the context).
      *
-     * @return Translation|string|null
+     * @return string|null
      */
     abstract public function title();
 
     /**
      * Retrieve the current object relative to the context.
      *
-     * @return ModelInterface
+     * @return \Charcoal\Model\ModelInterface
      */
     abstract public function contextObject();
 }

@@ -84,7 +84,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     /**
      * Retrieve the title of the page (the context).
      *
-     * @return Translation|string|null
+     * @return string|null
      */
     public function title()
     {
@@ -142,7 +142,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     /**
      * Retrieve the canonical URI of the object.
      *
-     * @return string|null
+     * @return \Psr\Http\Message\UriInterface|string|null
      */
     public function canonicalUrl()
     {
@@ -188,7 +188,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * This method should be extended by child controllers.
      *
-     * @return null
+     * @return string|null
      */
     protected function fallbackMetaTitle()
     {
@@ -221,7 +221,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * This method should be extended by child controllers.
      *
-     * @return null
+     * @return string|null
      */
     protected function fallbackMetaDescription()
     {
@@ -254,7 +254,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * This method should be extended by child controllers.
      *
-     * @return null
+     * @return string|null
      */
     protected function fallbackMetaImage()
     {
@@ -338,7 +338,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * This method should be extended by child controllers.
      *
-     * @return null
+     * @return string|null
      */
     protected function fallbackOpengraphImage()
     {
@@ -393,7 +393,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
     /**
      * Set additional SEO metadata.
      *
-     * @return array|Traversable
+     * @return iterable
      */
     public function seoMetadata()
     {
