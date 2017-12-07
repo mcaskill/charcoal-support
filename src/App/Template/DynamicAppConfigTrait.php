@@ -5,6 +5,7 @@ namespace Charcoal\Support\App\Template;
 use InvalidArgumentException;
 
 // From 'charcoal-config'
+use Charcoal\Config\DelegatesAwareInterface;
 use Charcoal\Config\EntityInterface;
 
 // From 'charcoal-core'
@@ -12,6 +13,9 @@ use Charcoal\Source\StorableInterface;
 
 // From 'charcoal-app'
 use Charcoal\App\AppConfig;
+
+// From 'mcaskill/charcoal-support'
+use Charcoal\Support\Cms\Object\SettingsInterface;
 
 /**
  * Provides support for merging the {@see \Charcoal\App\AppConfig Charcoal application configset}
@@ -38,18 +42,21 @@ trait DynamicAppConfigTrait
     /**
      * Set the application's configset.
      *
-     * @param  AppConfig $config A Charcoal application configset.
+     * @param  AppConfig $appConfig A Charcoal application configset.
      * @return self
      */
-    protected function setAppConfig(AppConfig $config)
+    protected function setAppConfig(AppConfig $appConfig)
     {
-        $delegated = $this->dynamicConfig();
-        if ($delegated instanceof EntityInterface) {
-            $config['dynamic'] = $delegated;
-            $config->prependDelegate($delegated);
+        $dynConfig = $this->dynamicConfig();
+        if ($dynConfig instanceof DelegatesAwareInterface) {
+            $dynConfig->prependDelegate($appConfig);
+            $this->appConfig = $dynConfig;
+        } elseif ($dynConfig instanceof EntityInterface) {
+            $appConfig['dynamic'] = $dynConfig;
+            $appConfig->prependDelegate($delegated);
+        } else {
+            $this->appConfig = $appConfig;
         }
-
-        $this->appConfig = $config;
 
         return $this;
     }
@@ -59,7 +66,7 @@ trait DynamicAppConfigTrait
      *
      * @param  string|null $key     Optional data key to retrieve from the configset.
      * @param  mixed|null  $default The default value to return if data key does not exist.
-     * @return mixed|AppConfig
+     * @return mixed|AppConfig|SettingsInterface
      */
     public function appConfig($key = null, $default = null)
     {
@@ -111,7 +118,7 @@ trait DynamicAppConfigTrait
     /**
      * Retrieve the dynamic configset (from the database).
      *
-     * @return EntityInterface|null
+     * @return DelegatesAwareInterface|EntityInterface|null
      */
     protected function dynamicConfig()
     {
