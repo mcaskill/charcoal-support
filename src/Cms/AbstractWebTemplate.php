@@ -74,7 +74,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
 
         $metatags = $this->appConfig('cms.metatags');
         if (is_array($metatags)) {
-            $this->setSeoMetadata($this->appConfig('cms.metatags'));
+            $this->setSeoMetadata($metatags);
         }
     }
 
