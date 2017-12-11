@@ -31,13 +31,11 @@ trait ManufacturableModelLoaderTrait
      * Set an model loader builder.
      *
      * @param  ModelLoaderBuilder $builder The builder to create models.
-     * @return self
+     * @return void
      */
     protected function setModelLoaderBuilder(ModelLoaderBuilder $builder)
     {
         $this->modelLoaderBuilder = $builder;
-
-        return $this;
     }
 
     /**

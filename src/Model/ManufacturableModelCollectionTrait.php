@@ -29,13 +29,11 @@ trait ManufacturableModelCollectionTrait
      * Set a model collection loader.
      *
      * @param  CollectionLoader $loader The model collection loader.
-     * @return self
+     * @return void
      */
     protected function setCollectionLoader(CollectionLoader $loader)
     {
         $this->collectionLoader = $loader;
-
-        return $this;
     }
 
     /**
@@ -60,13 +58,11 @@ trait ManufacturableModelCollectionTrait
      * Set a model collection loader factory.
      *
      * @param  FactoryInterface $factory The factory to create model collection loaders.
-     * @return self
+     * @return void
      */
     protected function setCollectionLoaderFactory(FactoryInterface $factory)
     {
         $this->collectionLoaderFactory = $factory;
-
-        return $this;
     }
 
     /**

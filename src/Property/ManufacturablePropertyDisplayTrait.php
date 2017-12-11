@@ -23,13 +23,11 @@ trait ManufacturablePropertyDisplayTrait
      * Set a property display factory.
      *
      * @param  FactoryInterface $factory The factory to create displayable property values.
-     * @return self
+     * @return void
      */
     protected function setPropertyDisplayFactory(FactoryInterface $factory)
     {
         $this->propertyDisplayFactory = $factory;
-
-        return $this;
     }
 
     /**

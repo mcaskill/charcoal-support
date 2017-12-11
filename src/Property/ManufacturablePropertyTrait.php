@@ -23,13 +23,11 @@ trait ManufacturablePropertyTrait
      * Set a property factory.
      *
      * @param  FactoryInterface $factory The factory to create property values.
-     * @return self
+     * @return void
      */
     protected function setPropertyFactory(FactoryInterface $factory)
     {
         $this->propertyFactory = $factory;
-
-        return $this;
     }
 
     /**

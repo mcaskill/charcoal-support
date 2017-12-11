@@ -23,13 +23,11 @@ trait ManufacturableModelTrait
      * Set an model factory.
      *
      * @param  FactoryInterface $factory The factory to create models.
-     * @return self
+     * @return void
      */
     protected function setModelFactory(FactoryInterface $factory)
     {
         $this->modelFactory = $factory;
-
-        return $this;
     }
 
     /**

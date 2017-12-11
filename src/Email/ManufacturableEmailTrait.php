@@ -23,13 +23,11 @@ trait ManufacturableEmailTrait
      * Set an email model factory.
      *
      * @param  FactoryInterface $factory The factory to create emails.
-     * @return self
+     * @return void
      */
     protected function setEmailFactory(FactoryInterface $factory)
     {
         $this->emailFactory = $factory;
-
-        return $this;
     }
 
     /**

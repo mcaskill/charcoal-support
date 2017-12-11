@@ -23,13 +23,11 @@ trait ManufacturablePropertyInputTrait
      * Set a property control factory.
      *
      * @param  FactoryInterface $factory The factory to create form controls for property values.
-     * @return self
+     * @return void
      */
     protected function setPropertyInputFactory(FactoryInterface $factory)
     {
         $this->propertyInputFactory = $factory;
-
-        return $this;
     }
 
     /**

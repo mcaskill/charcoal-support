@@ -24,13 +24,11 @@ trait ManufacturableMetadataTrait
      * Set a metadata loader.
      *
      * @param  MetadataLoader $loader The metadata loader.
-     * @return self
+     * @return void
      */
     protected function setMetadataLoader(MetadataLoader $loader)
     {
         $this->metadataLoader = $loader;
-
-        return $this;
     }
 
     /**
