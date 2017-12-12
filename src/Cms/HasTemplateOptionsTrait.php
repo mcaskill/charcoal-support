@@ -67,14 +67,12 @@ trait HasTemplateOptionsTrait
      */
     protected function buildTemplateOptions()
     {
-        $templateOptions = [];
-
         $context = $this->contextObject();
         if ($context instanceof TemplateableInterface) {
-            $templateOptions = $context->templateOptionsStructure();
+            return $context->templateOptionsStructure();
+        } else {
+            return [];
         }
-
-        return $templateOptions;
     }
 
     /**
