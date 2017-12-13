@@ -389,12 +389,28 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
             $img = (string)$context['twitter_card_image'];
         }
 
+        if (!$img) {
+            $img = (string)$this->fallbackTwitterCardImage();
+        }
+
         if ($img) {
             $uri = $this->baseUrl();
             return $uri->withPath(strval($img));
         }
 
         return $this->metaImage();
+    }
+
+    /**
+     * Hook called as a fallback if no social image is set on the object.
+     *
+     * This method should be extended by child controllers.
+     *
+     * @return string|null
+     */
+    protected function fallbackTwitterCardImage()
+    {
+        return null;
     }
 
     /**
