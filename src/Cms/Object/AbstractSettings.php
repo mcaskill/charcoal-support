@@ -111,7 +111,7 @@ class AbstractSettings extends Content implements
             return;
         }
 
-        $setter = 'set'.ucfirst($key);
+        $setter = 'set' . ucfirst($key);
         if (is_callable([ $this, $setter ])) {
             $this->{$setter}($value);
         } else {

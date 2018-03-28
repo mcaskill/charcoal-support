@@ -192,9 +192,9 @@ trait LocaleAwareTrait
      * Note: The application's locale is already modified and will be reset
      * after processing all available languages.
      *
-     * @param  mixed  $context      The translated {@see \Charcoal\Model\ModelInterface model}
+     * @param  mixed $context      The translated {@see \Charcoal\Model\ModelInterface model}
      *     or array-accessible structure.
-     * @param  array  $localeStruct The currently iterated language.
+     * @param  array $localeStruct The currently iterated language.
      * @return string Returns a link.
      */
     protected function formatAlternateTranslationUrl($context, array $localeStruct)
