@@ -31,6 +31,13 @@ trait DynamicAppConfigTrait
     protected $appConfig;
 
     /**
+     * The dynamic configset instance.
+     *
+     * @var EntityInterface
+     */
+    protected $dynamicConfig;
+
+    /**
      * The class name of the dynamic configset model.
      *
      * A fully-qualified PHP namespace. Used for the model factory.
@@ -42,18 +49,29 @@ trait DynamicAppConfigTrait
     /**
      * Set the application's configset.
      *
+     * Note: This method should be called after {@see self::setDynamicConfig()}
+     * or {@see self::setDynamicConfigClass()}.
+     *
      * @param  AppConfig $appConfig A Charcoal application configset.
+     * @throws InvalidArgumentException If a configset already exists.
      * @return self
      */
     protected function setAppConfig(AppConfig $appConfig)
     {
+        if ($this->appConfig !== null) {
+            throw new InvalidArgumentException(
+                'Application configset already assigned.'
+            );
+        }
+
         $dynConfig = $this->dynamicConfig();
         if ($dynConfig instanceof DelegatesAwareInterface) {
             $dynConfig->prependDelegate($appConfig);
             $this->appConfig = $dynConfig;
         } elseif ($dynConfig instanceof EntityInterface) {
             $appConfig['dynamic'] = $dynConfig;
-            $appConfig->prependDelegate($delegated);
+            $appConfig->prependDelegate($dynConfig);
+            $this->appConfig = $appConfig;
         } else {
             $this->appConfig = $appConfig;
         }
@@ -88,6 +106,8 @@ trait DynamicAppConfigTrait
     /**
      * Set the class name of the dynamic configset model.
      *
+     * Note: This method should be called before {@see self::setAppConfig()}.
+     *
      * @param  string $className The class name of the dynamic configset model.
      * @throws InvalidArgumentException If the class name is not a string.
      * @return self
@@ -96,7 +116,7 @@ trait DynamicAppConfigTrait
     {
         if (!is_string($className)) {
             throw new InvalidArgumentException(
-                'Configset class name must be a string.'
+                'Dynamic configset class name must be a string.'
             );
         }
 
@@ -116,11 +136,55 @@ trait DynamicAppConfigTrait
     }
 
     /**
-     * Retrieve the dynamic configset (from the database).
+     * Set the dynamic configset instance.
+     *
+     * Note: This method should be called before {@see self::setAppConfig()}.
+     *
+     * @param  EntityInterface $dynConfig A dynamic configset.
+     * @throws InvalidArgumentException If a configset already exists.
+     * @return self
+     */
+    protected function setDynamicConfig(EntityInterface $dynConfig)
+    {
+        if ($this->dynamicConfig !== null) {
+            throw new InvalidArgumentException(
+                'Dynamic configset already assigned.'
+            );
+        }
+
+        if ($this->appConfig !== null) {
+            if ($dynConfig instanceof DelegatesAwareInterface) {
+                $dynConfig->prependDelegate($this->appConfig);
+            } else {
+                $appConfig['dynamic'] = $dynConfig;
+                $appConfig->prependDelegate($dynConfig);
+            }
+        }
+
+        $this->dynamicConfig = $dynConfig;
+        return $this;
+    }
+
+    /**
+     * Retrieve the dynamic configset instance.
      *
      * @return DelegatesAwareInterface|EntityInterface|null
      */
     protected function dynamicConfig()
+    {
+        if ($this->dynamicConfig === null) {
+            $this->dynamicConfig = $this->loadDynamicConfig();
+        }
+
+        return $this->dynamicConfig;
+    }
+
+    /**
+     * Load the dynamic configset instance (from the database).
+     *
+     * @return DelegatesAwareInterface|EntityInterface|null
+     */
+    protected function loadDynamicConfig()
     {
         $className = $this->dynamicConfigClass();
         if ($className) {
