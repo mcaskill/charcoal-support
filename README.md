@@ -20,8 +20,6 @@ composer require mcaskill/charcoal-support
 
 ## What's inside?
 
--   `Charcoal\Support\Container\DependentInterface`  
-    for standardized dependency injection.
 -   `Charcoal\Support\Property\ParsableValueTrait`  
     for parsing/casting various types of [Charcoal Property][charcoal-property] values.
 -   `Charcoal\Support\Model\Collection`  
