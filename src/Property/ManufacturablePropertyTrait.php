@@ -2,10 +2,13 @@
 
 namespace Charcoal\Support\Property;
 
-use RuntimeException;
+// From 'charcoal-model'
+use Charcoal\Model\MetadataInterface;
 
 // From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+
+use RuntimeException;
 
 /**
  * Provides property factory features.
