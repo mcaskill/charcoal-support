@@ -356,6 +356,39 @@ trait ParsableValueTrait
             case 'array':
                 return (array)$value;
 
+            case 'auto':
+                if (!is_array($value)) {
+                    return $value;
+                }
+                // multiple
+                $castArray = [
+                    'multiple' => true,
+                    'l10n' => true
+                ];
+
+                foreach ($value as $key => $val) {
+                    if (!is_array($val)) {
+                        $castArray['multiple'] = false;
+                    }
+
+                    $locales = $this->translator()->availableLocales();
+                    if (!is_array($locales)) {
+                        $locales[] = $locales;
+                    }
+
+                    if (!in_array($key, $locales)) {
+                        $castArray['l10n'] = false;
+                        break;
+                    }
+                }
+
+                $value = $this->castTo(
+                    $value,
+                    $castArray
+                );
+
+                return $value;
+
             default:
                 if (method_exists($this, 'modelFactory')) {
                     if (is_string($value) || is_numeric($value)) {
