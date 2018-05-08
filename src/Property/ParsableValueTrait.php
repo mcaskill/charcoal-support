@@ -363,7 +363,7 @@ trait ParsableValueTrait
                 // multiple
                 $castArray = [
                     'multiple' => true,
-                    'l10n' => true
+                    'l10n' => false
                 ];
 
                 foreach ($value as $key => $val) {
@@ -376,8 +376,8 @@ trait ParsableValueTrait
                         $locales[] = $locales;
                     }
 
-                    if (!in_array($key, $locales)) {
-                        $castArray['l10n'] = false;
+                    if (in_array($key, $locales)) {
+                        $castArray['l10n'] = true;
                         break;
                     }
                 }
