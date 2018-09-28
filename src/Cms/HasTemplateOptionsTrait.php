@@ -24,7 +24,7 @@ trait HasTemplateOptionsTrait
      * @param  mixed|null  $default The default value to return if data key does not exist.
      * @return mixed|array
      */
-    protected function templateOptions($key = null, $default = null)
+    protected function getTemplateOptions($key = null, $default = null)
     {
         if ($this->templateOptions === null) {
             $this->templateOptions = $this->buildTemplateOptions();
