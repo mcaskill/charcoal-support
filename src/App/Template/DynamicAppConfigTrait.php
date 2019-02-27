@@ -47,6 +47,13 @@ trait DynamicAppConfigTrait
     protected $dynamicConfigClass;
 
     /**
+     * The id of the dynamic configset.
+     *
+     * @var string|null
+     */
+    protected $dynamicConfigId;
+
+    /**
      * Set the application's configset.
      *
      * Note: This method should be called after {@see self::setDynamicConfig()}
@@ -62,6 +69,12 @@ trait DynamicAppConfigTrait
             throw new InvalidArgumentException(
                 'Application configset already assigned.'
             );
+        }
+
+        $dynConfigFromConfig = $appConfig->get('dynamic_config');
+        if ($dynConfigFromConfig) {
+            $this->setDynamicConfigClass($dynConfigFromConfig['class']);
+            $this->setDynamicConfigId($dynConfigFromConfig['id']);
         }
 
         $dynConfig = $this->dynamicConfig();
@@ -136,6 +149,25 @@ trait DynamicAppConfigTrait
     }
 
     /**
+     * @return null|string
+     */
+    public function dynamicConfigId()
+    {
+        return $this->dynamicConfigId;
+    }
+
+    /**
+     * @param null|string $dynamicConfigId DynamicConfigId for DynamicAppConfigTrait.
+     * @return self
+     */
+    public function setDynamicConfigId($dynamicConfigId)
+    {
+        $this->dynamicConfigId = $dynamicConfigId;
+
+        return $this;
+    }
+
+    /**
      * Set the dynamic configset instance.
      *
      * Note: This method should be called before {@see self::setAppConfig()}.
@@ -191,7 +223,7 @@ trait DynamicAppConfigTrait
             $config = $this->modelFactory()->get($className);
 
             if ($config instanceof StorableInterface && !$config->id()) {
-                $config->load(1);
+                $config->load($this->dynamicConfigId ?: 1);
             }
 
             return $config;
