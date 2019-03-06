@@ -46,9 +46,9 @@ trait AdminSearchableTrait
     {
         $searchable = [];
 
-        $searchableProperties = $this->metadata()->get('admin.searchable_properties');
+        $searchableProperties = $this->metadata()->get('admin.search.properties');
 
-        foreach ($searchableProperties as $propIdent => $searchProps) {
+        foreach ($searchableProperties as $propIdent => $data) {
             $property = $this->property($propIdent);
             $value = $this[$propIdent];
 
@@ -58,13 +58,18 @@ trait AdminSearchableTrait
 
             if ($property instanceof ObjectProperty) {
                 $objType = $property->objType();
+                $searchProps = $data['properties'];
+
+                if (!$searchProps) {
+                    continue;
+                }
 
                 if ($property->multiple()) {
                     if (!count($value)) {
                         continue;
                     }
 
-                    $values = implode(',', $value);
+                    $values = implode($property->multipleSeparator(), $value);
                     $this->collectionLoader()
                          ->setModel($objType)
                          ->addFilter(['condition' => sprintf('FIND_IN_SET(id, "%s")', $cat)])
@@ -76,6 +81,8 @@ trait AdminSearchableTrait
                              }
                          })
                          ->load();
+
+                    continue;
                 }
 
                 $model = $this->modelFactory()
@@ -87,28 +94,18 @@ trait AdminSearchableTrait
                         $searchable[$lang][] = $this->translator()->translation($model->get($searchProp))[$lang];
                     }
                 }
+
+                continue;
             }
 
+            foreach ($this->translator()->availableLocales() as $lang) {
+                $searchable[$lang][] = $this->translator()->translation($property->parseVal($value))[$lang];
+            }
         }
 
         $this->setAdminSearchKeywords($searchable);
+
         return;
-
-        if ($this->categories() && !!count($this->categories())) {
-            $cat = implode(',', $this->categories());
-
-            $this->collectionLoader()
-                 ->setModel(BlogCategory::class)
-                 ->addFilter(['condition' => sprintf('FIND_IN_SET(id, "%s")', $cat)])
-                 ->setCallback(function ($item) use (&$searchable) {
-                     foreach ($this->languages() as $lang) {
-                         $searchable[$lang][] = $this->translator()->translation($item->name())[$lang];
-                     }
-                 })
-                 ->load();
-        }
-
-        $this->setAdminSearchKeywords($searchable);
     }
 
     /**
