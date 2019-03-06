@@ -42,7 +42,7 @@ trait AdminSearchableTrait
      * Generate the Searchable column data.
      * @return void
      */
-    private function generateAdminSearchable()
+    protected function generateAdminSearchable()
     {
         $searchable = [];
 
