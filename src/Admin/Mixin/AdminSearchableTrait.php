@@ -72,7 +72,7 @@ trait AdminSearchableTrait
                     $values = implode($property->multipleSeparator(), $value);
                     $this->collectionLoader()
                          ->setModel($objType)
-                         ->addFilter(['condition' => sprintf('FIND_IN_SET(id, "%s")', $cat)])
+                         ->addFilter(['condition' => sprintf('FIND_IN_SET(id, "%s")', $values)])
                          ->setCallback(function ($item) use (&$searchable, $searchProps) {
                              foreach ($searchProps as $searchProp) {
                                  foreach ($this->translator()->availableLocales() as $lang) {
