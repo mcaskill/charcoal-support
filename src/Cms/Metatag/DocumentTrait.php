@@ -33,31 +33,91 @@ trait DocumentTrait
     }
 
     /**
-     * Retrieve the document title.
+     * Parse the document title separator.
+     *
+     * @return string
+     */
+    protected function parseDocumentTitleSeparator()
+    {
+        $delim = trim($this->documentTitleSeparator());
+        if (empty($delim)) {
+            return '';
+        }
+
+        return sprintf(' %s ', $delim);
+    }
+
+    /**
+     * Parse the document title.
      *
      * @param  array $parts The document title parts.
-     * @return string
+     * @return string The concatenated title.
      */
     protected function parseDocumentTitle(array $parts)
     {
-        $parts = array_map('strval', $parts);
-        $parts = array_filter($parts, function ($segment, $key) use ($parts) {
-            if (empty($segment) && !is_numeric($segment)) {
-                return false;
-            }
-
-            if ($key !== 'site') {
-                if (!empty($parts['site']) || is_numeric($parts['site'])) {
-                    return (false === strpos($segment, $parts['site']));
-                }
-            }
-
-            return $segment;
-        }, ARRAY_FILTER_USE_BOTH);
-        $delim = sprintf(' %s ', $this->documentTitleSeparator());
+        $parts = $this->parseDocumentTitleParts($parts);
+        $delim = $this->parseDocumentTitleSeparator();
         $title = implode($delim, $parts);
 
         return $title;
+    }
+
+    /**
+     * Parse the document title segments.
+     *
+     * Iterates over each value in $parts passing them to
+     * {@see DocumentTrait::filterDocumentTitlePart}.
+     * If the method returns TRUE, the current value from $parts
+     * is concatenated into the title.
+     *
+     * @param  array $parts The document title parts.
+     * @return array The parsed and filtered segments.
+     */
+    protected function parseDocumentTitleParts(array $parts)
+    {
+        $segments = [];
+        foreach ($parts as $key => $value) {
+            $value = $this->parseDocumentTitlePart($value, $key, $parts);
+            if ($value === true) {
+                $value = $parts[$key];
+            }
+
+            if (is_bool($value) || (empty($value) && !is_numeric($value))) {
+                continue;
+            }
+
+            $segments[$key] = (string)$value;
+        }
+
+        return $segments;
+    }
+
+    /**
+     * Parse the document title part.
+     *
+     * If you want to exclude the site name ("site") from the document title
+     * if it is present in other parts, you can use the following snippet:
+     *
+     * ```php
+     * if ($key === 'site') {
+     *     foreach ($parts as $k => $v) {
+     *         if ($k !== $key && strpos($v, $value) !== false) {
+     *             return null;
+     *         }
+     *     }
+     * }
+     * ```
+     *
+     * @param  string $value The value of the current iteration.
+     * @param  string $key   The key/index of the current iteration.
+     * @param  array  $parts The document title parts.
+     * @return mixed  The mutated value of the current iteration.
+     *     If $value is equal to FALSE (converted to boolean; excluding "0"), it is excluded from the document title.
+     *     If the method returns TRUE, the original $value is included into the document title.
+     */
+    protected function parseDocumentTitlePart($value, $key, array $parts)
+    {
+        return $value;
     }
 
     /**
