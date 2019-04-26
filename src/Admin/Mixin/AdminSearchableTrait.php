@@ -2,25 +2,30 @@
 
 namespace Charcoal\Support\Admin\Mixin;
 
-// From charcoal-property
+// From 'charcoal-property'
 use Charcoal\Property\ObjectProperty;
 
 // From 'charcoal-translator'
 use Charcoal\Translator\Translation;
-use Charcoal\Translator\Translator;
 
 /**
- * Default implementation, as Trait, of the AdminSearchableInterface
+ *
  */
 trait AdminSearchableTrait
 {
     /**
+     * The search keywords for the Charcoal Admin.
+     *
      * @var Translation|string|null
      */
     private $adminSearchKeywords;
 
     /**
-     * @return Translation|null|string
+     * Get the search keywords for the Charcoal Admin.
+     *
+     * Get the search keywords for the Charcoal Admin.
+     *
+     * @return Translation|string|null
      */
     public function adminSearchKeywords()
     {
@@ -28,107 +33,110 @@ trait AdminSearchableTrait
     }
 
     /**
-     * @param Translation|null|string $adminSearchKeywords The admin search keywords.
+     * Set the search keywords for the Charcoal Admin.
+     *
+     * @param  mixed $searchKeywords The admin search keywords.
      * @return self
      */
-    public function setAdminSearchKeywords($adminSearchKeywords)
+    public function setAdminSearchKeywords($searchKeywords)
     {
-        $this->adminSearchKeywords = $adminSearchKeywords;
+        $this->adminSearchKeywords = $searchKeywords;
 
         return $this;
     }
 
     /**
-     * Generate the Searchable column data.
+     * Generate this object's search keywords for the Charcoal Admin.
+     *
      * @return void
      */
     protected function generateAdminSearchable()
     {
-        $searchable = [];
+        $translator = $this->translator();
+        $languages  = $translator->availableLocales();
+
+        $searchKeywords = [];
 
         $searchableProperties = $this->metadata()->get('admin.search.properties');
 
-        foreach ($searchableProperties as $propIdent => $data) {
+        foreach ($searchableProperties as $propIdent => $searchData) {
             $property = $this->property($propIdent);
-            $value = $this[$propIdent];
+            $objValue    = $this[$propIdent];
 
-            if (!$value) {
+            if (empty($objValue)) {
                 continue;
             }
 
             if ($property instanceof ObjectProperty) {
-                $objType = $property->objType();
-                $searchProps = $data['properties'];
-
-                if (!$searchProps) {
+                if (empty($searchData['properties'])) {
                     continue;
                 }
 
+                $searchProps  = $searchData['properties'];
+                $fillKeywords = function ($relObj) use (&$searchKeywords, $searchProps, $translator, $languages) {
+                    foreach ($searchProps as $searchProp) {
+                        foreach ($languages as $lang) {
+                            $relValue = $relObj->get($searchProp);
+                            $searchKeywords[$lang][] = $translator->translate($relValue, [], null, $lang);
+                        }
+                    }
+                };
+
+                $relObjType = $property->objType();
                 if ($property->multiple()) {
-                    if (!count($value)) {
+                    if (!count($objValue)) {
                         continue;
                     }
 
-                    $values = implode($property->multipleSeparator(), $value);
+                    $relObjIds = implode($property->multipleSeparator(), $objValue);
                     $this->collectionLoader()
-                         ->setModel($objType)
-                         ->addFilter(['condition' => sprintf('FIND_IN_SET(id, "%s")', $values)])
-                         ->setCallback(function ($item) use (&$searchable, $searchProps) {
-                             foreach ($searchProps as $searchProp) {
-                                 foreach ($this->translator()->availableLocales() as $lang) {
-                                     $searchable[$lang][] = $this->translator()->translation($item->get($searchProp))[$lang];
-                                 }
-                             }
-                         })
+                         ->setModel($relObjType)
+                         ->addFilter([
+                            'condition' => sprintf('FIND_IN_SET(objTable.id, "%s")', $relObjIds),
+                         ])
+                         ->setCallback($fillKeywords)
                          ->load();
-
-                    continue;
+                } else {
+                    $relObj = $this->modelFactory()->create($relObjType)->load($objValue);
+                    $fillKeywords($relObj);
                 }
-
-                $model = $this->modelFactory()
-                               ->create($objType)
-                               ->load($value);
-
-                foreach ($searchProps as $searchProp) {
-                    foreach ($this->translator()->availableLocales() as $lang) {
-                        $searchable[$lang][] = $this->translator()->translation($model->get($searchProp))[$lang];
-                    }
+            } else {
+                foreach ($languages as $lang) {
+                    $objValue = $property->parseVal($objValue);
+                    $searchKeywords[$lang][] = $translator->translate($objValue, [], null, $lang);
                 }
-
-                continue;
-            }
-
-            foreach ($this->translator()->availableLocales() as $lang) {
-                $searchable[$lang][] = $this->translator()->translation($property->parseVal($value))[$lang];
             }
         }
 
-        $this->setAdminSearchKeywords($searchable);
-
-        return;
+        $this->setAdminSearchKeywords($searchKeywords);
     }
+
+    /**
+     * Retrieve the property instance for the given property.
+     *
+     * @param  string $propertyIdent The property (ident) to get.
+     * @return \Charcoal\Property\PropertyInterface
+     */
+    abstract public function property($propertyIdent);
 
     /**
      * Retrieve the model factory.
      *
-     * @throws RuntimeException If the model factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\FactoryInterface
      */
     abstract public function modelFactory();
 
     /**
      * Retrieve the model collection loader.
      *
-     * @throws RuntimeException If the collection loader is missing.
-     * @return CollectionLoader
+     * @return \Charcoal\Loader\CollectionLoader
      */
     abstract public function collectionLoader();
 
     /**
      * Retrieve the translator service.
      *
-     * @throws RuntimeException If the translator is accessed before having been set.
-     * @return Translator
+     * @return \Charcoal\Translator\Translator
      */
     abstract protected function translator();
 }

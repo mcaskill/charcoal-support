@@ -168,7 +168,7 @@ class RouteRedirectionManager implements
         $this->app()->map(
             $newPath['methods'],
             $oldPath,
-            function(
+            function (
                 RequestInterface $request,
                 ResponseInterface $response,
                 array $args = []
