@@ -42,16 +42,16 @@ trait DynamicAppConfigTrait
      *
      * A fully-qualified PHP namespace. Used for the model factory.
      *
-     * @var string|null
+     * @var string
      */
-    protected $dynamicConfigClass;
+    private $dynamicConfigClass;
 
     /**
      * The id of the dynamic configset.
      *
-     * @var string|null
+     * @var string|integer
      */
-    protected $dynamicConfigId;
+    private $dynamicConfigId;
 
     /**
      * Set the application's configset.
@@ -67,12 +67,12 @@ trait DynamicAppConfigTrait
     {
         if ($this->appConfig !== null) {
             throw new InvalidArgumentException(
-                'Application configset already assigned.'
+                'Application configset already assigned'
             );
         }
 
         $dynConfigFromConfig = $appConfig->get('dynamic_config');
-        if ($dynConfigFromConfig) {
+        if (isset($dynConfigFromConfig['class'], $dynConfigFromConfig['id'])) {
             $this->setDynamicConfigClass($dynConfigFromConfig['class']);
             $this->setDynamicConfigId($dynConfigFromConfig['id']);
         }
@@ -129,7 +129,7 @@ trait DynamicAppConfigTrait
     {
         if (!is_string($className)) {
             throw new InvalidArgumentException(
-                'Dynamic configset class name must be a string.'
+                'Dynamic configset class name must be a string'
             );
         }
 
@@ -149,22 +149,35 @@ trait DynamicAppConfigTrait
     }
 
     /**
-     * @return null|string
+     * Set the object ID of the dynamic configset model.
+     *
+     * Note: This method should be called before {@see self::setAppConfig()}.
+     *
+     * @param  string|integer $configId The object ID of the dynamic configset model.
+     * @throws InvalidArgumentException If the object ID is invalid.
+     * @return self
+     */
+    protected function setDynamicConfigId($configId)
+    {
+        if (!is_scalar($configId)) {
+            throw new InvalidArgumentException(
+                'Dynamic configset ID must be a string or integer'
+            );
+        }
+
+        $this->dynamicConfigId = $configId;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the object ID of the dynamic configset model.
+     *
+     * @return string|integer|null
      */
     public function dynamicConfigId()
     {
         return $this->dynamicConfigId;
-    }
-
-    /**
-     * @param null|string $dynamicConfigId DynamicConfigId for DynamicAppConfigTrait.
-     * @return self
-     */
-    public function setDynamicConfigId($dynamicConfigId)
-    {
-        $this->dynamicConfigId = $dynamicConfigId;
-
-        return $this;
     }
 
     /**
@@ -180,7 +193,7 @@ trait DynamicAppConfigTrait
     {
         if ($this->dynamicConfig !== null) {
             throw new InvalidArgumentException(
-                'Dynamic configset already assigned.'
+                'Dynamic configset already assigned'
             );
         }
 
@@ -220,10 +233,11 @@ trait DynamicAppConfigTrait
     {
         $className = $this->dynamicConfigClass();
         if ($className) {
-            $config = $this->modelFactory()->get($className);
+            $config   = $this->modelFactory()->get($className);
+            $configId = $this->dynamicConfigId();
 
             if ($config instanceof StorableInterface && !$config->id()) {
-                $config->load($this->dynamicConfigId ?: 1);
+                $config->load($configId ?: 1);
             }
 
             return $config;
@@ -237,5 +251,5 @@ trait DynamicAppConfigTrait
      *
      * @return \Charcoal\Factory\FactoryInterface
      */
-    abstract public function modelFactory();
+    abstract protected function modelFactory();
 }
