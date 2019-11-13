@@ -29,11 +29,31 @@ abstract class AbstractWebContent extends Content implements
     private $locked = false;
 
     /**
+     * Alias of {@see Content::getActive()}.
+     *
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Alias of {@see self::getLocked()}.
+     *
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return $this->getLocked();
+    }
+
+    /**
      * Determine if the object is locked or not.
      *
      * @return boolean
      */
-    public function locked()
+    public function getLocked()
     {
         return $this->locked;
     }
@@ -58,7 +78,7 @@ abstract class AbstractWebContent extends Content implements
      */
     public function isViewable()
     {
-        return $this->id() && $this->active();
+        return $this->id() && $this->isActive();
     }
 
     /**
@@ -68,7 +88,17 @@ abstract class AbstractWebContent extends Content implements
      */
     public function isDeletable()
     {
-        return $this->id() && !$this->locked();
+        return $this->id() && !$this->isLocked();
+    }
+
+    /**
+     * Determine if the object can be reset.
+     *
+     * @return boolean
+     */
+    public function isResettable()
+    {
+        return $this->id() && !$this->isLocked();
     }
 
 
@@ -101,7 +131,7 @@ abstract class AbstractWebContent extends Content implements
     protected function postSave()
     {
         if (!$this->locked()) {
-            $this->generateObjectRoute($this->slug());
+            $this->generateObjectRoute($this['slug']);
         }
 
         return parent::postSave();
@@ -118,7 +148,7 @@ abstract class AbstractWebContent extends Content implements
     protected function preUpdate(array $properties = null)
     {
         if (!$this->locked()) {
-            $this->setSlug($this->generateSlug());
+            $this['slug'] = $this->generateSlug();
         }
 
         return parent::preUpdate($properties);
@@ -135,7 +165,7 @@ abstract class AbstractWebContent extends Content implements
     protected function postUpdate(array $properties = null)
     {
         if (!$this->locked()) {
-            $this->generateObjectRoute($this->slug());
+            $this->generateObjectRoute($this['slug']);
         }
 
         return parent::postUpdate($properties);

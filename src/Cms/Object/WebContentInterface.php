@@ -19,10 +19,4 @@ interface WebContentInterface extends
     HasOpenGraphInterface,
     HasTwitterCardInterface
 {
-    /**
-     * Determine if the object is locked or not.
-     *
-     * @return boolean
-     */
-    public function locked();
 }
