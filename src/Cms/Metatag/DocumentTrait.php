@@ -6,6 +6,8 @@ use InvalidArgumentException;
 
 /**
  * Additional utilities for the HTML document.
+ *
+ * This trait is recommended for template controllers.
  */
 trait DocumentTrait
 {
@@ -14,7 +16,7 @@ trait DocumentTrait
      *
      * @return string[]
      */
-    protected function documentTitleParts()
+    protected function getDocumentTitleParts()
     {
         return [
             'title' => $this->title(),
@@ -27,7 +29,7 @@ trait DocumentTrait
      *
      * @return string
      */
-    protected function documentTitleSeparator()
+    protected function getDocumentTitleSeparator()
     {
         return '—';
     }
@@ -128,8 +130,13 @@ trait DocumentTrait
      */
     final public function documentTitle()
     {
-        $parts = $this->documentTitleParts();
-        if (array_diff_key([ 'title' => true, 'site' => true ], $parts)) {
+        $parts = $this->getDocumentTitleParts();
+        $order = [
+            'title' => true,
+            'site'  => true,
+        ];
+
+        if (array_diff_key($order, $parts)) {
             throw new InvalidArgumentException(
                 'The document title parts requires at least a "title" and a "site"'
             );
@@ -151,11 +158,4 @@ trait DocumentTrait
      * @return string|null
      */
     abstract public function title();
-
-    /**
-     * Retrieve the current object relative to the context.
-     *
-     * @return \Charcoal\Model\ModelInterface
-     */
-    abstract public function contextObject();
 }
