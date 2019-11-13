@@ -2,9 +2,6 @@
 
 namespace Charcoal\Support\Admin\Mixin;
 
-// From 'charcoal-translator'
-use Charcoal\Translator\Translation;
-
 /**
  *
  */
@@ -13,9 +10,9 @@ interface AdminSearchableInterface
     /**
      * Get the search keywords for the Charcoal Admin.
      *
-     * @return Translation|string|null
+     * @return string|null
      */
-    public function adminSearchKeywords();
+    public function getAdminSearchKeywords();
 
     /**
      * Set the search keywords for the Charcoal Admin.

@@ -1,16 +1,12 @@
 {
     "properties": {
-        "admin_search_keywords": {
+        "adminSearchKeywords": {
             "type": "string",
             "l10n": true,
             "multiple": true,
             "label": {
                 "en": "Admin searchable keywords",
                 "fr": "Mots clés de recherche admin"
-            },
-            "description": {
-                "en": "",
-                "fr": ""
             }
         }
     }

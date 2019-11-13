@@ -23,11 +23,9 @@ trait AdminSearchableTrait
     /**
      * Get the search keywords for the Charcoal Admin.
      *
-     * Get the search keywords for the Charcoal Admin.
-     *
      * @return Translation|string|null
      */
-    public function adminSearchKeywords()
+    public function getAdminSearchKeywords()
     {
         return $this->adminSearchKeywords;
     }
@@ -40,7 +38,7 @@ trait AdminSearchableTrait
      */
     public function setAdminSearchKeywords($searchKeywords)
     {
-        $this->adminSearchKeywords = $searchKeywords;
+        $this->adminSearchKeywords = $this->property('adminSearchKeywords')->parseVal($searchKeywords);
 
         return $this;
     }
@@ -124,14 +122,14 @@ trait AdminSearchableTrait
      *
      * @return \Charcoal\Factory\FactoryInterface
      */
-    abstract public function modelFactory();
+    abstract protected function modelFactory();
 
     /**
      * Retrieve the model collection loader.
      *
      * @return \Charcoal\Loader\CollectionLoader
      */
-    abstract public function collectionLoader();
+    abstract protected function collectionLoader();
 
     /**
      * Retrieve the translator service.
