@@ -7,6 +7,8 @@ use Charcoal\Translator\Translation;
 
 /**
  * Basic implementation of {@see HasTwitterCardInterface}
+ *
+ * This trait is recommended for models.
  */
 trait HasTwitterCardTrait
 {
@@ -32,7 +34,7 @@ trait HasTwitterCardTrait
      *
      * @return string|null
      */
-    public function twitterCardType()
+    public function getTwitterCardType()
     {
         return $this->twitterCardType;
     }
@@ -56,7 +58,7 @@ trait HasTwitterCardTrait
      *
      * @return Translation|string|null
      */
-    public function twitterCardImage()
+    public function getTwitterCardImage()
     {
         return $this->twitterCardImage;
     }
@@ -69,16 +71,17 @@ trait HasTwitterCardTrait
      */
     public function setTwitterCardImage($path)
     {
-        $this->twitterCardImage = $this->translator()->translation($path);
+        $this->twitterCardImage = $this->property('twitterCardImage')->parseVal($path);
 
         return $this;
     }
 
     /**
-     * Retrieve the translator service.
+     * Retrieve an instance of {@see PropertyInterface} for the given property.
      *
-     * @see    \Charcoal\Translator\TranslatorAwareTrait
-     * @return \Charcoal\Translator\Translator
+     * @see    \Charcoal\Property\DescribablePropertyInterface
+     * @param  string $propertyIdent The property (ident) to get.
+     * @return \Charcoal\Property\PropertyInterface
      */
-    abstract protected function translator();
+    abstract public function property($propertyIdent);
 }

@@ -2,17 +2,17 @@
     "web": {
         "metatag": {
             "properties": {
-                "twitter:card": [ "twitter_card_type" ],
-                "twitter:url": [ "canonical_url" ],
-                "twitter:title": [ "meta_title", "title", "name" ],
-                "twitter:description": [ "meta_description", "description" ],
-                "twitter:image": [ "twitter_card_image", "meta_image", "thumbnail" ]
+                "twitter:card": [ "twitterCardType" ],
+                "twitter:url": [ "canonicalUrl" ],
+                "twitter:title": [ "metaTitle", "title", "name" ],
+                "twitter:description": [ "metaDescription", "description" ],
+                "twitter:image": [ "twitterCardImage", "metaImage", "thumbnail" ]
             }
         }
     },
 
     "properties": {
-        "twitter_card_type": {
+        "twitterCardType": {
             "type": "string",
             "input_type": "charcoal/admin/property/input/select",
             "storable": false,
@@ -39,7 +39,7 @@
                 }
             }
         },
-        "twitter_card_image": {
+        "twitterCardImage": {
             "type": "image",
             "label": {
                 "en": "Twitter Card Image",

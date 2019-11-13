@@ -40,12 +40,12 @@ interface HasOpenGraphInterface extends HasMetadataInterface
      *
      * @return string|null
      */
-    public function opengraphType();
+    public function getOpengraphType();
 
     /**
      * Retrieve the URL to the object's social image for the "og:image" meta-property.
      *
      * @return string|null
      */
-    public function opengraphImage();
+    public function getOpengraphImage();
 }

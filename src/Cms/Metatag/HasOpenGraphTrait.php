@@ -8,7 +8,7 @@ use Charcoal\Translator\Translation;
 /**
  * Basic implementation of {@see HasOpenGraphInterface}
  *
- * @uses \Charcoal\Support\Property\ParsableValueTrait
+ * This trait is recommended for models.
  */
 trait HasOpenGraphTrait
 {
@@ -34,7 +34,7 @@ trait HasOpenGraphTrait
      *
      * @return string
      */
-    public function opengraphType()
+    public function getOpengraphType()
     {
         return $this->opengraphType;
     }
@@ -58,7 +58,7 @@ trait HasOpenGraphTrait
      *
      * @return Translation|string|null
      */
-    public function opengraphImage()
+    public function getOpengraphImage()
     {
         return $this->opengraphImage;
     }
@@ -71,16 +71,17 @@ trait HasOpenGraphTrait
      */
     public function setOpengraphImage($path)
     {
-        $this->opengraphImage = $this->translator()->translation($path);
+        $this->opengraphImage = $this->property('opengraphImage')->parseVal($path);
 
         return $this;
     }
 
     /**
-     * Retrieve the translator service.
+     * Retrieve an instance of {@see PropertyInterface} for the given property.
      *
-     * @see    \Charcoal\Translator\TranslatorAwareTrait
-     * @return \Charcoal\Translator\Translator
+     * @see    \Charcoal\Property\DescribablePropertyInterface
+     * @param  string $propertyIdent The property (ident) to get.
+     * @return \Charcoal\Property\PropertyInterface
      */
-    abstract protected function translator();
+    abstract public function property($propertyIdent);
 }

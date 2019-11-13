@@ -8,7 +8,7 @@ use Charcoal\Translator\Translation;
 /**
  * Basic implementation of {@see HasMetatagInterface}
  *
- * @uses \Charcoal\Support\Property\ParsableValueTrait
+ * This trait is recommended for models.
  */
 trait HasMetatagTrait
 {
@@ -44,7 +44,7 @@ trait HasMetatagTrait
      *
      * @return Translation|string|null
      */
-    public function metaTitle()
+    public function getMetaTitle()
     {
         return $this->metaTitle;
     }
@@ -57,7 +57,7 @@ trait HasMetatagTrait
      */
     public function setMetaTitle($name)
     {
-        $this->metaTitle = $this->translator()->translation($name);
+        $this->metaTitle = $this->property('metaTitle')->parseVal($name);
 
         return $this;
     }
@@ -67,7 +67,7 @@ trait HasMetatagTrait
      *
      * @return Translation|string|null
      */
-    public function metaDescription()
+    public function getMetaDescription()
     {
         return $this->metaDescription;
     }
@@ -80,7 +80,7 @@ trait HasMetatagTrait
      */
     public function setMetaDescription($description)
     {
-        $this->metaDescription = $this->translator()->translation($description);
+        $this->metaDescription = $this->property('metaDescription')->parseVal($description);
 
         return $this;
     }
@@ -90,7 +90,7 @@ trait HasMetatagTrait
      *
      * @return Translation|string|null
      */
-    public function metaImage()
+    public function getMetaImage()
     {
         return $this->metaImage;
     }
@@ -103,16 +103,17 @@ trait HasMetatagTrait
      */
     public function setMetaImage($path)
     {
-        $this->metaImage = $this->translator()->translation($path);
+        $this->metaImage = $this->property('metaImage')->parseVal($path);
 
         return $this;
     }
 
     /**
-     * Retrieve the translator service.
+     * Retrieve an instance of {@see PropertyInterface} for the given property.
      *
-     * @see    \Charcoal\Translator\TranslatorAwareTrait
-     * @return \Charcoal\Translator\Translator
+     * @see    \Charcoal\Property\DescribablePropertyInterface
+     * @param  string $propertyIdent The property (ident) to get.
+     * @return \Charcoal\Property\PropertyInterface
      */
-    abstract protected function translator();
+    abstract public function property($propertyIdent);
 }

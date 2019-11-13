@@ -15,35 +15,35 @@ interface MetadataAwareInterface
      *
      * @return string|null
      */
-    public function canonicalUrl();
+    public function getCanonicalUrl();
 
     /**
      * Retrieve the current URI of the object.
      *
      * @return string|null
      */
-    public function currentUrl();
+    public function getCurrentUrl();
 
     /**
      * Retrieve the name or title of the object.
      *
      * @return string|null
      */
-    public function metaTitle();
+    public function getMetaTitle();
 
     /**
      * Retrieve the description of the object.
      *
      * @return string|null
      */
-    public function metaDescription();
+    public function getMetaDescription();
 
     /**
      * Retrieve the URL to the image representing the object.
      *
      * @return string|null
      */
-    public function metaImage();
+    public function getMetaImage();
 
     /**
      * Retrieve the object's {@link https://developers.facebook.com/docs/reference/opengraph/ OpenGraph type},
@@ -51,7 +51,7 @@ interface MetadataAwareInterface
      *
      * @return string|null
      */
-    public function opengraphType();
+    public function getOpengraphType();
 
     /**
      * Retrieve the URL to the object's social image for the "og:image" meta-property.
@@ -61,7 +61,7 @@ interface MetadataAwareInterface
      *
      * @return string|null
      */
-    public function opengraphImage();
+    public function getOpengraphImage();
 
     /**
      * Retrieve the object's {@link https://dev.twitter.com/cards/types card type},
@@ -69,12 +69,12 @@ interface MetadataAwareInterface
      *
      * @return string|null
      */
-    public function twitterCardType();
+    public function getTwitterCardType();
 
     /**
      * Retrieve the URL to the object's social image for the "twitter:image" meta-property.
      *
      * @return string|null
      */
-    public function twitterCardImage();
+    public function getTwitterCardImage();
 }

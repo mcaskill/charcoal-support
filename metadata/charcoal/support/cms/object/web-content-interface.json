@@ -12,10 +12,10 @@
             }
         },
         "opengraph_image": {
-            "placeholder": "{{ obj.meta_image }}"
+            "placeholder": "{{ obj.metaImage }}"
         },
         "twitter_card_image": {
-            "placeholder": "{{ obj.meta_image }}"
+            "placeholder": "{{ obj.metaImage }}"
         }
     },
 
@@ -27,11 +27,11 @@
                     "fr": "Méta-données"
                 },
                 "properties": [
-                    "meta_title",
-                    "meta_description",
-                    "meta_image",
-                    "opengraph_image",
-                    "twitter_card_image"
+                    "metaTitle",
+                    "metaDescription",
+                    "metaImage",
+                    "opengraphImage",
+                    "twitterCardImage"
                 ],
                 "layout": {
                     "structure": [

@@ -20,19 +20,19 @@ interface HasMetatagInterface extends HasMetadataInterface
      *
      * @return string|null
      */
-    public function metaTitle();
+    public function getMetaTitle();
 
     /**
      * Retrieve the object's description.
      *
      * @return string|null
      */
-    public function metaDescription();
+    public function getMetaDescription();
 
     /**
      * Retrieve the object's thumbnail or preview image.
      *
      * @return string|null
      */
-    public function metaImage();
+    public function getMetaImage();
 }

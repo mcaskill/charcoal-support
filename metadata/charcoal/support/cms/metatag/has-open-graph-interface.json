@@ -2,17 +2,17 @@
     "web": {
         "metatag": {
             "properties": {
-                "og:type": [ "opengraph_type" ],
-                "og:url": [ "canonical_url" ],
-                "og:title": [ "meta_title", "title", "name" ],
-                "og:description": [ "meta_description", "description" ],
-                "og:image": [ "opengraph_image", "meta_image", "thumbnail" ]
+                "og:type": [ "opengraphType" ],
+                "og:url": [ "canonicalUrl" ],
+                "og:title": [ "metaTitle", "title", "name" ],
+                "og:description": [ "metaDescription", "description" ],
+                "og:image": [ "opengraphImage", "metaImage", "thumbnail" ]
             }
         }
     },
 
     "properties": {
-        "opengraph_type": {
+        "opengraphType": {
             "type": "string",
             "storable": false,
             "label": {
@@ -25,7 +25,7 @@
             },
             "placeholder": "website"
         },
-        "opengraph_image": {
+        "opengraphImage": {
             "type": "image",
             "label": {
                 "en": "OpenGraph Thumbnail",

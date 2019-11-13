@@ -41,12 +41,12 @@ interface HasTwitterCardInterface extends HasMetadataInterface
      *
      * @return string|null
      */
-    public function twitterCardType();
+    public function getTwitterCardType();
 
     /**
      * Retrieve the URL to the object's social image for the "twitter:image" meta-property.
      *
      * @return string|null
      */
-    public function twitterCardImage();
+    public function getTwitterCardImage();
 }
