@@ -23,16 +23,19 @@
 <meta property="og:description" content="{{ . }}">
 {{/ metaDescription }}
 
-{{# socialMedia.facebook.app_id }}
+{{# socialMedia.facebook }}
+{{# app_id }}
 <meta property="fb:app_id"      content="{{ . }}">
-{{/ socialMedia.facebook.app_id }}
-{{# socialMedia.facebook.admins }}
+{{/ app_id }}
+{{# admins }}
 <meta property="fb:admins"      content="{{ . }}">
-{{/ socialMedia.facebook.admins }}
+{{/ admins }}
 
-{{# hasTranslations }}
-{{# translations }}
-<meta property="og:locale{{^ isCurrentLanguage }}:alternate{{/ isCurrentLanguage }}"{{# isCurrentLanguage }}          {{/ isCurrentLanguage }} content="{{ language.underscoreLocale }}">
-{{/ translations }}
+{{/ socialMedia.facebook }}
+{{# hasAlternateTranslations }}
+<meta property="og:locale"{{# hasAlternateTranslations }}          {{/ hasAlternateTranslations }} content="{{ currentLocale }}">
+{{# alternateTranslations }}
+<meta property="og:locale:alternate" content="{{ locale }}">
+{{/ alternateTranslations }}
 
-{{/ hasTranslations }}
+{{/ hasAlternateTranslations }}
