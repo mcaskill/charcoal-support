@@ -2,11 +2,10 @@
 
 namespace Charcoal\Support\Model;
 
-use RuntimeException;
-
-// From 'charcoal-core'
 use Charcoal\Model\Service\ModelLoader;
 use Charcoal\Model\Service\ModelLoaderBuilder;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Provides model loader builder features.

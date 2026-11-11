@@ -2,10 +2,8 @@
 
 namespace Charcoal\Support\App\Template;
 
-use RuntimeException;
-
-// From PSR-7
 use Psr\Http\Message\UriInterface;
+use RuntimeException;
 
 /**
  * Additional utilities for managing views.

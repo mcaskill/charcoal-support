@@ -2,14 +2,9 @@
 
 namespace Charcoal\Support\Model;
 
-use InvalidArgumentException;
-
-// From 'illuminate/support'
 use Illuminate\Support\Collection as LaravelCollection;
-
-// From 'charcoal-core'
+use InvalidArgumentException;
 use Charcoal\Model\Collection as CharcoalCollection;
-use Charcoal\Model\ModelInterface;
 
 /**
  * A Super Model Collection

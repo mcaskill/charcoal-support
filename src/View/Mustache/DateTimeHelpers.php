@@ -3,20 +3,15 @@
 namespace Charcoal\Support\View\Mustache;
 
 use ArrayAccess;
-use Exception;
-use InvalidArgumentException;
-
+use Charcoal\View\Mustache\HelpersInterface;
 use Closure;
 use DateTime;
-use DateTimeZone;
-use DateTimeInterface;
 use DateTimeImmutable;
-
-// From Mustache
-use Mustache_LambdaHelper as LambdaHelper;
-
-// From 'charcoal-view'
-use Charcoal\View\Mustache\HelpersInterface;
+use DateTimeInterface;
+use DateTimeZone;
+use Exception;
+use InvalidArgumentException;
+use Mustache\LambdaHelper;
 
 /**
  * Mustache Date/Time Helpers

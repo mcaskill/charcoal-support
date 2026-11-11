@@ -2,10 +2,7 @@
 
 namespace Charcoal\Support\Cms\Object;
 
-// From 'charcoal-config'
 use Charcoal\Config\DelegatesAwareInterface;
-
-// From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
 
 /**

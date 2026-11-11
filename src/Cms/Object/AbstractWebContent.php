@@ -2,10 +2,7 @@
 
 namespace Charcoal\Support\Cms\Object;
 
-// From 'charcoal-object'
 use Charcoal\Object\Content;
-
-// From 'mcaskill/charcoal-support'
 use Charcoal\Support\Cms\Metatag\HasMetatagTrait;
 use Charcoal\Support\Cms\Metatag\HasOpenGraphTrait;
 use Charcoal\Support\Cms\Metatag\HasTwitterCardTrait;

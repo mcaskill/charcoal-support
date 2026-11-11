@@ -2,7 +2,6 @@
 
 namespace Charcoal\Support\Cms\Metatag;
 
-// From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 
 /**

@@ -2,11 +2,9 @@
 
 namespace Charcoal\Support\Model;
 
-use RuntimeException;
-
-// From 'charcoal-core'
 use Charcoal\Model\Service\MetadataLoader;
 use Charcoal\Model\MetadataInterface;
+use RuntimeException;
 
 /**
  * Provides describable metadata features.

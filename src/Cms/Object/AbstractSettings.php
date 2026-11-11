@@ -2,16 +2,10 @@
 
 namespace Charcoal\Support\Cms\Object;
 
-use InvalidArgumentException;
-
-// From 'charcoal-config'
 use Charcoal\Config\DelegatesAwareTrait;
-
-// From 'charcoal-object'
 use Charcoal\Object\Content;
-
-// From 'mcaskill/charcoal-support'
 use Charcoal\Support\Cms\Object\SettingsInterface;
+use InvalidArgumentException;
 
 /**
  * Configset Model

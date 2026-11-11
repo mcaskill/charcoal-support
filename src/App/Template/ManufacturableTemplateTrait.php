@@ -2,10 +2,8 @@
 
 namespace Charcoal\Support\App\Template;
 
-use RuntimeException;
-
-// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+use RuntimeException;
 
 /**
  * Provides template factory features.

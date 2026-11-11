@@ -2,10 +2,8 @@
 
 namespace Charcoal\Support\Cache;
 
-use RuntimeException;
-
-// From PSR-6
 use Psr\Cache\CacheItemPoolInterface;
+use RuntimeException;
 
 /**
  * The Cache Aware Trait provides the methods necessary for an object

@@ -2,13 +2,9 @@
 
 namespace Charcoal\Support\App\Routing;
 
-use UnexpectedValueException;
-
-// From 'charcoal-object'
 use Charcoal\Object\RoutableTrait;
-
-// From 'charcoal-translator'
 use Charcoal\Translator\Translation;
+use UnexpectedValueException;
 
 /**
  * Full implementation, as Trait, of the {@see \Charcoal\Object\RoutableInterface}.

@@ -2,15 +2,9 @@
 
 namespace Charcoal\Support\Admin\Mixin;
 
-// From 'charcoal-property'
 use Charcoal\Property\ObjectProperty;
-
-// From 'charcoal-translator'
 use Charcoal\Translator\Translation;
 
-/**
- *
- */
 trait AdminSearchableTrait
 {
     /**

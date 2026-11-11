@@ -2,10 +2,8 @@
 
 namespace Charcoal\Support\Model;
 
-use RuntimeException;
-
-// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+use RuntimeException;
 
 /**
  * Provides model factory features.

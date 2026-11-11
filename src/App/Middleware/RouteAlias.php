@@ -2,7 +2,6 @@
 
 namespace Charcoal\Support\App\Middleware;
 
-// From PSR-7
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

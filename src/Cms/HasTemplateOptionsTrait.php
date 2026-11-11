@@ -2,7 +2,6 @@
 
 namespace Charcoal\Support\Cms;
 
-// From 'charcoal-cms'
 use Charcoal\Cms\TemplateableInterface;
 
 /**

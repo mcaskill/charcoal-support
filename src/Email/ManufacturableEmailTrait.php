@@ -2,10 +2,8 @@
 
 namespace Charcoal\Support\Email;
 
-use RuntimeException;
-
-// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+use RuntimeException;
 
 /**
  * Provides email factory features.

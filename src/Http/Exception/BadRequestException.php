@@ -4,9 +4,6 @@ namespace Charcoal\Support\Http\Exception;
 
 use Exception;
 use LogicException;
-
-// From PSR-7
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

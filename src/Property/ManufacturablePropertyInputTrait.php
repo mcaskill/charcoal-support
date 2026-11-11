@@ -2,10 +2,8 @@
 
 namespace Charcoal\Support\Property;
 
-use RuntimeException;
-
-// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+use RuntimeException;
 
 /**
  * Provides property control factory features.

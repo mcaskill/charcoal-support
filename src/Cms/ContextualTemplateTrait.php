@@ -2,14 +2,11 @@
 
 namespace Charcoal\Support\Cms;
 
-use InvalidArgumentException;
-
-// From PSR-7
-use Psr\Http\Message\UriInterface;
-
-// From 'charcoal-core'
 use Charcoal\Model\Model;
 use Charcoal\Model\ModelInterface;
+use Charcoal\Translator\Translation;
+use InvalidArgumentException;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Additional utilities for the routing.
@@ -26,7 +23,7 @@ trait ContextualTemplateTrait
     /**
      * The route group path (base URI).
      *
-     * @var string|null
+     * @var Translation|null
      */
     protected $routeGroup;
 
@@ -58,7 +55,7 @@ trait ContextualTemplateTrait
      *
      * @param  string $className The class name of the section model.
      * @throws InvalidArgumentException If the class name is not a string.
-     * @return AbstractPropertyDisplay Chainable
+     * @return self
      */
     public function setGenericContextClass($className)
     {

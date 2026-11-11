@@ -2,9 +2,6 @@
 
 namespace Charcoal\Support\Admin\Mixin;
 
-/**
- *
- */
 interface AdminSearchableInterface
 {
     /**

@@ -2,7 +2,6 @@
 
 namespace Charcoal\Support\App;
 
-// From 'charcoal-app'
 use Charcoal\App\AppConfig;
 
 /**

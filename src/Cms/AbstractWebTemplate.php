@@ -3,20 +3,8 @@
 namespace Charcoal\Support\Cms;
 
 use ArrayIterator;
-
-// From Pimple
-use Pimple\Container;
-
-// From 'charcoal-core'
-use Charcoal\Model\ModelInterface;
-
-// From 'charcoal-translator'
-use Charcoal\Translator\TranslatorAwareTrait;
-
-// From 'charcoal-app'
 use Charcoal\App\Template\AbstractTemplate as CharcoalTemplate;
-
-// From 'mcaskill/charcoal-support'
+use Charcoal\Model\ModelInterface;
 use Charcoal\Support\App\Template\DynamicAppConfigTrait;
 use Charcoal\Support\App\Template\SupportTrait as TemplateSupportTrait;
 use Charcoal\Support\Cms\ContextualTemplateInterface;
@@ -26,6 +14,8 @@ use Charcoal\Support\Cms\Metatag\HasMetatagInterface;
 use Charcoal\Support\Cms\Metatag\HasOpenGraphInterface;
 use Charcoal\Support\Cms\Metatag\HasTwitterCardInterface;
 use Charcoal\Support\Cms\Metatag\MetadataAwareInterface;
+use Charcoal\Translator\TranslatorAwareTrait;
+use Pimple\Container;
 
 /**
  * Hypertext Template Controller

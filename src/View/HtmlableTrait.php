@@ -2,6 +2,9 @@
 
 namespace Charcoal\Support\View;
 
+use Closure;
+use JsonSerializable;
+
 /**
  * Implementation, as trait, of the {@see \Charcoal\View\HtmlableInterface}.
  */

@@ -2,20 +2,12 @@
 
 namespace Charcoal\Support\App\Template;
 
-use InvalidArgumentException;
-
-// From 'charcoal-config'
+use Charcoal\App\AppConfig;
 use Charcoal\Config\DelegatesAwareInterface;
 use Charcoal\Config\EntityInterface;
-
-// From 'charcoal-core'
 use Charcoal\Source\StorableInterface;
-
-// From 'charcoal-app'
-use Charcoal\App\AppConfig;
-
-// From 'mcaskill/charcoal-support'
 use Charcoal\Support\Cms\Object\SettingsInterface;
+use InvalidArgumentException;
 
 /**
  * Provides support for merging the {@see \Charcoal\App\AppConfig Charcoal application configset}

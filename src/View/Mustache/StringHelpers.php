@@ -2,8 +2,8 @@
 
 namespace Charcoal\Support\View\Mustache;
 
-use Mustache_LambdaHelper as LambdaHelper;
 use Charcoal\View\Mustache\HelpersInterface;
+use Mustache\LambdaHelper;
 
 /**
  * Mustache String Helpers

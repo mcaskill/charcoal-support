@@ -2,20 +2,13 @@
 
 namespace Charcoal\Support\App\Routing;
 
-use Closure;
-use InvalidArgumentException;
-
-// From PSR-7
-use Psr\Http\Message\UriInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
-// From 'charcoal-translator'
-use Charcoal\Translator\TranslatorAwareTrait;
-
-// From 'charcoal-app'
 use Charcoal\App\AppAwareInterface;
 use Charcoal\App\AppAwareTrait;
+use Charcoal\Translator\TranslatorAwareTrait;
+use InvalidArgumentException;
+use Psr\Http\Message\UriInterface;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * The Route Redirection Manager

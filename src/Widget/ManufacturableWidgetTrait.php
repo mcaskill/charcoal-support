@@ -2,10 +2,8 @@
 
 namespace Charcoal\Support\Widget;
 
-use RuntimeException;
-
-// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
+use RuntimeException;
 
 /**
  * Provides widget factory features.

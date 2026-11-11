@@ -3,6 +3,7 @@
 namespace Charcoal\Support\Cms;
 
 use Charcoal\Cms\SectionInterface;
+use InvalidArgumentException;
 
 /**
  * Provides awareness for CMS a singular Section object.
@@ -36,7 +37,7 @@ trait SectionAwareTrait
      *
      * @param  string $className The class name of the section model.
      * @throws InvalidArgumentException If the class name is not a string.
-     * @return AbstractPropertyDisplay Chainable
+     * @return self
      */
     public function setSectionClass($className)
     {

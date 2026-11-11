@@ -2,12 +2,9 @@
 
 namespace Charcoal\Support\Property;
 
-// From 'charcoal-model'
-use Charcoal\Model\MetadataInterface;
-
-// From 'charcoal-factory'
 use Charcoal\Factory\FactoryInterface;
-
+use Charcoal\Model\MetadataInterface;
+use Charcoal\Property\PropertyInterface;
 use RuntimeException;
 
 /**

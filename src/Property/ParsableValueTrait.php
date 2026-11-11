@@ -3,20 +3,13 @@
 namespace Charcoal\Support\Property;
 
 use ArrayAccess;
+use Charcoal\Property\AbstractProperty;
+use Charcoal\Translator\Translation;
 use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-
-// From 'cahrcoal-core'
-use Charcoal\Model\ModelInterface;
-
-// From 'cahrcoal-property'
-use Charcoal\Property\AbstractProperty;
-use Charcoal\Property\PropertyInterface;
-
-// From 'cahrcoal-translator'
-use Charcoal\Translator\Translation;
+use Traversable;
 
 /**
  * Provides utilities for parsing property values.
@@ -29,8 +22,8 @@ trait ParsableValueTrait
     /**
      * Parse the property value as a "multiple" value type.
      *
-     * @param  mixed                    $value     The value being converted to an array.
-     * @param  string|PropertyInterface $separator The boundary string.
+     * @param  mixed                   $value     The value being converted to an array.
+     * @param  string|AbstractProperty $separator The boundary string.
      * @return array
      */
     protected function parseAsMultiple($value, $separator = ',')
@@ -48,7 +41,7 @@ trait ParsableValueTrait
             return $parsed;
         }
 
-        if ($separator instanceof PropertyInterface) {
+        if ($separator instanceof AbstractProperty) {
             $separator = $separator->multipleSeparator();
         }
 
@@ -291,14 +284,14 @@ trait ParsableValueTrait
         $castTo,
         $fallback = null
     ) {
-        if (!is_string($castTo) && !is_array($castTo) && !($castTo instanceof PropertyInterface)) {
+        if (!is_string($castTo) && !is_array($castTo) && !($castTo instanceof AbstractProperty)) {
             throw new InvalidArgumentException('Invalid data casting type.');
         }
 
         if (empty($value) && !is_numeric($value)) {
             $value    = $fallback;
             $property = null;
-            if ($fallback instanceof PropertyInterface) {
+            if ($fallback instanceof AbstractProperty) {
                 $property = $fallback->ident();
             } elseif (is_string($fallback) && $this->hasProperty($fallback)) {
                 $property = $fallback;
@@ -312,7 +305,7 @@ trait ParsableValueTrait
             }
         }
 
-        if (($castTo instanceof PropertyInterface) || is_array($castTo)) {
+        if (($castTo instanceof AbstractProperty) || is_array($castTo)) {
             if (is_object($castTo)) {
                 $l10n  = $castTo['l10n'];
                 $multi = $castTo['multiple'];

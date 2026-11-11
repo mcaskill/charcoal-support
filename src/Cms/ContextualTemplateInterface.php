@@ -2,11 +2,8 @@
 
 namespace Charcoal\Support\Cms;
 
-// From PSR-7
-use Psr\Http\Message\UriInterface;
-
-// From 'charcoal-core'
 use Charcoal\Model\ModelInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Defines a template intrinsically related to routing.
