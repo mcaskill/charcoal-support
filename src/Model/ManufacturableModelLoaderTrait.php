@@ -68,7 +68,7 @@ trait ManufacturableModelLoaderTrait
         if (!is_string($objType)) {
             throw new InvalidArgumentException(sprintf(
                 'The object type must be a string, received %s',
-                get_var_type($objType)
+                is_object($objType) ? get_class($objType) : gettype($objType)
             ));
         }
 
@@ -78,7 +78,7 @@ trait ManufacturableModelLoaderTrait
         } elseif (!is_string($key)) {
             throw new InvalidArgumentException(sprintf(
                 'The object property key must be a string, received %s',
-                get_var_type($key)
+                is_object($key) ? get_class($key) : gettype($key)
             ));
         }
 

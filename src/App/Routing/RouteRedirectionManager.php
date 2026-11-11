@@ -232,11 +232,11 @@ class RouteRedirectionManager implements
             );
         } else {
             if (!is_array($route)) {
-                throw new InvalidArgumentException(
+                throw new InvalidArgumentException(sprintf(
                     'The new path must be a string (%s) or an array structure; received %s',
                     'URI, \Psr\Http\Message\UriInterface, or the name of a \Slim\Route',
                     (is_object($route) ? get_class($route) : gettype($route))
-                );
+                ));
             }
 
             if (!isset($route['status'])) {
