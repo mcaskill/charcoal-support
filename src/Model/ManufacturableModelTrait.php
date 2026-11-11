@@ -15,14 +15,14 @@ trait ManufacturableModelTrait
     /**
      * Store the factory instance.
      *
-     * @var FactoryInterface
+     * @var \Charcoal\Factory\GenericFactory
      */
     protected $modelFactory;
 
     /**
      * Set an model factory.
      *
-     * @param  FactoryInterface $factory The factory to create models.
+     * @param  \Charcoal\Factory\GenericFactory $factory The factory to create models.
      * @return void
      */
     protected function setModelFactory(FactoryInterface $factory)
@@ -34,7 +34,7 @@ trait ManufacturableModelTrait
      * Retrieve the model factory.
      *
      * @throws RuntimeException If the model factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     public function modelFactory()
     {

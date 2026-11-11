@@ -18,14 +18,14 @@ trait ManufacturablePropertyTrait
     /**
      * Store the factory instance.
      *
-     * @var FactoryInterface
+     * @var \Charcoal\Factory\GenericFactory
      */
     protected $propertyFactory;
 
     /**
      * Set a property factory.
      *
-     * @param  FactoryInterface $factory The factory to create property values.
+     * @param  \Charcoal\Factory\GenericFactory $factory The factory to create property values.
      * @return void
      */
     protected function setPropertyFactory(FactoryInterface $factory)
@@ -37,7 +37,7 @@ trait ManufacturablePropertyTrait
      * Retrieve the property factory.
      *
      * @throws RuntimeException If the property factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     public function propertyFactory()
     {

@@ -15,14 +15,14 @@ trait ManufacturableEmailTrait
     /**
      * Store the factory instance.
      *
-     * @var FactoryInterface
+     * @var \Charcoal\Factory\GenericFactory
      */
     protected $emailFactory;
 
     /**
      * Set an email model factory.
      *
-     * @param  FactoryInterface $factory The factory to create emails.
+     * @param  \Charcoal\Factory\GenericFactory $factory The factory to create emails.
      * @return void
      */
     protected function setEmailFactory(FactoryInterface $factory)
@@ -34,7 +34,7 @@ trait ManufacturableEmailTrait
      * Retrieve the email model factory.
      *
      * @throws RuntimeException If the model factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     protected function emailFactory()
     {

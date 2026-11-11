@@ -15,14 +15,14 @@ trait ManufacturablePropertyDisplayTrait
     /**
      * Store the factory instance.
      *
-     * @var FactoryInterface
+     * @var \Charcoal\Factory\GenericFactory
      */
     protected $propertyDisplayFactory;
 
     /**
      * Set a property display factory.
      *
-     * @param  FactoryInterface $factory The factory to create displayable property values.
+     * @param  \Charcoal\Factory\GenericFactory $factory The factory to create displayable property values.
      * @return void
      */
     protected function setPropertyDisplayFactory(FactoryInterface $factory)
@@ -34,7 +34,7 @@ trait ManufacturablePropertyDisplayTrait
      * Retrieve the property display factory.
      *
      * @throws RuntimeException If the property display factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     public function propertyDisplayFactory()
     {

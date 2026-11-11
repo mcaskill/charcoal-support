@@ -15,14 +15,14 @@ trait ManufacturablePropertyInputTrait
     /**
      * Store the factory instance.
      *
-     * @var FactoryInterface
+     * @var \Charcoal\Factory\GenericFactory
      */
     protected $propertyInputFactory;
 
     /**
      * Set a property control factory.
      *
-     * @param  FactoryInterface $factory The factory to create form controls for property values.
+     * @param  \Charcoal\Factory\GenericFactory $factory The factory to create form controls for property values.
      * @return void
      */
     protected function setPropertyInputFactory(FactoryInterface $factory)
@@ -34,7 +34,7 @@ trait ManufacturablePropertyInputTrait
      * Retrieve the property control factory.
      *
      * @throws RuntimeException If the property control factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     public function propertyInputFactory()
     {

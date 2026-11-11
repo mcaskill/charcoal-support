@@ -21,7 +21,7 @@ trait ManufacturableModelCollectionTrait
     /**
      * Store the factory instance.
      *
-     * @var FactoryInterface
+     * @var \Charcoal\Factory\GenericFactory
      */
     protected $collectionLoaderFactory;
 
@@ -57,7 +57,7 @@ trait ManufacturableModelCollectionTrait
     /**
      * Set a model collection loader factory.
      *
-     * @param  FactoryInterface $factory The factory to create model collection loaders.
+     * @param  \Charcoal\Factory\GenericFactory $factory The factory to create model collection loaders.
      * @return void
      */
     protected function setCollectionLoaderFactory(FactoryInterface $factory)
@@ -69,7 +69,7 @@ trait ManufacturableModelCollectionTrait
      * Retrieve the collection loader factory.
      *
      * @throws RuntimeException If the collection loader factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     public function collectionLoaderFactory()
     {

@@ -42,7 +42,7 @@ trait ManufacturableModelLoaderTrait
      * Retrieve the model loader builder.
      *
      * @throws RuntimeException If the model loader builder is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     protected function modelLoaderBuilder()
     {

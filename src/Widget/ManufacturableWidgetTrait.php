@@ -15,14 +15,14 @@ trait ManufacturableWidgetTrait
     /**
      * Store the factory instance.
      *
-     * @var FactoryInterface
+     * @var \Charcoal\Factory\GenericFactory
      */
     protected $widgetFactory;
 
     /**
      * Set an widget factory.
      *
-     * @param  FactoryInterface $factory The factory to create widgets.
+     * @param  \Charcoal\Factory\GenericFactory $factory The factory to create widgets.
      * @return void
      */
     protected function setWidgetFactory(FactoryInterface $factory)
@@ -34,7 +34,7 @@ trait ManufacturableWidgetTrait
      * Retrieve the widget factory.
      *
      * @throws RuntimeException If the widget factory is missing.
-     * @return FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     protected function widgetFactory()
     {

@@ -235,7 +235,7 @@ trait ContextualTemplateTrait
     /**
      * Retrieve the object model factory.
      *
-     * @return \Charcoal\Factory\FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     abstract public function modelFactory();
 }

@@ -120,7 +120,7 @@ trait AdminSearchableTrait
     /**
      * Retrieve the model factory.
      *
-     * @return \Charcoal\Factory\FactoryInterface
+     * @return \Charcoal\Factory\GenericFactory
      */
     abstract protected function modelFactory();
 
