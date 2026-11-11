@@ -275,7 +275,7 @@ class DateTimeHelpers implements
                     $time = $this->parseDateTime($helper->render($time));
                 }
 
-                $diff = time_diff($from);
+                $diff = $this->timeDiff($time);
 
                 if ($diff < static::MINUTE_IN_SECONDS) {
                     $secs = $diff;
@@ -313,7 +313,7 @@ class DateTimeHelpers implements
                         $months = 1;
                     }
                     $since = sprintf($plural('%s month', '%s months', $months), $months);
-                } elseif ($diff >= static::YEAR_IN_SECONDS) {
+                } else {
                     $years = round($diff / static::YEAR_IN_SECONDS);
                     if ($years <= 1) {
                         $years = 1;
@@ -326,6 +326,29 @@ class DateTimeHelpers implements
         ];
     }
 
+    /**
+     * Determines the difference between two timestamps.
+     *
+     * @link   https://developer.wordpress.org/reference/functions/human_time_diff/
+     * @param  mixed $from A date/time string—or instance of DateTimeInterface—from which the difference begins.
+     * @param  mixed $to   A date/time string—or instance of DateTimeInterface—to end the time difference.
+     *                     Defaults to the value of {@see time()}.
+     * @return integer Time difference in seconds.
+     */
+    private function timeDiff($from, $to = null)
+    {
+        if (empty($to)) {
+            $to = time();
+        } elseif ($to instanceof DateTimeInterface) {
+            $to = $to->getTimestamp();
+        }
+
+        if ($from instanceof DateTimeInterface) {
+            $from = $from->getTimestamp();
+        }
+
+        return (int)abs($to - $from);
+    }
 
 
     // Magic Methods
