@@ -148,8 +148,8 @@ trait DynamicAppConfigTrait
             if ($dynConfig instanceof DelegatesAwareInterface) {
                 $dynConfig->prependDelegate($this->appConfig);
             } else {
-                $appConfig['dynamic'] = $dynConfig;
-                $appConfig->prependDelegate($dynConfig);
+                $this->appConfig['dynamic'] = $dynConfig;
+                $this->appConfig->prependDelegate($dynConfig);
             }
         }
 
