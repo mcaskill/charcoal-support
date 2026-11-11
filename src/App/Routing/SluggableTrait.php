@@ -62,7 +62,7 @@ trait SluggableTrait
         $translator = $this->translator();
         $languages  = $translator->availableLocales();
         $patterns   = $this->slugPattern();
-        $curSlug    = $this->slug();
+        $curSlug    = $this->getSlug();
         $newSlug    = [];
 
         $origLang = $translator->getLocale();
@@ -101,7 +101,7 @@ trait SluggableTrait
         $translator = $this->translator();
         $languages  = $translator->availableLocales();
         $patterns   = $this->slugPattern();
-        $curSlug    = $this->slug();
+        $curSlug    = $this->getSlug();
         $newSlug    = [];
 
         $origLang = $translator->getLocale();

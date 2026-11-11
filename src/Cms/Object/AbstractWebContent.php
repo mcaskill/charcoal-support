@@ -32,7 +32,7 @@ abstract class AbstractWebContent extends Content implements
      */
     public function isActive()
     {
-        return $this->active;
+        return $this->getActive();
     }
 
     /**
@@ -111,7 +111,7 @@ abstract class AbstractWebContent extends Content implements
      */
     protected function preSave()
     {
-        if (!$this->locked()) {
+        if (!$this->getLocked()) {
             $this->setSlug($this->generateSlug());
         }
 
@@ -127,7 +127,7 @@ abstract class AbstractWebContent extends Content implements
      */
     protected function postSave()
     {
-        if (!$this->locked()) {
+        if (!$this->getLocked()) {
             $this->generateObjectRoute($this['slug']);
         }
 
@@ -144,7 +144,7 @@ abstract class AbstractWebContent extends Content implements
      */
     protected function preUpdate(?array $properties = null)
     {
-        if (!$this->locked()) {
+        if (!$this->getLocked()) {
             $this['slug'] = $this->generateSlug();
         }
 
@@ -161,7 +161,7 @@ abstract class AbstractWebContent extends Content implements
      */
     protected function postUpdate(?array $properties = null)
     {
-        if (!$this->locked()) {
+        if (!$this->getLocked()) {
             $this->generateObjectRoute($this['slug']);
         }
 
@@ -177,7 +177,7 @@ abstract class AbstractWebContent extends Content implements
      */
     protected function preDelete()
     {
-        if ($this->locked()) {
+        if ($this->getLocked()) {
             return false;
         }
 

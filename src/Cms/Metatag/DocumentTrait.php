@@ -41,7 +41,7 @@ trait DocumentTrait
      */
     protected function parseDocumentTitleSeparator()
     {
-        $delim = trim($this->documentTitleSeparator());
+        $delim = trim($this->getDocumentTitleSeparator());
         if (empty($delim)) {
             return '';
         }
