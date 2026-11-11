@@ -48,22 +48,13 @@ trait HtmlableTrait
                     }
 
                     if (is_array($val)) {
-                        if (function_exists('is_blank')) {
-                            $filter = function ($var) {
-                                return !is_blank($var);
-                            };
-                        } else {
-                            $filter = function ($var) {
-                                return !empty($var) || is_numeric($var);
-                            };
-                        }
-                        $val = implode(' ', array_filter($val, $filter));
+                        $val = implode(' ', array_filter($val, function ($var) {
+                            return !empty($var) || is_numeric($var);
+                        }));
                     }
 
                     if (is_callable($callback)) {
                         $val = call_user_func($callback, $val);
-                    } elseif (function_exists('esc_attr')) {
-                        $val = esc_attr($val);
                     } else {
                         $val = htmlspecialchars($val, ENT_QUOTES);
                     }
