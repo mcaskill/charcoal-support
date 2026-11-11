@@ -156,6 +156,8 @@ class RouteRedirectionManager implements
             );
         }
 
+        $manager = $this;
+
         $newPath = $this->parseRoute($newPath);
         $this->paths[$oldPath] = $newPath;
 
@@ -163,56 +165,68 @@ class RouteRedirectionManager implements
             $newPath['methods'],
             $oldPath,
             function (
-                RequestInterface $request,
-                ResponseInterface $response,
+                Request $_request,
+                Response $response,
                 array $args = []
             ) use (
+                $manager,
                 $newPath
             ) {
-                if ($newPath['route'] === 404) {
-                    return $response->withStatus(404);
-                }
-
-                $locale = isset($args['lang']) ? $args['lang'] : null;
-
-                if ($newPath['data_key'] === null) {
-                    if (is_array($newPath['route'])) {
-                        $route = $this->translator()->translate($newPath['route'], [], null, $locale);
-                        if ($route !== null) {
-                            $newPath['route'] = $route;
-                        } else {
-                            $newPath['route'] = reset($newPath['route']);
-                        }
-                    }
-
-                    return $response->withRedirect($newPath['route'], $newPath['status']);
-                }
-
-                if (!isset($newPath['ident'])) {
-                    return $response->withStatus(404);
-                }
-
-                if (!empty($newPath[$newPath['data_key']])) {
-                    $args = array_merge($newPath[$newPath['data_key']], $args);
-                }
-
-                $router = $this->get('router');
-                if (isset($newPath[$newPath['data_key']]['route_endpoint'])) {
-                    $endpoint = $this->translator()->translate(
-                        $newPath[$newPath['data_key']]['route_endpoint'],
-                        [],
-                        null,
-                        $locale
-                    );
-
-                    $args['route_endpoint'] = $endpoint;
-                }
-
-                $uri = $router->pathFor($newPath['ident'], $args);
-
-                return $response->withRedirect($uri, $newPath['status']);
+                return $manager->handleRoute($response, $newPath, $args);
             }
         );
+    }
+
+    /**
+     * @return Response
+     */
+    protected function handleRoute(Response $response, array $newPath, array $args = [])
+    {
+        if ($newPath['route'] === 404) {
+            return $response->withStatus(404);
+        }
+
+        $locale = isset($args['lang']) ? $args['lang'] : null;
+
+        if ($newPath['data_key'] === null) {
+            if (is_array($newPath['route'])) {
+                $route = $this->translator()->translate($newPath['route'], [], null, $locale);
+                if ($route !== null) {
+                    $newPath['route'] = $route;
+                } else {
+                    $newPath['route'] = reset($newPath['route']);
+                }
+            }
+
+            return $response->withRedirect($newPath['route'], $newPath['status']);
+        }
+
+        if (!isset($newPath['ident'])) {
+            return $response->withStatus(404);
+        }
+
+        if (!empty($newPath[$newPath['data_key']])) {
+            $args = array_merge($newPath[$newPath['data_key']], $args);
+        }
+
+        /** @var \Slim\Container */
+        $container = $this->app()->getContainer();
+
+        $router = $container->get('router');
+        if (isset($newPath[$newPath['data_key']]['route_endpoint'])) {
+            $endpoint = $this->translator()->translate(
+                $newPath[$newPath['data_key']]['route_endpoint'],
+                [],
+                null,
+                $locale
+            );
+
+            $args['route_endpoint'] = $endpoint;
+        }
+
+        $uri = $router->pathFor($newPath['ident'], $args);
+
+        return $response->withRedirect($uri, $newPath['status']);
     }
 
     /**
