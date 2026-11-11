@@ -44,7 +44,7 @@ class AbstractSettings extends Content implements
             return false;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -83,7 +83,7 @@ class AbstractSettings extends Content implements
             return null;
         }
 
-        $getter = 'get'.ucfirst($key);
+        $getter = 'get' . ucfirst($key);
         if (!isset($this->mutatorCache[$getter])) {
             $this->mutatorCache[$getter] = is_callable([ $this, $getter ]);
         }
@@ -123,7 +123,7 @@ class AbstractSettings extends Content implements
             return;
         }
 
-        $setter = 'set'.ucfirst($key);
+        $setter = 'set' . ucfirst($key);
         if (!isset($this->mutatorCache[$setter])) {
             $this->mutatorCache[$setter] = is_callable([ $this, $setter ]);
         }

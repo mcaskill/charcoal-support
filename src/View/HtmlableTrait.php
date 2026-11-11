@@ -36,7 +36,7 @@ trait HtmlableTrait
                     } elseif ($val instanceof JsonSerializable) {
                         $val = json_encode(
                             $val->jsonSerialize(),
-                            (JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
+                            (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
                         );
                     } elseif (is_callable([ $val, 'toArray' ])) {
                         $val = $val->toArray();
