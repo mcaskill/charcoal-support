@@ -2,34 +2,24 @@
 
 namespace Charcoal\Tests\Support\Model;
 
-use ArrayIterator;
-use ArrayObject;
-use CachingIterator;
-use ReflectionClass;
-
-// From 'mockery/mockery'
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-// From 'charcoal-core'
+use ArrayAccess;
 use Charcoal\Model\Model;
 use Charcoal\Model\ModelInterface;
-
-// From 'charcoal-support'
 use Charcoal\Support\Model\Collection;
+use PHPUnit\Framework\InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 /**
  * Test the enhanced model collection class.
  */
-class CollectionTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    const OBJ_1 = '40ea';
-    const OBJ_2 = '69c6';
-    const OBJ_3 = '71b5';
-    const OBJ_4 = 'dce3';
-    const OBJ_5 = 'ea9f';
+    public const OBJ_1 = '40ea';
+    public const OBJ_2 = '69c6';
+    public const OBJ_3 = '71b5';
+    public const OBJ_4 = 'dce3';
+    public const OBJ_5 = 'ea9f';
 
     /**
      * @var Model[] Ordered array of models.
@@ -41,22 +31,17 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      */
     protected $map;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->map = [
-            self::OBJ_1 => m::mock(Model::class, [ 'id' => self::OBJ_1 ]),
-            self::OBJ_2 => m::mock(Model::class, [ 'id' => self::OBJ_2 ]),
-            self::OBJ_3 => m::mock(Model::class, [ 'id' => self::OBJ_3 ]),
-            self::OBJ_4 => m::mock(Model::class, [ 'id' => self::OBJ_4 ]),
-            self::OBJ_5 => m::mock(Model::class, [ 'id' => self::OBJ_5 ]),
-        ];
+        $logger = new NullLogger();
 
-        $i = 1;
-        foreach ($this->map as &$mock) {
-            $mock->shouldReceive('offsetGet')
-                 ->with('position')
-                 ->andReturn($i++);
-        }
+        $this->map = [
+            self::OBJ_1 => (new Model([ 'logger' => $logger ]))->setData([ 'id' => self::OBJ_1, 'position' => 1 ]),
+            self::OBJ_2 => (new Model([ 'logger' => $logger ]))->setData([ 'id' => self::OBJ_2, 'position' => 2 ]),
+            self::OBJ_3 => (new Model([ 'logger' => $logger ]))->setData([ 'id' => self::OBJ_3, 'position' => 3 ]),
+            self::OBJ_4 => (new Model([ 'logger' => $logger ]))->setData([ 'id' => self::OBJ_4, 'position' => 4 ]),
+            self::OBJ_5 => (new Model([ 'logger' => $logger ]))->setData([ 'id' => self::OBJ_5, 'position' => 5 ]),
+        ];
 
         $this->arr = array_values($this->map);
     }
@@ -66,7 +51,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyCollection()
     {
-        $c = new Collection;
+        $c = new Collection();
 
         $this->assertEquals(null, $c->shift());
         $this->assertEquals(null, $c->pop());
@@ -122,11 +107,10 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->map, $c->all());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testSortByThrowsAnException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $arr = $this->arr;
         shuffle($arr);
 
@@ -177,12 +161,11 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $random);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testRandomOnEmptyCollection()
     {
-        (new Collection)->random();
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Collection())->random();
     }
 
     public function testPaginate()
@@ -212,11 +195,10 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $c->prepend($o5)->all());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testPrependUnacceptableData()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $c = new Collection($this->arr);
         $c->prepend('foo');
     }
@@ -285,5 +267,44 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         list($o1, $o2, $o3, $o4, $o5) = $this->arr;
         $c = new Collection($this->arr);
         $this->assertEquals([ $o2, $o3, $o4 ], $c->slice(-4, -1)->values());
+    }
+
+    /**
+     * Asserts that an array has a specified subset.
+     *
+     * Note: This is a poor-man's fallback for a method previously available
+     * in PHPUnit, deprecated in PHPUnit 8, and removed in PHPUnit 9.
+     *
+     * @param  array|ArrayAccess|mixed[] $subset                 The expected subset.
+     * @param  array|ArrayAccess|mixed[] $array                  The actual haystack.
+     * @param  string                    $message                The error to report.
+     * @throws InvalidArgumentException
+     * @return void
+     */
+    protected function assertArraySubset($subset, $array, $message = ''): void
+    {
+        if (!(is_array($subset) || $subset instanceof ArrayAccess)) {
+            throw InvalidArgumentException::create(
+                1,
+                'array or ArrayAccess'
+            );
+        }
+
+        if (!(is_array($array) || $array instanceof ArrayAccess)) {
+            throw InvalidArgumentException::create(
+                2,
+                'array or ArrayAccess'
+            );
+        }
+
+        foreach ($subset as $key => $value) {
+            $this->assertArrayHasKey($key, $array, $message);
+
+            if (is_array($value) || $value instanceof ArrayAccess) {
+                $this->assertArraySubset($value, $array[$key], $message);
+            } else {
+                $this->assertSame($value, $array[$key], $message);
+            }
+        }
     }
 }

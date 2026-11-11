@@ -2,17 +2,13 @@
 
 namespace Charcoal\Tests\Support\View;
 
-// From 'charcoal-view'
-use Charcoal\View\AbstractView;
-use Charcoal\View\GenericView;
-
-// From 'charcoal-support'
 use Charcoal\Support\View\HtmlableTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test the HTML-renderable trait.
  */
-class HtmlableTraitTest extends \PHPUnit_Framework_TestCase
+class HtmlableTraitTest extends TestCase
 {
     /**
      * Store an instance of the mock object.
@@ -22,23 +18,13 @@ class HtmlableTraitTest extends \PHPUnit_Framework_TestCase
     private $obj;
 
     /**
-     * Store the view renderer.
-     *
-     * @var AbtractView
-     */
-    private $view;
-
-    /**
      * Invoked before the test is run.
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->obj = $this->getMockForTrait('\Charcoal\Support\View\HtmlableTrait');
     }
 
-    /**
-     *
-     */
     public function testHtmlAttributes()
     {
         $obj  = $this->obj;
