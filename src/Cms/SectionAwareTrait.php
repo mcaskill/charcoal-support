@@ -138,4 +138,11 @@ trait SectionAwareTrait
 
         return [];
     }
+
+    /**
+     * Retrieve the object model factory.
+     *
+     * @return \Charcoal\Factory\GenericFactory
+     */
+    abstract public function modelFactory();
 }

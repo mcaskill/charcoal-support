@@ -395,4 +395,19 @@ trait ParsableValueTrait
 
         return $value;
     }
+
+    /**
+     * Determine if the model has the given property.
+     *
+     * @param  string $propertyIdent The property identifier to lookup.
+     * @return boolean
+     */
+    abstract public function hasProperty($propertyIdent);
+
+    /**
+     * Retrieve the translator service.
+     *
+     * @return \Charcoal\Translator\Translator
+     */
+    abstract protected function translator();
 }

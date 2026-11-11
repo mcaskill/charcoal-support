@@ -185,4 +185,20 @@ abstract class AbstractWebContent extends Content implements
 
         return parent::preDelete();
     }
+
+    /**
+     * Route generation.
+     *
+     * @param  mixed $slug Slug by langs.
+     * @param  array $data Object route custom data.
+     * @return void
+     */
+    abstract protected function generateObjectRoute($slug = null, array $data = []);
+
+    /**
+     * Delete all object routes.
+     *
+     * @return boolean Success or failure.
+     */
+    abstract protected function deleteObjectRoutes();
 }
