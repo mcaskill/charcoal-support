@@ -23,7 +23,7 @@ trait HtmlableTrait
      * @param   string|boolean $prefix   Prepend the returned string with a space.
      * @return  string  Returns a string of HTML attributes.
      */
-    public function htmlAttributes(array $attr, callable $callback = null, $prefix = true)
+    public function htmlAttributes(array $attr, ?callable $callback = null, $prefix = true)
     {
         if (!count($attr)) {
             return '';

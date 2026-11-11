@@ -58,7 +58,7 @@ class DateTimeHelpers implements
      *     If $timezone is omitted, the current time zone will be used.
      * @throws InvalidArgumentException If the timezone value is invalid.
      */
-    public function __construct(array $macros = null, $timezone = null)
+    public function __construct(?array $macros = null, $timezone = null)
     {
         if (is_string($timezone)) {
             try {
@@ -87,7 +87,7 @@ class DateTimeHelpers implements
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'now'  => $this->macrosForNow(),
@@ -177,7 +177,7 @@ class DateTimeHelpers implements
         };
 
         return [
-            'year' => function ($time, LambdaHelper $helper = null) {
+            'year' => function ($time, ?LambdaHelper $helper = null) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -188,7 +188,7 @@ class DateTimeHelpers implements
 
                 return $time->format('Y');
             },
-            'atom' => function ($time, LambdaHelper $helper = null) {
+            'atom' => function ($time, ?LambdaHelper $helper = null) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -199,7 +199,7 @@ class DateTimeHelpers implements
 
                 return $time->format(DateTime::ATOM);
             },
-            'sqlFull' => function ($time, LambdaHelper $helper = null) {
+            'sqlFull' => function ($time, ?LambdaHelper $helper = null) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -210,7 +210,7 @@ class DateTimeHelpers implements
 
                 return $time->format('Y-m-d H:i:s');
             },
-            'sqlDate' => function ($time, LambdaHelper $helper = null) {
+            'sqlDate' => function ($time, ?LambdaHelper $helper = null) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -221,7 +221,7 @@ class DateTimeHelpers implements
 
                 return $time->format('Y-m-d');
             },
-            'sqlTime' => function ($time, LambdaHelper $helper = null) {
+            'sqlTime' => function ($time, ?LambdaHelper $helper = null) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -232,7 +232,7 @@ class DateTimeHelpers implements
 
                 return $time->format('H:i:s');
             },
-            'timestamp' => function ($time, LambdaHelper $helper = null) {
+            'timestamp' => function ($time, ?LambdaHelper $helper = null) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -243,7 +243,7 @@ class DateTimeHelpers implements
 
                 return $time->getTimestamp();
             },
-            'seconds' => function ($time, LambdaHelper $helper = null) {
+            'seconds' => function ($time, ?LambdaHelper $helper = null) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -266,7 +266,7 @@ class DateTimeHelpers implements
 
                 return $time->format($helper->render($format));
             },
-            'relative' => function ($time, LambdaHelper $helper = null) use ($plural) {
+            'relative' => function ($time, ?LambdaHelper $helper = null) use ($plural) {
                 if ($time === null || $time === '') {
                     return;
                 }
@@ -392,6 +392,7 @@ class DateTimeHelpers implements
      * @throws InvalidArgumentException If the $key is invalid.
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         if (!is_string($key)) {
@@ -408,6 +409,7 @@ class DateTimeHelpers implements
      * @throws InvalidArgumentException If the $key is invalid.
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         if (!is_string($key)) {
@@ -425,6 +427,7 @@ class DateTimeHelpers implements
      * @throws InvalidArgumentException If the $key or $value are invalid.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (!is_string($key)) {
@@ -444,6 +447,7 @@ class DateTimeHelpers implements
      * @param  string $key The name of the macro to remove.
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         unset($this->macros[$key]);

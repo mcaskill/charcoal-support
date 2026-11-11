@@ -15,7 +15,7 @@ class BadRequestException extends LogicException
     /** @var RequestInterface */
     private $request;
 
-    /** @var ResponseInterface */
+    /** @var ?ResponseInterface */
     private $response;
 
     /**
@@ -29,8 +29,8 @@ class BadRequestException extends LogicException
     public function __construct(
         $message,
         RequestInterface $request,
-        ResponseInterface $response = null,
-        Exception $previous = null
+        ?ResponseInterface $response = null,
+        ?Exception $previous = null
     ) {
         // Set the code of the exception if the response is set and not future.
         $code = $response ? $response->getStatusCode() : 0;

@@ -62,6 +62,7 @@ class RouteRedirectionManager implements
         if (isset($data['translator'])) {
             $this->setTranslator($data['translator']);
         } else {
+            /** @var \Slim\Container */
             $container = $this->app()->getContainer();
             $this->setTranslator($container['translator']);
         }
@@ -310,6 +311,7 @@ class RouteRedirectionManager implements
 
             $found = false;
             if ($route['route_type'] && isset($route['route'])) {
+                /** @var \Slim\Container */
                 $container = $this->app()->getContainer();
                 $routeName = $route['route'];
                 $routeType = $route['route_type'];

@@ -31,6 +31,8 @@ trait SluggableTrait
      */
     public function url($lang = null)
     {
+        /** @var \Charcoal\Model\ModelInterface&self $this */
+
         if ($this->url === null) {
             if (!$this->id()) {
                 return null;

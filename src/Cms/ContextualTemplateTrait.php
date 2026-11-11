@@ -129,6 +129,7 @@ trait ContextualTemplateTrait
         if ($this->routeEndpoint) {
             $endpoint = $this->translator()->translation($this->routeEndpoint);
             foreach ($this->translator()->availableLocales() as $lang) {
+                /** @var \Slim\Http\Uri */
                 $uri = $baseUrl->withPath($endpoint[$lang]);
 
                 if ($this->routeGroup) {
@@ -172,7 +173,7 @@ trait ContextualTemplateTrait
     /**
      * Append a path to the base URI.
      *
-     * @param  string $path The base path.
+     * @param  mixed $path The base path.
      * @return self
      */
     public function setRouteGroup($path)

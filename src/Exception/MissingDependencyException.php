@@ -28,7 +28,7 @@ class MissingDependencyException extends RuntimeException
     public function __construct(
         $message,
         $dependency = null,
-        Exception $previous = null
+        ?Exception $previous = null
     ) {
         $template = 'Missing dependency for class [%s]';
 

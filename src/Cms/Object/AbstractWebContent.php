@@ -142,7 +142,7 @@ abstract class AbstractWebContent extends Content implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    protected function preUpdate(array $properties = null)
+    protected function preUpdate(?array $properties = null)
     {
         if (!$this->locked()) {
             $this['slug'] = $this->generateSlug();
@@ -159,7 +159,7 @@ abstract class AbstractWebContent extends Content implements
      * @param  array $properties Optional. The list of properties to update.
      * @return boolean
      */
-    protected function postUpdate(array $properties = null)
+    protected function postUpdate(?array $properties = null)
     {
         if (!$this->locked()) {
             $this->generateObjectRoute($this['slug']);
