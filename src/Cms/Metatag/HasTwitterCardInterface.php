@@ -26,14 +26,14 @@ interface HasTwitterCardInterface extends HasMetadataInterface
      *
      * @var string
      */
-    const TWITTER_CARD_NAMESPACE = 'twitter';
+    public const TWITTER_CARD_NAMESPACE = 'twitter';
 
     /**
      * The default Twitter Card type.
      *
      * @var string
      */
-    const DEFAULT_TWITTER_CARD_TYPE = 'summary';
+    public const DEFAULT_TWITTER_CARD_TYPE = 'summary';
 
     /**
      * Retrieve the object's {@link https://dev.twitter.com/cards/types card type},

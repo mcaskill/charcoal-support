@@ -25,14 +25,14 @@ interface HasOpenGraphInterface extends HasMetadataInterface
      *
      * @var string
      */
-    const OPENGRAPH_NAMESPACE = 'og';
+    public const OPENGRAPH_NAMESPACE = 'og';
 
     /**
      * The default OpenGraph content type.
      *
      * @var string
      */
-    const DEFAULT_OPENGRAPH_TYPE = 'website';
+    public const DEFAULT_OPENGRAPH_TYPE = 'website';
 
     /**
      * Retrieve the object's {@link https://developers.facebook.com/docs/reference/opengraph/ OpenGraph type},

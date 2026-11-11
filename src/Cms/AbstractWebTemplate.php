@@ -38,7 +38,7 @@ abstract class AbstractWebTemplate extends CharcoalTemplate implements
      *
      * @var string
      */
-    const DEFAULT_SOCIAL_MEDIA_IMAGE = '';
+    public const DEFAULT_SOCIAL_MEDIA_IMAGE = '';
 
     /**
      * Additional SEO metadata.
